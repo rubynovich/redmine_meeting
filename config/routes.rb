@@ -5,8 +5,11 @@ resources :meeting_agendas do
   collection do
     get 'autocomplete_for_issue'
   end
-  member do
-    resources :meeting_members
+end
+resources :meeting_members do
+  collection do
+    get 'autocomplete_for_user'
   end
 end
+
 resources :meeting_protocols
