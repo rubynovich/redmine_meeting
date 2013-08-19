@@ -1,0 +1,79 @@
+.contextual
+  = link_to l(:button_add), {action: 'new'}, class: 'icon icon-add'
+  = link_to l(:button_update), {action: 'edit', id: @object.id}, class: 'icon icon-edit'
+  = link_to l(:button_delete), {action: 'destroy', id: @object.id}, :confirm => l(:text_are_you_sure), :method => :delete, :class => 'icon icon-del'
+  - if @object.meeting_protocol.present?
+    = link_to l(:label_meeting_protocol), {controller: 'meeting_protocols', action: 'show', id: @object.meeting_protocol.id}, class: 'icon icon-edit'
+  - else
+    = link_to l(:label_new_meeting_protocol), {controller: 'meeting_protocols', action: 'new', meeting_protocol: {meeting_agenda_id: @object.id}}, class: 'icon icon-add'
+
+%h2
+  = link_to l(:label_meeting_agenda_plural), action: 'index'
+  &#187;
+  = l(:label_meeting_agenda)
+  ="##{h @object.id}"
+
+
+.issue.details
+  %table.attributes
+    %tr
+      %th=l(:field_subject)+":"
+      %td{colspan: 3}=h @object.subject
+    %tr
+      %th=l(:field_place)+":"
+      %td{colspan: 3}=h @object.place
+    %tr
+      %th= l(:field_meet_on)+":"
+      %td= format_date(@object.meet_on)
+      %th= l(:label_meeting_agenda_start_time)+":"
+      %td= format_time(@object.start_time, false)
+    %tr
+      %th= l(:field_created_on)+":"
+      %td= format_time(@object.created_on)
+      %th= l(:label_meeting_agenda_end_time)+":"
+      %td= format_time(@object.end_time, false)
+    %tr
+      %th= l(:field_updated_on)+":"
+      %td= format_time(@object.updated_on)
+      %th= l(:field_author)+":"
+      %td= link_to_user @object.author
+  %hr
+
+  %h3= l(:field_meeting_members)
+  %table.list.issues
+    %tr
+      %th=l(:field_company)
+      %th=l(:field_job_title)
+      %th=l(:field_member)
+      %th=l(:field_status)
+    - @object.users.each do |user|
+      %tr.issue
+        %td=h user.company
+        %td=h user.job_title
+        %td=link_to_user(user)
+        %td=h user.status
+
+  %br
+  %h3=l(:label_meeting_question_plural)
+  %table.list.issues
+    %tr
+      %th=l(:field_title)
+      %th=l(:field_issue)
+      %th=l(:label_meeting_question_user)
+      %th=l(:field_status)
+      %th=l(:field_done_ratio)
+    - @object.meeting_questions.each do |question|
+      %tr.issue
+        %td.subject=h question.title
+        %td.subject
+          - if question.issue.present?
+            = link_to_issue(question.issue, tracker: false)
+        %td
+          - if question.user.present?
+            = link_to_user question.user
+        %td
+          - if question.status.present?
+            = h question.status
+        %td{width: '80px'}
+          - if question.issue.present?
+            =progress_bar(question.issue.done_ratio, width: '80px')

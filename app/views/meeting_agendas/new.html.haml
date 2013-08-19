@@ -1,0 +1,17 @@
+%h2
+  = link_to l(:label_meeting_agenda_plural), action: 'index'
+  &#187;
+  =l(:label_meeting_agenda_new)
+
+= nested_form_for @object do |f|
+  = render :partial => 'form', :locals => {:f => f}
+  = submit_tag l(:button_create)
+
+- content_for(:sidebar) do
+  %h3=t(:label_meeting_agenda_plural)
+  %p= link_to t(:label_meeting_agenda_show_all), action: 'index'
+  .contextual
+    = link_to l(:button_add), {controller: 'meeting_members', action: 'new', meeting_agenda_id:  @object.id}, :remote => true, :method => :get
+
+  %h3
+    = l(:field_meeting_members)

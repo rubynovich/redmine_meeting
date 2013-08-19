@@ -1,0 +1,7 @@
+.box.tabular
+  .contextual
+    = f.link_to_remove l(:button_delete), class: 'icon icon-del'
+  = f.hidden_field :meeting_member_id
+  %p
+    = f.label :member
+    = f.collection_select :user_id, User.active.all, :id, :name, :prompt => t(:prompt_please_select)

@@ -1,0 +1,48 @@
+# Russian strings go here for Rails i18n
+ru:
+  field_meeting_questions: "Вопросы"
+  field_meeting_answers: "Решения"
+  field_meeting_participators: "Реальные участники"
+  field_meeting_members: "Заявленные участники"
+  field_member: "Участник"
+  field_meet_on: "Дата совещания"
+  field_place: "Место"
+  label_meeting_agenda: "Повестка совещания"
+  label_meeting_agenda_plural: "Повестки совещаний"
+  label_meeting_agenda_new: "Новая повестка совещания"
+  label_new_meeting_agenda: "Добавить новую повестку совещания"
+  label_meeting_agenda_show_all: "Посмотреть все повестки совещаний"
+  label_meeting_agenda_start_time: "Время начала"
+  label_meeting_agenda_end_time: "Время окончания"
+  label_meeting_question: "Рассмотренный вопрос"
+  label_meeting_question_plural: "Вопросы на рассмотрение"
+  label_meeting_question_title: "Вопрос"
+  label_meeting_question_user: "Докладчик"
+  label_meeting_protocol: "Протокол совещания"
+  label_new_meeting_protocol: "Добавить протокол совещания"
+  label_meeting_protocol_plural: "Протоколы совещаний"
+  label_meeting_protocol_new: "Новый протокол совещания"
+  label_meeting_protocol_show_all: "Посмотреть все протоколы совещаний"
+  label_meeting_answer_plural: "Рассмотренные вопросы"
+  label_meeting_answer: "Принятое решение"
+  label_meeting_answer_user: "Исполнитель"
+  label_meeting_answer_description: "Описание решения"
+  label_new_base_meeting_agenda: "Составляется на основании повестки совещания"
+  label_meeting_member_blank: "Отсутствовал"
+  label_meeting_member_present: "Присутствовал"
+  label_meeting_member_extra: "Явился без приглашения"
+
+  label_period: Период
+  label_period_any: любой
+  label_period_today: сегодня
+  label_period_yesterday: вчера
+  label_period_last_week: предыдущая неделя
+  label_period_this_week: эта неделя
+  label_period_last_month: предыдущий месяц
+  label_period_this_month: этот месяц
+  label_period_last_year: прошлый год
+  label_period_this_year: этот год
+
+  label_protocol_for_select:
+    none: "Нет протокола"
+    have: "Есть протокол"

@@ -1,0 +1,31 @@
+:css
+  input#approver_search {width:100%}
+  input#approver_search {
+    background: url(../images/magnifier.png) no-repeat 2px 50%; padding-left:20px;
+    border:1px solid #9EB1C2; border-radius:3px; height:1.5em; width:95%;
+  }
+  input#approver_search.ajax-loading {
+   background-image: url(../images/loading.gif);
+  }
+  #users_for_approvers{
+    height: 200px;
+    overflow: auto;
+  }
+  #users_for_approvers label {
+    display: block;
+  }
+
+%h3.title= l(:label_new_approver_plural)
+
+= form_tag({:controller => :approval_items, :action => :create, :issue_id => @issue.id}, :method => :post, :remote => true, :id => 'new-item-form') do
+  %p
+    = label_tag :approver_search, l(:label_user_search)
+    = text_field_tag :approver_search, nil
+  = javascript_tag "observeSearchfield('approver_search', 'users_for_approvers', '#{ escape_javascript url_for(:controller => :approval_items, :action => :autocomplete_for_user, :issue_id => @issue.id) }')"
+
+  #users_for_approvers
+    = principals_check_box_tags 'approver[user_ids][]', @users
+
+  %p.buttons
+    = submit_tag l(:button_add), :name => nil, :onclick => "hideModal(this);"
+    = submit_tag l(:button_cancel), :name => nil, :onclick => "hideModal(this);", :type => 'button'

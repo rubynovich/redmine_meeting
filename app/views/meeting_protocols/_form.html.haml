@@ -1,0 +1,41 @@
+- content_for(:header_tags) do
+  = javascript_include_tag :jquery_nested_form, :plugin => 'redmine_meeting'
+
+= error_messages_for @object
+= back_url_hidden_field_tag
+- heads_for_wiki_formatter
+
+.box.tabular
+  = f.hidden_field :meeting_agenda_id
+  %p
+    %h3=l :field_meeting_participators
+    = f.fields_for :meeting_participators
+    = f.link_to_add l(:button_add), :meeting_participators, class: 'icon icon-add'
+  %p
+    %h3=l :field_meeting_answers
+    = f.fields_for :meeting_answers
+    = f.link_to_add l(:button_add), :meeting_answers, class: 'icon icon-add'
+
+
+  :javascript
+    $(function() {
+      $('.wiki-edit').each( function(index){
+        var wikiToolbar = new jsToolBar(this);
+        wikiToolbar.setHelpLink('#{escape_javascript Redmine::Utils.relative_url_root+"/help/wiki_syntax.html"}');
+        wikiToolbar.draw();
+      } );
+      $('.autocomplete_for_issue:not(.autocomplete)').each( function(index){
+        observeAutocompleteField( $(this).attr('id'), '#{escape_javascript autocomplete_for_issue_meeting_agendas_path}')
+      } );
+
+      $(document).on('nested:fieldAdded', function() {
+        $('.wiki-edit:not(.jstEditor > .wiki-edit)').each( function(index){
+          var wikiToolbar = new jsToolBar(this);
+          wikiToolbar.setHelpLink('#{escape_javascript Redmine::Utils.relative_url_root+"/help/wiki_syntax.html"}');
+          wikiToolbar.draw();
+        } );
+        $('.autocomplete_for_issue:not(.autocomplete)').each( function(index){
+          observeAutocompleteField( $(this).attr('id'), '#{escape_javascript autocomplete_for_issue_meeting_agendas_path}')
+        } );
+      });
+    });

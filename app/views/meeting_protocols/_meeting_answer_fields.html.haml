@@ -1,0 +1,18 @@
+.box.tabular
+  .contextual
+    = f.link_to_remove l(:button_delete), class: "icon icon-del"
+  %p
+    = f.label :meeting_question_id, t(:label_meeting_question)
+    = f.collection_select :meeting_question_id, @object.meeting_agenda.meeting_questions, :id, :to_s, :prompt => t(:prompt_please_select)
+  .splitcontentleft
+    %p
+      = f.label :user_id, t(:label_meeting_answer_user)
+      = f.collection_select :user_id, User.active.all, :id, :to_s, :prompt => t(:prompt_please_select)
+  .splitcontentright
+    %p
+      = f.label :issue_id
+      = f.text_field :issue_id, size: 10, class: "autocomplete_for_issue"
+  %div{:style=>"clear:both"}
+  %p
+    = f.label :description, t(:label_meeting_answer_description)
+    = f.text_area :description, :cols => 60, :rows => 15, :class => 'wiki-edit'

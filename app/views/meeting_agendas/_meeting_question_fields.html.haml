@@ -1,0 +1,15 @@
+.box.tabular
+  .contextual
+    = f.link_to_remove l(:button_delete), class: "icon icon-del"
+  %p
+    = f.label :title, t(:label_meeting_question_title)
+    = f.text_field :title, size: 255, style: "width: 90%"
+  .splitcontentleft
+    %p
+      = f.label :user_id, t(:label_meeting_question_user)
+      = f.collection_select :user_id, User.active.all, :id, :name, :prompt => t(:prompt_please_select)
+  .splitcontentright
+    %p
+      = f.label :issue_id
+      = f.text_field :issue_id, size: 10, class: "autocomplete_for_issue"
+  %div{:style=>"clear:both"}

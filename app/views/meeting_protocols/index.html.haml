@@ -1,0 +1,43 @@
+.contextual
+  = link_to t(:label_new_meeting_protocol), {action: 'new'}, class: 'icon icon-add'
+
+%h2= t(:label_meeting_protocol_plural)
+
+=# render partial: 'filters'
+
+- if @collection.present?
+  .autoscroll
+    %table.list
+      %thead
+        %tr
+          %th= "#"
+          %th= l(:field_meet_on)
+          %th= l(:label_meeting_agenda_start_time)
+          %th= l(:label_meeting_agenda_end_time)
+          %th= l(:field_subject)
+          %th= l(:field_author)
+          %th= l(:label_meeting_agenda)
+          %th= l(:field_updated_on)
+          %th= l(:field_created_on)
+          %th
+      %tbody
+        - @collection.each do |item|
+          %tr{:class=>cycle("odd", "even")}
+            %td{align: 'center'}= link_to item.id, action: 'show', id: item.id
+            %td{align: 'center'}= format_date(item.meeting_agenda.meet_on)
+            %td{align: 'center'}= format_time(item.meeting_agenda.start_time, false)
+            %td{align: 'center'}= format_time(item.meeting_agenda.end_time, false)
+            %td{align: 'left'}= link_to h(item.meeting_agenda.subject), action: 'show', id: item.id
+            %td{align: 'center'}= link_to_user item.author
+            %td{align: 'center'}= link_to "#{t(:label_meeting_agenda)} ##{item.meeting_agenda_id}", controller: 'meeting_agendas', action: 'show', id: item.meeting_agenda_id
+            %td{align: 'center'}= format_time(item.updated_on)
+            %td{align: 'center'}= format_time(item.created_on)
+            %td.buttons
+              - if item.author == User.current || User.current.admin?
+                = link_to l(:button_update), {action: 'edit', id: item.id}, class: 'icon icon-edit'
+                = link_to(l(:button_delete), {action: 'destroy', id: item.id}, method: 'delete', confirm: l(:text_are_you_sure), class: 'icon icon-del')
+
+  -#%p.pagination= pagination_links_full @pages, @count
+- else
+  %p.nodata
+    = l(:label_no_data)

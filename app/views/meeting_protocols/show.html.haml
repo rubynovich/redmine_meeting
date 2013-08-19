@@ -1,0 +1,91 @@
+.contextual
+  -#= link_to l(:button_add), {action: 'new'}, class: 'icon icon-add'
+  = link_to l(:button_update), {action: 'edit', id: @object.id}, class: 'icon icon-edit'
+  = link_to l(:button_delete), {action: 'destroy', id: @object.id}, :confirm => l(:text_are_you_sure), :method => :delete, :class => 'icon icon-del'
+  = link_to l(:label_meeting_agenda), {controller: 'meeting_agendas', action: 'show', id: @object.meeting_agenda_id}, class: 'icon icon-edit'
+
+%h2
+  = link_to l(:label_meeting_protocol_plural), action: 'index'
+  &#187;
+  = l(:label_meeting_protocol)
+  ="##{h @object.id}"
+
+
+.issue.details
+  %table.attributes
+    %tr
+      %th=l(:field_subject)+":"
+      %td{colspan: 3}=h @object.meeting_agenda.subject
+    %tr
+      %th=l(:field_place)+":"
+      %td{colspan: 3}=h @object.meeting_agenda.place
+    %tr
+      %th= l(:field_meet_on)+":"
+      %td= format_date(@object.meeting_agenda.meet_on)
+      %th= l(:label_meeting_agenda_start_time)+":"
+      %td= format_time(@object.meeting_agenda.start_time, false)
+    %tr
+      %th= l(:field_created_on)+":"
+      %td= format_time(@object.created_on)
+      %th= l(:label_meeting_agenda_end_time)+":"
+      %td= format_time(@object.meeting_agenda.end_time, false)
+    %tr
+      %th= l(:field_updated_on)+":"
+      %td= format_time(@object.updated_on)
+      %th= l(:field_author)+":"
+      %td= link_to_user @object.author
+
+%h3= l(:field_meeting_participators)+":"
+%table.list.issues
+  %tr
+    %th=l(:field_company)
+    %th=l(:field_job_title)
+    %th=l(:field_member)
+    %th=l(:field_status)
+  - @object.meeting_members.each do |member|
+    %tr.issue
+      %td=h member.user.company
+      %td=h member.user.job_title
+      %td=link_to_user(member.user)
+      %td
+        - if member.meeting_participator.try(:user) == member.user
+          = t(:label_meeting_member_present)
+        - else
+          = t(:label_meeting_member_blank)
+  - @object.meeting_participators.reject(&:meeting_member).map(&:user).each do |member|
+    %tr.issue
+      %td=h member.company
+      %td=h member.job_title
+      %td=link_to_user(member)
+      %td= t(:label_meeting_member_extra)
+%br
+%h3=l(:label_meeting_answer_plural)+":"
+- @object.meeting_answers.group_by(&:project).each do |project, answers|
+  %h4{align: 'center'}=link_to_project project
+  - answers.each do |answer|
+    .issue.details
+      %table.attributes
+        %tr
+          %th=t(:label_meeting_question)+":"
+          %td{colspan: 3}=h answer.meeting_question
+        %tr
+          %th=t(:label_meeting_answer_user)+":"
+          %td=link_to_user answer.user
+          %th=t(:label_meeting_question_user)+":"
+          %td=link_to_user answer.meeting_question.user
+      - if answer.issue.present?
+        %p
+          %table.list.issues
+            %tr.issue
+              %td.subject=link_to_issue(answer.issue, :project => false)
+              %td=link_to_user(answer.issue.assigned_to)
+              %td=format_date(answer.issue.start_date)
+              %td=format_date(answer.issue.due_date)
+              %td=answer.status
+              %td=progress_bar(answer.issue.done_ratio, :width => '80px')
+      %p
+        %strong=t(:label_meeting_answer)+":"
+        %br
+        %div{style: 'margin-left: 40px;'}
+          =textilizable(answer, :description)
+        %br

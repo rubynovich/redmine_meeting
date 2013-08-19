@@ -1,0 +1,2 @@
+module MeetingProtocolsHelper
+end
