@@ -27,9 +27,10 @@ class MeetingAgendasController < ApplicationController
         where("LOWER(place) LIKE LOWER(?)", "%#{q}%").
         order(:place).
         limit(10).
+        select(:place).
         uniq.
         compact.
-        map{|l| { 'id' => l.id, 'label' => l.place, 'value' => l.place} }
+        map{|l| { 'label' => l.place, 'value' => l.place} }
     end
 
     render :text => places.to_json, :layout => false
