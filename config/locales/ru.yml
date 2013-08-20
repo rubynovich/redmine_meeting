@@ -43,6 +43,8 @@ ru:
   label_period_last_year: прошлый год
   label_period_this_year: этот год
 
+  label_without_project: Без проекта
+
   label_protocol_for_select:
     none: "Нет протокола"
     have: "Есть протокол"

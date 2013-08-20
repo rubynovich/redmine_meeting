@@ -30,7 +30,7 @@
             %td{align: 'left'}= link_to h(item.subject), action: 'show', id: item.id
             %td{align: 'center'}
               - if item.meeting_protocol.present?
-                = link_to item.meeting_protocol.id, controller: 'meeting_protocols', action: 'show', id: item.meeting_protocol.id
+                = link_to "#{t(:label_meeting_protocol)} ##{item.meeting_protocol.id}", controller: 'meeting_protocols', action: 'show', id: item.meeting_protocol.id
               - else
                 = link_to t(:button_add), {controller: 'meeting_protocols', action: 'new', meeting_protocol: {meeting_agenda_id: item.id}}, {class: 'icon icon-add'}
             %td{align: 'center'}= link_to_user item.author

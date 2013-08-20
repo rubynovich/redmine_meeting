@@ -19,6 +19,8 @@ class MeetingAgenda < ActiveRecord::Base
   attr_accessible :meeting_questions_attributes
   attr_accessible :subject, :place, :meet_on, :start_time, :end_time
 
+  validates_uniqueness_of :subject, scope: :meet_on
+
   scope :free, -> {
     where("id NOT IN (SELECT meeting_agenda_id FROM meeting_protocols)")
   }

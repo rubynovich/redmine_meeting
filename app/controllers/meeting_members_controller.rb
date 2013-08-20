@@ -3,12 +3,14 @@ class MeetingMembersController < ApplicationController
   before_filter :find_object, :only => [:new, :create, :destroy, :autocomplete_for_user]
 
   def new
-    @users = User.active.order(:lastname, :firstname)
+    @no_members = User.active.order(:lastname, :firstname)
+    @users = []
     if @object.present?
-      @users -= @object.meeting_members.map(&:user)
+      @users = @object.meeting_members.map(&:user)
     else
-      @users -= User.where(id: session[:meeting_member_ids])
+      @users = User.where(id: session[:meeting_member_ids])
     end
+    @no_members -= @users
   end
 
   def create
@@ -16,8 +18,8 @@ class MeetingMembersController < ApplicationController
 
     @users = if @object.present?
       @object.meeting_members << members.map{ |user_id| MeetingMember.new(user_id: user_id) }.compact
-      #TODO save?
-      @object.meeting_members.map(&:user_id)
+      @object.save
+      @object.meeting_members.map(&:user)
     else
       session[:meeting_member_ids] = (members + session[:meeting_member_ids]).uniq
       User.find(session[:meeting_member_ids])
@@ -30,13 +32,12 @@ class MeetingMembersController < ApplicationController
 
   def destroy
     @users = if @object.present?
-      MeetingMember.where(model_sym_id => @object.id, user_id: params[:user_id]).try(:destroy_all)
-      model_class.meeting_members.map(&:user_id)
+      MeetingMember.where(model_sym_id => @object.id, user_id: params[:id]).try(:destroy_all)
+      @object.meeting_members.map(&:user)
     else
-      session[:meeting_member_ids] -= params[:user_id]
+      session[:meeting_member_ids] -= [ params[:id] ]
       User.find(session[:meeting_member_ids])
     end
-
 
     respond_to do |format|
       format.js
@@ -57,7 +58,7 @@ class MeetingMembersController < ApplicationController
 private
 
   def find_object
-    @object = model_class.find(params[:model_sym_id])
+    @object = model_class.find(params[model_sym_id]) rescue nil
   end
 
   def model_class

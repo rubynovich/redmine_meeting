@@ -1,0 +1,15 @@
+:css
+  #meeting_members ul {margin: 0;  padding: 0;}
+  #meeting_members li {list-style-type:none;margin: 0px 2px 0px 0px; padding: 0px 0px 0px 0px;}
+  #meeting_members select {width: 95%; display: block;}
+  #meeting_members a.delete {opacity: 0.4; vertical-align: middle;}
+  #meeting_members a.delete:hover {opacity: 1;}
+  #meeting_members img.gravatar {margin: 0 4px 2px 0;}
+
+%ul
+  - @users.each do |user|
+    %li{class: "user-#{user.id}"}
+      = avatar(user, :size => "16")
+      = link_to_user(user, :class => 'user')
+      - url = {controller: 'meeting_members', action: 'destroy', id: user.id, meeting_agenda_id: @object.try(:id)}
+      = link_to(image_tag('delete.png'), url, remote: true, method: 'delete', class: "delete")

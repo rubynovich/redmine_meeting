@@ -44,15 +44,17 @@
     %th=l(:field_status)
   - @object.meeting_members.each do |member|
     %tr.issue
-      %td=h member.user.company
-      %td=h member.user.job_title
-      %td=link_to_user(member.user)
+      %td=h member.user.try(:company)
+      %td=h member.user.try(:job_title)
+      %td
+        - if member.user.present?
+          =link_to_user(member.user)
       %td
         - if member.meeting_participator.try(:user) == member.user
           = t(:label_meeting_member_present)
         - else
           = t(:label_meeting_member_blank)
-  - @object.meeting_participators.reject(&:meeting_member).map(&:user).each do |member|
+  - @object.meeting_participators.reject(&:meeting_member).map(&:user).compact.each do |member|
     %tr.issue
       %td=h member.company
       %td=h member.job_title
@@ -60,8 +62,12 @@
       %td= t(:label_meeting_member_extra)
 %br
 %h3=l(:label_meeting_answer_plural)+":"
-- @object.meeting_answers.group_by(&:project).each do |project, answers|
-  %h4{align: 'center'}=link_to_project project
+- @object.meeting_answers.group_by(&:project).sort_by{ |project, answers| project.to_s }.each do |project, answers|
+  %h4{align: 'center'}
+    - if project.present?
+      = link_to_project project
+    - else
+      = t(:label_without_project)
   - answers.each do |answer|
     .issue.details
       %table.attributes

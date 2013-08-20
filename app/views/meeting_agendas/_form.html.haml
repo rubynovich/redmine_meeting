@@ -24,10 +24,11 @@
       = f.label :end_time, l(:label_meeting_agenda_end_time)
       = f.time_select :end_time, minute_step: 15
   %div{:style=>"clear:both"}
-  %p
-    %h3=l :field_meeting_members
-    = f.fields_for :meeting_members
-    = f.link_to_add l(:button_add), :meeting_members, class: 'icon icon-add'
+  -#
+    %p
+      %h3=l :field_meeting_members
+      = f.fields_for :meeting_members
+      = f.link_to_add l(:button_add), :meeting_members, class: 'icon icon-add'
   %p
     %h3=l :field_meeting_questions
     = f.fields_for :meeting_questions
