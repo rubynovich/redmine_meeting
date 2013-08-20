@@ -48,8 +48,8 @@
       %th=l(:field_status)
     - @object.users.each do |user|
       %tr.issue
-        %td=h user.try(:company)
-        %td=h user.try(:job_title)
+        %td=h user.company rescue ""
+        %td=h user.job_title rescue ""
         %td=link_to_user(user)
         %td=h user.status
 
