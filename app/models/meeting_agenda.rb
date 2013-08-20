@@ -14,13 +14,15 @@ class MeetingAgenda < ActiveRecord::Base
   accepts_nested_attributes_for :meeting_members, allow_destroy: true
 
   before_create :add_author_id
-  after_save :add_spikers_to_members, if: "self.meeting_questions.present?"
 
   attr_accessible :meeting_members_attributes
   attr_accessible :meeting_questions_attributes
   attr_accessible :subject, :place, :meet_on, :start_time, :end_time
 
   validates_uniqueness_of :subject, scope: :meet_on
+  validates_presence_of :subject, :place, :meet_on
+  validate :start_time_less_than_end_time, if: "self.start_time > self.end_time"
+  validate :presence_of_meeting_questions, if: "self.meeting_questions.blank?"
 
   scope :free, -> {
     where("id NOT IN (SELECT meeting_agenda_id FROM meeting_protocols)")
@@ -36,10 +38,11 @@ private
     self.author_id = User.current.id
   end
 
-  def add_spikers_to_members
-    spikers = self.meeting_questions.map(&:user)
-    (spikers - self.users).compact.each do |user|
-      MeetingMember.create(meeting_agenda_id: self.id, user_id: user.id)
-    end
+  def start_time_less_than_end_time
+    errors.add(:end_time, :less_than_start_time)
+  end
+
+  def presence_of_meeting_questions
+    errors.add(:meeting_questions, :must_exist)
   end
 end

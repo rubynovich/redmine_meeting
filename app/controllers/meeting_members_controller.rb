@@ -72,10 +72,4 @@ private
   def model_sym_id
     :meeting_agenda_id
   end
-#    def find_issue
-#      @issue = Issue.find(params[:issue_id])
-#      @project = @issue.project
-#    rescue ActiveRecord::RecordNotFound
-#      render_404
-#    end
 end

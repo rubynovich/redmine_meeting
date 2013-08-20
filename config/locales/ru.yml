@@ -48,3 +48,14 @@ ru:
   label_protocol_for_select:
     none: "Нет протокола"
     have: "Есть протокол"
+  activerecord:
+    errors:
+      models:
+        meeting_agenda:
+          attributes:
+            meeting_questions:
+              must_exist:
+                "должны присутствовать. Иначе нечего обсуждать"
+            end_time:
+              less_than_start_time:
+                "меньше, чем Время начала"
