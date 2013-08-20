@@ -14,6 +14,7 @@ class MeetingAgenda < ActiveRecord::Base
   accepts_nested_attributes_for :meeting_members, allow_destroy: true
 
   before_create :add_author_id
+  after_save :add_spikers_to_members, if: "self.meeting_questions.present?"
 
   attr_accessible :meeting_members_attributes
   attr_accessible :meeting_questions_attributes
@@ -33,5 +34,12 @@ private
 
   def add_author_id
     self.author_id = User.current.id
+  end
+
+  def add_spikers_to_members
+    spikers = self.meeting_questions.map(&:user)
+    (spikers - self.users).compact.each do |user|
+      MeetingMember.create(meeting_agenda_id: self.id, user_id: user.id)
+    end
   end
 end

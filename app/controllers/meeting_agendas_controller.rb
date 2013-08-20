@@ -41,6 +41,7 @@ class MeetingAgendasController < ApplicationController
       flash[:notice] = l(:notice_successful_create)
       redirect_to action: 'show', id: @object.id
     else
+      @users = User.find(session[:meeting_member_ids])
       render action: 'new'
     end
   end
