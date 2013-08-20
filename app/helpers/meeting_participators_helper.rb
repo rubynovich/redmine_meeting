@@ -1,0 +1,2 @@
+module MeetingParticipatorsHelper
+end

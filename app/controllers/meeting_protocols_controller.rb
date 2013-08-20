@@ -32,15 +32,20 @@ class MeetingProtocolsController < ApplicationController
   end
 
   def new
-#    @object.meeting_agenda_id = params[:meeting_agenda_id]
+    @members = @object.meeting_agenda.users
+    session[:meeting_participator_ids] = @object.meeting_agenda.user_ids
     @object.meeting_answers_attributes = @object.meeting_agenda.meeting_questions.map do |question|
       {meeting_question_id: question.id, user_id: question.user_id}
     end
-    @object.meeting_participators_attributes = @object.meeting_agenda.meeting_members.map do |member|
-      {meeting_member_id: member.id, user_id: member.user_id}
-    end
+#    @object.meeting_participators_attributes = @object.meeting_agenda.meeting_members.map do |member|
+#      {meeting_member_id: member.id, user_id: member.user_id}
+#    end
   rescue
     render_403
+  end
+
+  def edit
+    @members = @object.meeting_agenda.users
   end
 
   def destroy

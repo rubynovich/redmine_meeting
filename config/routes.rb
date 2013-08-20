@@ -12,5 +12,10 @@ resources :meeting_members do
     get 'autocomplete_for_user'
   end
 end
+resources :meeting_participators do
+  collection do
+    get 'autocomplete_for_user'
+  end
+end
 
 resources :meeting_protocols

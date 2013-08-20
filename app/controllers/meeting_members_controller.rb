@@ -6,7 +6,7 @@ class MeetingMembersController < ApplicationController
     @no_members = User.active.order(:lastname, :firstname)
     @users = []
     if @object.present?
-      @users = @object.meeting_members.map(&:user)
+      @users = @object.users
     else
       @users = User.where(id: session[:meeting_member_ids])
     end
@@ -19,10 +19,10 @@ class MeetingMembersController < ApplicationController
     @users = if @object.present?
       @object.meeting_members << members.map{ |user_id| MeetingMember.new(user_id: user_id) }.compact
       @object.save
-      @object.meeting_members.map(&:user)
+      @object.users
     else
       session[:meeting_member_ids] = (members + session[:meeting_member_ids]).uniq
-      User.find(session[:meeting_member_ids])
+      User.find(session[:meeting_member_ids]).order(:lastname, :firstname)
     end
 
     respond_to do |format|
@@ -33,10 +33,10 @@ class MeetingMembersController < ApplicationController
   def destroy
     @users = if @object.present?
       MeetingMember.where(model_sym_id => @object.id, user_id: params[:id]).try(:destroy_all)
-      @object.meeting_members.map(&:user)
+      @object.users
     else
-      session[:meeting_member_ids] -= [ params[:id] ]
-      User.find(session[:meeting_member_ids])
+      session[:meeting_member_ids] -= [ params[:id].to_i ]
+      User.find(session[:meeting_member_ids]).order(:lastname, :firstname)
     end
 
     respond_to do |format|
@@ -47,9 +47,9 @@ class MeetingMembersController < ApplicationController
   def autocomplete_for_user
     @users = User.active.like(params[:q]).order(:lastname, :firstname)
     @users -= if @object.present?
-      @object.meeting_members.map(&:user)
+      @object.users
     else
-      User.find(session[:meeting_member_ids])
+      User.find(session[:meeting_member_ids]).order(:lastname, :firstname)
     end
 
     render :layout => false

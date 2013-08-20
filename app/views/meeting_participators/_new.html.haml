@@ -1,0 +1,31 @@
+:css
+  input#user_search {width:100%}
+  input#user_search {
+    background: url(../images/magnifier.png) no-repeat 2px 50%; padding-left:20px;
+    border:1px solid #9EB1C2; border-radius:3px; height:1.5em; width:95%;
+  }
+  input#user_search.ajax-loading {
+   background-image: url(../images/loading.gif);
+  }
+  #users_for_meeting_protocol{
+    height: 200px;
+    overflow: auto;
+  }
+  #users_for_meeting_protocol label {
+    display: block;
+  }
+
+%h3.title= l(:label_new_meeting_participator)
+
+= form_tag({controller: 'meeting_participators', action: 'create', meeting_protocol_id: @object.try(:id)}, method: :post, remote: true, id: 'new-item-form') do
+  %p
+    = label_tag :user_search, l(:label_user_search)
+    = text_field_tag :user_search, nil
+  = javascript_tag "observeSearchfield('user_search', 'users_for_meeting_protocol', '#{ escape_javascript url_for(controller: 'meeting_participators', action: 'autocomplete_for_user', meeting_protocol_id: @object.try(:id)) }')"
+
+  #users_for_meeting_protocol
+    = principals_check_box_tags 'meeting_protocol[user_ids][]', @no_members
+
+  %p.buttons
+    = submit_tag l(:button_add), :name => nil, :onclick => "hideModal(this);"
+    = submit_tag l(:button_cancel), :name => nil, :onclick => "hideModal(this);", :type => 'button'

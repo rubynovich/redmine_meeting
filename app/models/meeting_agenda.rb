@@ -2,12 +2,12 @@ class MeetingAgenda < ActiveRecord::Base
   unloadable
 
   has_one :meeting_protocol
-  has_many :meeting_questions, dependent: :delete_all
-  has_many :issues, through: :meeting_questions
-  has_many :projects, through: :issues
+  has_many :meeting_questions, dependent: :delete_all, order: :title
+  has_many :issues, through: :meeting_questions, order: :id
+  has_many :projects, through: :issues, order: :title
   has_many :statuses, through: :issues
   has_many :meeting_members, dependent: :delete_all
-  has_many :users, through: :meeting_members
+  has_many :users, through: :meeting_members, order: [:lastname, :firstname]
   belongs_to :author, class_name: 'User', foreign_key: 'author_id'
 
   accepts_nested_attributes_for :meeting_questions, allow_destroy: true
