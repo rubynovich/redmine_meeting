@@ -34,7 +34,9 @@ class MeetingAgendasController < ApplicationController
   end
 
   def create
-    @object.meeting_members_attributes = session[:meeting_member_ids].map{ |user_id| {user_id: user_id} }
+    if session[:meeting_member_ids].present?
+      @object.meeting_members_attributes = session[:meeting_member_ids].map{ |user_id| {user_id: user_id} }
+    end
     if @object.save
       flash[:notice] = l(:notice_successful_create)
       redirect_to action: 'show', id: @object.id
