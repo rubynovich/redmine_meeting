@@ -20,6 +20,21 @@ class MeetingAgendasController < ApplicationController
     render layout: false
   end
 
+  def autocomplete_for_place
+    q = (params[:q] || params[:term]).to_s.strip
+    places = if q.present?
+      MeetingAgenda.
+        where("LOWER(place) LIKE LOWER(?)", "%#{q}%").
+        order(:place).
+        limit(10).
+        uniq.
+        compact.
+        map{|l| { 'id' => l.id, 'label' => l.place, 'value' => l.place} }
+    end
+
+    render :text => places.to_json, :layout => false
+  end
+
   def new
     @users = []
     session[:meeting_member_ids] = []

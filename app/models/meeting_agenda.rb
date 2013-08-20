@@ -23,6 +23,7 @@ class MeetingAgenda < ActiveRecord::Base
   validates_presence_of :subject, :place, :meet_on
   validate :start_time_less_than_end_time, if: "self.start_time > self.end_time"
   validate :presence_of_meeting_questions, if: "self.meeting_questions.blank?"
+  validate :presence_of_meeting_members, if: "self.meeting_members.blank?"
 
   scope :free, -> {
     where("id NOT IN (SELECT meeting_agenda_id FROM meeting_protocols)")
@@ -43,6 +44,10 @@ private
   end
 
   def presence_of_meeting_questions
+    errors.add(:meeting_questions, :must_exist)
+  end
+
+  def presence_of_meeting_members
     errors.add(:meeting_questions, :must_exist)
   end
 end

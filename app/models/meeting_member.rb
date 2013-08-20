@@ -9,7 +9,6 @@ class MeetingMember < ActiveRecord::Base
 
   validates_uniqueness_of :user_id, scope: :meeting_agenda_id
   validates_presence_of :user_id
-#  validates_presence_of :meeting_agenda_id
 
   def to_s
     self.user.try(:name) || ''

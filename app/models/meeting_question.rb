@@ -14,6 +14,7 @@ class MeetingQuestion < ActiveRecord::Base
   after_save :add_new_users_from_questions
 
   validates_presence_of :title
+  validates_uniqueness_of :title, scope: :meeting_agenda_id
 
   def to_s
     self.title

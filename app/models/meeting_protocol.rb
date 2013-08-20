@@ -18,6 +18,7 @@ class MeetingProtocol < ActiveRecord::Base
   before_create :add_author_id
 
   validates_uniqueness_of :meeting_agenda_id
+  validates_presence_of :meeting_agenda_id
 
 private
 
