@@ -44,8 +44,8 @@
     %th=l(:field_status)
   - @object.meeting_members.each do |member|
     %tr.issue
-      %td=h member.user.try(:company)
-      %td=h member.user.try(:job_title)
+      %td=h member.user.company rescue ""
+      %td=h member.user.job_title rescue ""
       %td
         - if member.user.present?
           =link_to_user(member.user)

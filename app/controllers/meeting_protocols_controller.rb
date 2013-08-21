@@ -10,6 +10,7 @@ class MeetingProtocolsController < ApplicationController
 
   def create
 #    @object.save_attachments(params[:attachments])
+    @object.meeting_participators_attributes = session[:meeting_participator_ids].map{ |user_id| {user_id: user_id} }
     if @object.save
       flash[:notice] = l(:notice_successful_create)
 #      render_attachment_warning_if_needed(@object)
@@ -45,7 +46,7 @@ class MeetingProtocolsController < ApplicationController
   end
 
   def edit
-    @members = @object.meeting_agenda.users
+    @members = @object.users
   end
 
   def destroy

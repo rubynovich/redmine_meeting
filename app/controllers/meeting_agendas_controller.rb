@@ -42,7 +42,7 @@ class MeetingAgendasController < ApplicationController
   end
 
   def edit
-    @users = @object.meeting_members.map(&:user)
+    @users = @object.users
   end
 
   def index
@@ -67,6 +67,7 @@ class MeetingAgendasController < ApplicationController
       flash[:notice] = l(:notice_successful_update)
       redirect_to action: 'show', id: @object.id
     else
+      @users = @object.users
       render action: 'edit'
     end
   end
