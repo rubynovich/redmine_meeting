@@ -17,7 +17,6 @@
           %th= l(:field_subject)
           %th= l(:field_author)
           %th= l(:label_meeting_agenda)
-          %th= l(:field_updated_on)
           %th= l(:field_created_on)
           %th
       %tbody
@@ -30,7 +29,6 @@
             %td{align: 'left'}= link_to h(item.meeting_agenda.subject), action: 'show', id: item.id
             %td{align: 'center'}= link_to_user item.author
             %td{align: 'center'}= link_to "#{t(:label_meeting_agenda)} ##{item.meeting_agenda_id}", controller: 'meeting_agendas', action: 'show', id: item.meeting_agenda_id
-            %td{align: 'center'}= format_time(item.updated_on)
             %td{align: 'center'}= format_time(item.created_on)
             %td.buttons
               - if item.author == User.current || User.current.admin?

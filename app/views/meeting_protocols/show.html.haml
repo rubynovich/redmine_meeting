@@ -30,8 +30,8 @@
       %th= l(:label_meeting_agenda_end_time)+":"
       %td= format_time(@object.meeting_agenda.end_time, false)
     %tr
-      %th= l(:field_updated_on)+":"
-      %td= format_time(@object.updated_on)
+      %th= l(:field_meeting_agenda)+":"
+      %td= link_to "#{t(:label_meeting_agenda)} ##{@object.meeting_agenda.id}", controller: 'meeting_agendas', action: 'show', id: @object.meeting_agenda_id
       %th= l(:field_author)+":"
       %td= link_to_user @object.author
 

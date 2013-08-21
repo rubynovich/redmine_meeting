@@ -16,7 +16,6 @@
           %th= l(:label_meeting_agenda_end_time)
           %th= l(:field_subject)
           %th= l(:field_author)
-          %th= l(:field_updated_on)
           %th= l(:field_created_on)
           %th= l(:label_meeting_protocol)
           %th
@@ -29,7 +28,6 @@
             %td{align: 'center'}= format_time(item.end_time, false)
             %td{align: 'left'}= link_to h(item.subject), action: 'show', id: item.id
             %td{align: 'center'}= link_to_user item.author
-            %td{align: 'center'}= format_time(item.updated_on)
             %td{align: 'center'}= format_time(item.created_on)
             %td{align: 'center'}
               - if item.meeting_protocol.present?
