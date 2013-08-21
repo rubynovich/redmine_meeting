@@ -2,7 +2,7 @@
 ru:
   field_meeting_questions: "Вопросы"
   field_meeting_answers: "Решения"
-  field_meeting_participators: "Реальные участники"
+  field_meeting_participators: "Фактические участники"
   field_meeting_members: "Заявленные участники"
   field_member: "Участник"
   field_meet_on: "Дата совещания"
@@ -30,7 +30,7 @@ ru:
   label_new_base_meeting_agenda: "Составляется на основании повестки совещания"
   label_meeting_member_blank: "Отсутствовал"
   label_meeting_member_present: "Присутствовал"
-  label_meeting_member_extra: "Явился без приглашения"
+  label_meeting_member_extra: "Не был заявлен"
 
   label_period: Период
   label_period_any: любой
