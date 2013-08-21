@@ -8,10 +8,6 @@
 .box.tabular
   = f.hidden_field :meeting_agenda_id
   %p
-    %h3=l :field_meeting_participators
-    = f.fields_for :meeting_participators
-    = f.link_to_add l(:button_add), :meeting_participators, class: 'icon icon-add'
-  %p
     %h3=l :field_meeting_answers
     = f.fields_for :meeting_answers
     = f.link_to_add l(:button_add), :meeting_answers, class: 'icon icon-add'
