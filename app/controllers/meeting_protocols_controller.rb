@@ -17,6 +17,7 @@ class MeetingProtocolsController < ApplicationController
       redirect_to action: 'show', id: @object.id
 #      redirect_to :action => :show, :id => @object.id
     else
+      @members = @object.users
       render action: 'new'
     end
   end
@@ -28,6 +29,7 @@ class MeetingProtocolsController < ApplicationController
 #      render_attachment_warning_if_needed(@object)
       redirect_to action: 'show', id: @object.id
     else
+      @members = @object.users
       render action: 'edit'
     end
   end
