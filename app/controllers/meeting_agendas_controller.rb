@@ -51,7 +51,7 @@ class MeetingAgendasController < ApplicationController
     @scope = model_class.
       time_period(params[:time_period_created_on], :created_on).
       time_period(params[:time_period_meet_on], :meet_on).
-
+      where(nil)
 
     @count = @scope.count
 
