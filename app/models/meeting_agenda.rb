@@ -29,6 +29,24 @@ class MeetingAgenda < ActiveRecord::Base
     where("id NOT IN (SELECT meeting_agenda_id FROM meeting_protocols)")
   }
 
+  scope :like_field, ->(q, field) {
+    if q.present? && field.present?
+      where("LOWER(?) LIKE LOWER(?)", field, "%#{q.to_s.downcase}%")
+    end
+  }
+
+  scope :eql_field, ->(q, field) {
+    if q.present? && field.present?
+      where(field => q)
+    end
+  }
+
+  scope :eql_project_id, ->(q) {
+    if q.present?
+      joins(meeting_questions: :issue).where("issues.project_id = ?", q)
+    end
+  }
+
   def to_s
     self.subject
   end

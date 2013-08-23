@@ -51,6 +51,9 @@ class MeetingAgendasController < ApplicationController
     @scope = model_class.
       time_period(params[:time_period_created_on], :created_on).
       time_period(params[:time_period_meet_on], :meet_on).
+      eql_field(params[:author_id], :author_id).
+      like_field(params[:subject], :subject).
+      eql_project_id(params[:project_id]).
       where(nil)
 
     @count = @scope.count
