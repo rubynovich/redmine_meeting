@@ -46,7 +46,9 @@ class MeetingAgendasController < ApplicationController
   end
 
   def index
-    @collection = model_class.order('created_on desc')
+    @collection = model_class.
+      where(true).
+      order('created_on desc')
   end
 
   def create

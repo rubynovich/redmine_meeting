@@ -23,9 +23,12 @@
         - @collection.each do |item|
           %tr{:class=>cycle("odd", "even")}
             %td{align: 'center'}= link_to item.id, action: 'show', id: item.id
-            %td{align: 'center'}= format_date(item.meeting_agenda.meet_on)
-            %td{align: 'center'}= format_time(item.meeting_agenda.start_time, false)
-            %td{align: 'center'}= format_time(item.meeting_agenda.end_time, false)
+            %td{align: 'center'}
+              = format_date(item.meeting_agenda.meet_on) rescue ''
+            %td{align: 'center'}
+              = format_time(item.meeting_agenda.start_time, false) rescue ''
+            %td{align: 'center'}
+              = format_time(item.meeting_agenda.end_time, false) rescue ''
             %td{align: 'left'}= link_to h(item.meeting_agenda.subject), action: 'show', id: item.id
             %td{align: 'center'}= link_to_user item.author
             %td{align: 'center'}= link_to "#{t(:label_meeting_agenda)} ##{item.meeting_agenda_id}", controller: 'meeting_agendas', action: 'show', id: item.meeting_agenda_id

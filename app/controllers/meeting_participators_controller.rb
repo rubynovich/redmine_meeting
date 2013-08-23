@@ -23,7 +23,7 @@ class MeetingParticipatorsController < ApplicationController
       @object.users
     else
       session[session_sym] = (new_members + session[session_sym]).uniq
-      User.find(session[session_sym])
+      User.order(:lastname, :firstname).find(session[session_sym])
     end
 
     respond_to do |format|
@@ -37,7 +37,7 @@ class MeetingParticipatorsController < ApplicationController
       @object.users
     else
       session[session_sym] -= [params[:id].to_i]
-      User.find(session[session_sym])
+      User.order(:lastname, :firstname).find(session[session_sym])
     end
 
     respond_to do |format|
@@ -49,7 +49,7 @@ class MeetingParticipatorsController < ApplicationController
     @members = if @object.present?
       @object.users
     else
-      User.find(session[session_sym])
+      User.order(:lastname, :firstname).find(session[session_sym])
     end
 
     @no_members = User.active.like(params[:q]).order(:lastname, :firstname) - @members

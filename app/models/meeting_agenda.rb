@@ -20,7 +20,7 @@ class MeetingAgenda < ActiveRecord::Base
   attr_accessible :subject, :place, :meet_on, :start_time, :end_time
 
   validates_uniqueness_of :subject, scope: :meet_on
-  validates_presence_of :subject, :place, :meet_on
+  validates_presence_of :subject, :place, :meet_on, :start_time, :end_time
   validate :start_time_less_than_end_time, if: "self.start_time > self.end_time"
   validate :presence_of_meeting_questions, if: "self.meeting_questions.blank?"
   validate :presence_of_meeting_members, if: "self.meeting_members.blank?"
