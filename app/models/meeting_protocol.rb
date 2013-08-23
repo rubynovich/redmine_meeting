@@ -22,6 +22,24 @@ class MeetingProtocol < ActiveRecord::Base
   validate :presence_of_meeting_answers, if: -> {self.meeting_answers.blank?}
   validate :presence_of_meeting_participators, if: -> {self.meeting_participators.blank?}
 
+  scope :like_field, ->(q, field) {
+    if q.present? && field.present?
+      where("LOWER(#{field}) LIKE LOWER(?)", "%#{q.to_s.downcase}%")
+    end
+  }
+
+  scope :eql_field, ->(q, field) {
+    if q.present? && field.present?
+      where(field => q)
+    end
+  }
+
+  scope :eql_project_id, ->(q) {
+    if q.present?
+      joins(meeting_answers: :issue).where("issues.project_id = ?", q)
+    end
+  }
+
 private
 
   def presence_of_meeting_answers

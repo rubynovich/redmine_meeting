@@ -1,5 +1,5 @@
 .contextual
-  = link_to t(:label_new_meeting_protocol), {action: 'new'}, class: 'icon icon-add'
+  =# link_to t(:label_new_meeting_protocol), {action: 'new'}, class: 'icon icon-add'
 
 %h2= t(:label_meeting_protocol_plural)
 
@@ -38,7 +38,7 @@
                 = link_to l(:button_update), {action: 'edit', id: item.id}, class: 'icon icon-edit'
                 = link_to(l(:button_delete), {action: 'destroy', id: item.id}, method: 'delete', confirm: l(:text_are_you_sure), class: 'icon icon-del')
 
-  -#%p.pagination= pagination_links_full @pages, @count
+  %p.pagination= pagination_links_full @pages, @count
 - else
   %p.nodata
     = l(:label_no_data)

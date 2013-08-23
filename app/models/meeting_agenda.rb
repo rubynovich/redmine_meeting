@@ -31,7 +31,7 @@ class MeetingAgenda < ActiveRecord::Base
 
   scope :like_field, ->(q, field) {
     if q.present? && field.present?
-      where("LOWER(?) LIKE LOWER(?)", field, "%#{q.to_s.downcase}%")
+      where("LOWER(#{field}) LIKE LOWER(?)", "%#{q.to_s.downcase}%")
     end
   }
 
