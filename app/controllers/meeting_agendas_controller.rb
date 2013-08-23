@@ -46,9 +46,33 @@ class MeetingAgendasController < ApplicationController
   end
 
   def index
-    @collection = model_class.
-      where(true).
-      order('created_on desc')
+    @limit = per_page_option
+
+    @scope = model_class.
+      time_period(params[:time_period_created_on], :created_on).
+      time_period(params[:time_period_meet_on], :meet_on).
+
+
+    @count = @scope.count
+
+    @pages = begin
+      Paginator.new @count, @limit, params[:page]
+    rescue
+      Paginator.new self, @count, @limit, params[:page]
+    end
+    @offset ||= begin
+      @pages.offset
+    rescue
+      @pages.current.offset
+    end
+
+    @collection = @scope.
+      limit(@limit).
+      offset(@offset).
+#      order(sort_clause).
+      order('created_on desc').
+      all
+
   end
 
   def create
