@@ -4,6 +4,7 @@
 = error_messages_for @object
 = back_url_hidden_field_tag
 - heads_for_wiki_formatter
+- include_calendar_headers_tags
 
 .box.tabular
   = f.hidden_field :meeting_agenda_id
@@ -23,6 +24,9 @@
       $('.autocomplete_for_issue:not(.autocomplete)').each( function(index){
         observeAutocompleteField( $(this).attr('id'), '#{escape_javascript autocomplete_for_issue_meeting_agendas_path}')
       } );
+      $('.datepickme').each( function(index){
+        $(this).datepicker(datepickerOptions);
+      } );
 
       $(document).on('nested:fieldAdded', function() {
         $('.wiki-edit:not(.jstEditor > .wiki-edit)').each( function(index){
@@ -32,6 +36,9 @@
         } );
         $('.autocomplete_for_issue:not(.autocomplete)').each( function(index){
           observeAutocompleteField( $(this).attr('id'), '#{escape_javascript autocomplete_for_issue_meeting_agendas_path}')
+        } );
+        $('.datepickme').each( function(index){
+          $(this).datepicker(datepickerOptions);
         } );
       });
     });

@@ -48,6 +48,6 @@ private
   end
 
   def presence_of_meeting_members
-    errors.add(:meeting_questions, :must_exist)
+    errors.add(:meeting_members, :must_exist)
   end
 end

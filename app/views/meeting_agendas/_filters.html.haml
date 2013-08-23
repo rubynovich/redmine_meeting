@@ -4,7 +4,7 @@
 %fieldset
   %legend= l(:label_filter_plural)
   %form{:method => :get}
-    - %w{meet_on updated_on created_on}.each do |type_date|
+    - %w{meet_on created_on}.each do |type_date|
       %br
       %label=l(:"field_#{type_date}") + ":"
       %input{:id => type_date, :name => type_date, :size => 10, :onchange => "this.form.submit(); return false;", :value => params[type_date]}
@@ -20,12 +20,6 @@
     %br
 
     .inline-block
-      %label{:for=>'protocol'}= l(:label_meeting_protocol) + ":"
-      %select{:id => 'protocol', :name => 'protocol', :class => "small", :onchange => "this.form.submit(); return false;"}
-        %option
-        = options_for_select protocol_for_select, params[:protocol]
-
-    .inline-block
       %label{:for=>'author_id'}= l(:field_author) + ":"
       %select{:id => 'author_id', :name => 'author_id', :class => "small", :onchange => "this.form.submit(); return false;"}
         %option
@@ -38,7 +32,7 @@
         = project_tree_options_for_select(project_id_for_select, selected: Project.where(id: params[:project_id]))
 
   %form{:method => :get}
-    - [:protocol, :project_id, :author_id, :time_period_meet_on, :time_period_updated_on, :time_period_created_on].each do |item|
+    - [:project_id, :author_id, :time_period_meet_on, :time_period_created_on].each do |item|
       = hidden_field_tag item, params[item]
 
     .inline-block

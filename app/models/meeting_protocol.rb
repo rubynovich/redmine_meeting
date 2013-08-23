@@ -19,8 +19,18 @@ class MeetingProtocol < ActiveRecord::Base
 
   validates_uniqueness_of :meeting_agenda_id
   validates_presence_of :meeting_agenda_id
+  validate :presence_of_meeting_answers, if: -> {self.meeting_answers.blank?}
+  validate :presence_of_meeting_participators, if: -> {self.meeting_participators.blank?}
 
 private
+
+  def presence_of_meeting_answers
+    errors.add(:meeting_answers, :must_exist)
+  end
+
+  def presence_of_meeting_participators
+    errors.add(:meeting_participators, :must_exist)
+  end
 
   def add_author_id
     self.author_id = User.current.id

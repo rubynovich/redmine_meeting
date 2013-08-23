@@ -78,7 +78,11 @@
           %th=t(:label_meeting_answer_user)+":"
           %td=link_to_user answer.user
           %th=t(:label_meeting_question_user)+":"
-          %td=link_to_user answer.meeting_question.try(:user)
+          %td
+            - if answer.speaker.present?
+              = link_to_user answer.speaker
+            - elsif answer.meeting_question.present?
+              = link_to_user answer.meeting_question.user
       - if answer.issue.present?
         %p
           %table.list.issues
