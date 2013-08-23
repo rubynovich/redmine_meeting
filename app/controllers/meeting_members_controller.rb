@@ -36,7 +36,7 @@ class MeetingMembersController < ApplicationController
       @object.users
     else
       session[:meeting_member_ids] -= [ params[:id].to_i ]
-      User.find(session[:meeting_member_ids]).order(:lastname, :firstname)
+      User.order(:lastname, :firstname).find(session[:meeting_member_ids])
     end
 
     respond_to do |format|
@@ -49,7 +49,7 @@ class MeetingMembersController < ApplicationController
     @users -= if @object.present?
       @object.users
     else
-      User.find(session[:meeting_member_ids]).order(:lastname, :firstname)
+      User.order(:lastname, :firstname).find(session[:meeting_member_ids])
     end
 
     render :layout => false
