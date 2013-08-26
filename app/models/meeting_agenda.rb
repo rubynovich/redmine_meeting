@@ -21,8 +21,8 @@ class MeetingAgenda < ActiveRecord::Base
 
   validates_uniqueness_of :subject, scope: :meet_on
   validates_presence_of :subject, :place, :meet_on, :start_time, :end_time
-  validate :end_time_less_than_start_time, if: -> {self.end_time <= self.start_time}
-  validate :meet_on_less_than_today, if: -> {self.meet_on < Date.today}
+  validate :end_time_less_than_start_time, if: -> {self.start_time && self.end_time && (self.end_time <= self.start_time)}
+  validate :meet_on_less_than_today, if: -> {self.meet_on && (self.meet_on < Date.today)}
   validate :presence_of_meeting_questions, if: -> {self.meeting_questions.blank?}
   validate :presence_of_meeting_members, if: -> {self.meeting_members.blank?}
 

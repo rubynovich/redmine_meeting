@@ -49,23 +49,17 @@ ru:
   label_protocol_for_select:
     none: "Нет протокола"
     have: "Есть протокол"
+
+  label_done_status_for_select:
+    none: "Не исполнено"
+    have: "Исполнено"
+
   activerecord:
     errors:
-      models:
-        meeting_agenda:
-          attributes:
-            meeting_questions:
-              must_exist:
-                "должны присутствовать"
-            meeting_members:
-              must_exist:
-                "должны присутствовать"
-            end_time:
-              less_than_start_time:
-                "меньше, чем Время начала"
-        meeting_protocol:
-          attributes:
-            meeting_participators:
-              must_exist: "должны присутствовать"
-            meeting_answers:
-              must_exist: "должны присутствовать"
+      messages:
+        must_exist:
+          "должны присутствовать"
+        less_than_today:
+          "не может быть составлен задним числом"
+        less_than_start_time:
+          "меньше, чем Время начала"
