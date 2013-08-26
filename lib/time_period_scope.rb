@@ -16,7 +16,7 @@ module TimePeriodScope
       end
 
       scope :time_period, lambda {|q, field|
-        today = Date.today
+        today = Date.today.to_time(:utc)
         if q.present?
           period_start, period_end = case q
                                      when "yesterday"
