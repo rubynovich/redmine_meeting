@@ -12,11 +12,26 @@
 
       - MeetingAgenda.time_periods.each do |key|
         = "/"
-        - if params[:"time_period_#{type_date}"] == key
-          %strong
-            = l(:"label_period_#{key}")
+        - if %w{today yesterday}.include? key
+          - case key
+          - when 'today'
+            - if params[:"#{type_date}"].present? && (Date.parse(params[:"#{type_date}"]) == Date.today)
+              %strong
+                = l(:"label_period_#{key}")
+            - else
+              = link_to l(:"label_period_#{key}"), params.merge(:"time_period_#{type_date}" => "", :"#{type_date}" => Date.today )
+          - when 'yesterday'
+            - if params[:"#{type_date}"].present? && (Date.parse(params[:"#{type_date}"]) == Date.yesterday)
+              %strong
+                = l(:"label_period_#{key}")
+            - else
+              = link_to l(:"label_period_#{key}"), params.merge(:"time_period_#{type_date}" => "", :"#{type_date}" => Date.yesterday )
         - else
-          = link_to l(:"label_period_#{key}"), params.merge( :"time_period_#{type_date}" => key, :"#{type_date}" => "" )
+          - if params[:"time_period_#{type_date}"] == key
+            %strong
+              = l(:"label_period_#{key}")
+          - else
+            = link_to l(:"label_period_#{key}"), params.merge( :"time_period_#{type_date}" => key, :"#{type_date}" => "" )
     %br
 
     .inline-block
