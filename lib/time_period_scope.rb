@@ -24,9 +24,11 @@ module TimePeriodScope
                                      when "today"
                                        [today.beginning_of_day, today.end_of_day]
                                      when "last_week"
-                                       [1.week.ago.beginning_of_week, 1.week.ago.end_of_week]
+                                       [1.week.ago - today.wday.days, 1.week.ago - today.wday.days + 1.week]
+                                       #[1.week.ago.beginning_of_week, 1.week.ago.end_of_week]
                                      when "this_week"
-                                       [ today.beginning_of_week, today.end_of_week]
+                                       [1.week.from_now - today.wday.days - 1.week, 1.week.from_now - today.wday.days]
+                                       #[ today.beginning_of_week, today.end_of_week]
                                      when "last_month"
                                        [1.month.ago.beginning_of_month, 1.month.ago.end_of_month]
                                      when "this_month"
