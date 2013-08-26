@@ -67,7 +67,7 @@ private
   end
 
   def presence_of_meeting_questions
-    errors.add(:meeting_questions, :must_exist)
+    errors[:base] << ::I18n.t(:error_messages_meeting_questions_must_exist)
   end
 
   def presence_of_meeting_members

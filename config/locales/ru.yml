@@ -1,7 +1,5 @@
 # Russian strings go here for Rails i18n
 ru:
-  field_meeting_questions: "Вопросы"
-  field_meeting_answers: "Решения"
   field_meeting_participators: "Фактические участники"
   field_meeting_members: "Заявленные участники"
   field_member: "Участник"
@@ -60,6 +58,16 @@ ru:
         must_exist:
           "должны присутствовать"
         less_than_today:
-          "не может быть составлен задним числом"
+          "установлена ранее текущего дня"
         less_than_start_time:
-          "меньше, чем Время начала"
+          "должно быть позже, чем Время начала"
+  field_meeting_questions:
+    title: "Вопрос"
+  field_meeting_answers:
+    description: "Описание решения"
+    user: "Исполнитель"
+    start_date: "Начата"
+    due_date: "Дата выполнения"
+    meeting_question: "Рассмотренный вопрос"
+  error_messages_meeting_answers_must_exist: "Рассмотренные вопросы должны присутствовать"
+  error_messages_meeting_questions_must_exist: "Вопросы на рассмотрение должны присутствовать"

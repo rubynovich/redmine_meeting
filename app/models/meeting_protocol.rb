@@ -43,7 +43,7 @@ class MeetingProtocol < ActiveRecord::Base
 private
 
   def presence_of_meeting_answers
-    errors.add(:meeting_answers, :must_exist)
+    errors[:base] << ::I18n.t(:error_messages_meeting_answers_must_exist)
   end
 
   def presence_of_meeting_participators

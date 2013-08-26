@@ -9,5 +9,5 @@ class MeetingAnswer < ActiveRecord::Base
   has_one :status, through: :issue
   has_one :project, through: :issue
 
-  validates_presence_of :user_id, :description, :start_date, :due_date
+  validates_presence_of :user_id, :description, :start_date, :due_date, :meeting_question_id
 end
