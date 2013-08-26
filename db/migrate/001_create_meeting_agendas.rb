@@ -8,7 +8,6 @@ class CreateMeetingAgendas < ActiveRecord::Migration
       t.time :end_time
       t.integer :author_id
       t.datetime :created_on
-      t.datetime :updated_on
     end
     add_index :meeting_agendas, :author_id
   end

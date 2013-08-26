@@ -8,10 +8,10 @@ class MeetingProtocolsController < ApplicationController
     @limit = per_page_option
 
     @scope = model_class.joins(:meeting_agenda).
-      time_period(params[:time_period_created_on], :created_on).
+      time_period(params[:time_period_created_on], 'meeting_protocols.created_on').
       time_period(params[:time_period_meet_on], 'meeting_agendas.meet_on').
-      eql_field(params[:author_id], :author_id).
-      eql_field(params[:created_on], :created_on).
+      eql_field(params[:author_id], 'meeting_protocols.author_id').
+      eql_field(params[:created_on], 'meeting_protocols.created_on').
       eql_field(params[:meet_on], 'meeting_agendas.meet_on').
       like_field(params[:subject], 'meeting_agendas.subject').
       eql_project_id(params[:project_id]).
