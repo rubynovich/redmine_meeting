@@ -16,7 +16,7 @@ module TimePeriodScope
       end
 
       scope :time_period, lambda {|q, field|
-        today = Date.today.to_time(:utc)
+        today = Date.today
         if q.present?
           period_start, period_end = case q
                                      when "yesterday"
@@ -38,7 +38,7 @@ module TimePeriodScope
                                      when "any"
                                      end
           if field.present? && period_start.present?
-            conditions = ["#{field} BETWEEN ? AND ?", period_start , period_end]
+            conditions = ["DATE(#{field}) BETWEEN ? AND ?", period_start.to_date , period_end.to_date]
           end
 
           {:conditions => conditions}
