@@ -21,7 +21,7 @@ class MeetingMember < ActiveRecord::Base
 
   def resend_invite
     close_status_id = IssueStatus.find(Setting[:plugin_redmine_meeting][:issue_status]).id
-    if self.issue.present?
+    if self.issue.present? && !self.issue.closed?
       self.issue.update_attribute(:status_id, close_status_id)
       self.update_attribute(:issue_id, nil)
       self.send_invite
@@ -37,6 +37,7 @@ private
       start_time: self.meeting_agenda.start_time.strftime("%H:%M"),
       due_date: self.meeting_agenda.end_time.strftime("%H:%M"),
       author: self.meeting_agenda.author.name,
+      place: self.meeting_agenda.place,
       url: url_for(controller: 'meeting_agendas', action: 'show', id: self.meeting_agenda_id, only_path: false)
     }
   end
