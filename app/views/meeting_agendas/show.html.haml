@@ -1,15 +1,17 @@
 .contextual
   = link_to l(:button_add), {action: 'new'}, class: 'icon icon-add'
   = link_to l(:button_update), {action: 'edit', id: @object.id}, class: 'icon icon-edit'
-  = link_to l(:button_delete), {action: 'destroy', id: @object.id}, :confirm => l(:text_are_you_sure), :method => :delete, :class => 'icon icon-del'
-  - if @object.meeting_questions.all?{ |q| q.issue.present? }
-    = link_to l(:label_resend_invites), {action: 'resend_invites', id: @object.id}
+  = link_to l(:button_delete), {action: 'destroy', id: @object.id}, confirm: l(:text_are_you_sure), method: 'delete', class: 'icon icon-del'
+  - if @object.meet_on > Date.today
+    - if @object.meeting_members.all?{ |q| q.issue.present? }
+      = link_to l(:label_resend_invites), {action: 'resend_invites', id: @object.id}, class: 'icon icon-issue'
+    - else
+      = link_to l(:label_send_invites), {action: 'send_invites', id: @object.id}, class: 'icon icon-issue'
   - else
-    = link_to l(:label_send_invites), {action: 'send_invites', id: @object.id}
-  - if @object.meeting_protocol.present?
-    = link_to l(:label_meeting_protocol), {controller: 'meeting_protocols', action: 'show', id: @object.meeting_protocol.id}, class: 'icon icon-edit'
-  - else
-    = link_to l(:label_new_meeting_protocol), {controller: 'meeting_protocols', action: 'new', meeting_protocol: {meeting_agenda_id: @object.id}}, class: 'icon icon-add'
+    - if @object.meeting_protocol.present?
+      = link_to l(:label_meeting_protocol), {controller: 'meeting_protocols', action: 'show', id: @object.meeting_protocol.id}, class: 'icon icon-edit'
+    - else
+      = link_to l(:label_new_meeting_protocol), {controller: 'meeting_protocols', action: 'new', meeting_protocol: {meeting_agenda_id: @object.id}}, class: 'icon icon-add'
 
 %h2
   = link_to l(:label_meeting_agenda_plural), action: 'index'

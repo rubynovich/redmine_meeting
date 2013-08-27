@@ -7,13 +7,13 @@ class MeetingAgendasController < ApplicationController
   include ApplicationHelper
 
   def send_invites
-    @object.meeting_members.each(&:send_invite)
+    @object.meeting_members.each(&:send_invite) if @object.meet_on > Date.today
 
     redirect_to action: 'show', id: @object.id
   end
 
   def resend_invites
-    @object.meeting_members.each(&:resend_invite)
+    @object.meeting_members.each(&:resend_invite) if @object.meet_on > Date.today
 
     redirect_to action: 'show', id: @object.id
   end
