@@ -13,8 +13,8 @@ class MeetingProtocolsController < ApplicationController
       eql_field(params[:author_id], 'meeting_protocols.author_id').
       eql_field(params[:created_on], 'meeting_protocols.created_on').
       eql_field(params[:meet_on], 'meeting_agendas.meet_on').
+      eql_field(params[:project_id], 'issues.project_id').
       like_field(params[:subject], 'meeting_agendas.subject').
-      eql_project_id(params[:project_id]).
       where(nil)
 
     @count = @scope.count
