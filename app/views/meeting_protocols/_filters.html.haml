@@ -5,10 +5,12 @@
   %legend= l(:label_filter_plural)
   %form{:method => :get}
     - %w{meet_on created_on}.each do |type_date|
-      %br
-      %label=l(:"field_#{type_date}") + ":"
-      %input{:id => type_date, :name => type_date, :size => 10, :onchange => "this.form.submit(); return false;", :value => params[type_date]}
-      = calendar_for(type_date)
+      -#%br
+
+      .inline-block
+        %label=l(:"field_#{type_date}") + ":"
+        %input{:id => type_date, :name => type_date, :size => 10, :onchange => "this.form.submit(); return false;", :value => params[type_date]}
+        = calendar_for(type_date)
 
       -# time_periods_for_select.each do |key|
         = "/"
