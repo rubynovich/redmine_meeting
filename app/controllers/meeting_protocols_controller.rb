@@ -15,7 +15,7 @@ class MeetingProtocolsController < ApplicationController
       eql_field(params[:meet_on], 'meeting_agendas.meet_on').
       eql_project_id(params[:project_id]).
       like_field(params[:subject], 'meeting_agendas.subject').
-      where(nil)
+      uniq
 
     @count = @scope.count
 

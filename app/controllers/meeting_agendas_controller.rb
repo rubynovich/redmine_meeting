@@ -56,7 +56,7 @@ class MeetingAgendasController < ApplicationController
       eql_field(params[:meet_on], 'meeting_agendas.meet_on').
       like_field(params[:subject], 'meeting_agendas.subject').
       eql_field(params[:project_id], 'issues.project_id').
-      where(nil)
+      uniq
 
     @count = @scope.count
 
