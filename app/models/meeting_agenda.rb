@@ -42,6 +42,12 @@ class MeetingAgenda < ActiveRecord::Base
     end
   }
 
+  scope :eql_project_id, ->(q) {
+    if q.present?
+      joins(meeting_questions: :issue).where("issues.project_id = ?", q)
+    end
+  }
+
   def to_s
     self.subject
   end
