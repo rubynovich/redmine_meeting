@@ -59,7 +59,7 @@ private
   def create_issue
     settings = Setting[:plugin_redmine_meeting]
     Issue.create(
-      :status => IssueStatus.find(settings[:issue_status]),
+      :status => IssueStatus.default,
       :tracker => Tracker.find(settings[:issue_tracker]),
       :subject => issue_subject,
       :project => Project.find(settings[:project_id]),
