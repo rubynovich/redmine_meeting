@@ -6,6 +6,10 @@ resources :meeting_agendas do
     get 'autocomplete_for_issue'
     get 'autocomplete_for_place'
   end
+  member do
+    get 'send_invites'
+    get 'resend_invites'
+  end
 end
 resources :meeting_members do
   collection do

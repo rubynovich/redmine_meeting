@@ -1,10 +1,22 @@
 class MeetingAgendasController < ApplicationController
   unloadable
 
-  before_filter :find_object, only: [:edit, :show, :destroy, :update]
+  before_filter :find_object, only: [:edit, :show, :destroy, :update, :send_invites, :resend_invites]
   before_filter :new_object, only: [:new, :create]
 
   include ApplicationHelper
+
+  def send_invites
+    @object.meeting_members.each(&:send_invite)
+
+    redirect_to action: 'show', id: @object.id
+  end
+
+  def resend_invites
+    @object.meeting_members.each(&:resend_invite)
+
+    redirect_to action: 'show', id: @object.id
+  end
 
   def autocomplete_for_issue
     q = (params[:q] || params[:term]).to_s.strip
