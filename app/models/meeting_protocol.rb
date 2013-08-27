@@ -34,6 +34,12 @@ class MeetingProtocol < ActiveRecord::Base
     end
   }
 
+  scope :eql_project_id, ->(q) {
+    if q.present?
+      joins(meeting_answers: :issue).where("issues.project_id = ?", q)
+    end
+  }
+
 private
 
   def presence_of_meeting_answers

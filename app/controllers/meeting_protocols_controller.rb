@@ -7,13 +7,13 @@ class MeetingProtocolsController < ApplicationController
   def index
     @limit = per_page_option
 
-    @scope = model_class.joins(:meeting_agenda).joins(meeting_answers: :issue).
+    @scope = model_class.joins(:meeting_agenda).
       time_period(params[:time_period_created_on], 'meeting_protocols.created_on').
       time_period(params[:time_period_meet_on], 'meeting_agendas.meet_on').
       eql_field(params[:author_id], 'meeting_protocols.author_id').
       eql_field(params[:created_on], 'meeting_protocols.created_on').
       eql_field(params[:meet_on], 'meeting_agendas.meet_on').
-      eql_field(params[:project_id], 'issues.project_id').
+      eql_project_id(params[:project_id]).
       like_field(params[:subject], 'meeting_agendas.subject').
       where(nil)
 
