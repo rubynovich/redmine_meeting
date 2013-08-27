@@ -4,7 +4,7 @@
 %fieldset
   %legend= l(:label_filter_plural)
   %form{:method => :get}
-    - %w{meet_on created_on}.each do |type_date|
+    -# %w{meet_on created_on}.each do |type_date|
       %br
       %label=l(:"field_#{type_date}") + ":"
       %input{:id => type_date, :name => type_date, :size => 10, :onchange => "this.form.submit(); return false;", :value => params[type_date]}

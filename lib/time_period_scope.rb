@@ -38,7 +38,7 @@ module TimePeriodScope
                                      when "any"
                                      end
           if field.present? && period_start.present?
-            conditions = ["DATE(#{field}) BETWEEN ? AND ?", period_start.to_date , period_end.to_date]
+            conditions = ["#{field} BETWEEN ? AND ?", period_start , period_end]
           end
 
           {:conditions => conditions}
