@@ -47,7 +47,7 @@ class MeetingProtocolsController < ApplicationController
       redirect_to action: 'show', id: @object.id
 #      redirect_to :action => :show, :id => @object.id
     else
-      @members = @object.users
+      @members = User.order(:lastname, :firstname).find(session[:meeting_participator_ids])
       render action: 'new'
     end
   end
