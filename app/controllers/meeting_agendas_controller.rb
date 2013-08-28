@@ -53,6 +53,7 @@ class MeetingAgendasController < ApplicationController
   end
 
   def new
+    @object.priority = IssuePriority.default
     @users = []
     session[:meeting_member_ids] = []
   end
