@@ -14,19 +14,21 @@ class MeetingMember < ActiveRecord::Base
     self.user.try(:name) || ''
   end
 
-  def send_invite
+  def send_invite(url = nil)
+    @url = url
     self.update_attribute(:issue_id, create_issue.try(:id)) if self.issue.blank?
-  rescue
+  #rescue
   end
 
-  def resend_invite
+  def resend_invite(url = nil)
+    @url = url
     close_status_id = IssueStatus.find(Setting[:plugin_redmine_meeting][:issue_status]).id
     if self.issue.present? && !self.issue.closed?
       self.issue.update_attribute(:status_id, close_status_id)
       self.update_attribute(:issue_id, nil)
-      self.send_invite
+      self.send_invite(url)
     end
-  rescue
+  #rescue
   end
 
 private
@@ -38,7 +40,7 @@ private
       due_date: self.meeting_agenda.end_time.strftime("%H:%M"),
       author: self.meeting_agenda.author.name,
       place: self.meeting_agenda.place,
-      url: url_for(controller: 'meeting_agendas', action: 'show', id: self.meeting_agenda_id, only_path: false)
+      url: @url
     }
   end
 
@@ -58,7 +60,7 @@ private
 
   def create_issue
     settings = Setting[:plugin_redmine_meeting]
-    Issue.create(
+    Issue.create!(
       :status => IssueStatus.default,
       :tracker => Tracker.find(settings[:issue_tracker]),
       :subject => issue_subject,
