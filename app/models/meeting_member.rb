@@ -6,6 +6,7 @@ class MeetingMember < ActiveRecord::Base
   belongs_to :issue
   has_one :status, through: :issue
   has_one :meeting_participator
+  has_many :meeting_questions, through: :meeting_agenda
 
   validates_uniqueness_of :user_id, scope: :meeting_agenda_id
   validates_presence_of :user_id

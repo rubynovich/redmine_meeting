@@ -32,7 +32,9 @@ class MeetingMembersController < ApplicationController
 
   def destroy
     @users = if @object.present?
-      MeetingMember.where(model_sym_id => @object.id, user_id: params[:id]).try(:destroy_all)
+      user = User.find(params[:id])
+      reporters = @object.meeting_questions.map(&:user)
+      MeetingMember.where(model_sym_id => @object.id, user_id: user.id).try(:destroy_all) unless reporters.include?(user)
       @object.users
     else
       session[:meeting_member_ids] -= [ params[:id].to_i ]
