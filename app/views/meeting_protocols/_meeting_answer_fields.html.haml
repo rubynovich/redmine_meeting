@@ -7,7 +7,7 @@
   .splitcontentleft
     %p
       = f.label :reporter_id, t(:label_meeting_answer_reporter)
-      = f.collection_select :reporter_id, User.active.order(:lastname, :firstname), :id, :to_s, prompt: t(:prompt_please_select), include_blank: true
+      = f.collection_select :reporter_id, User.active.order(:lastname, :firstname), :id, :to_s, include_blank: t(:prompt_please_select)
   .splitcontentright
     %p
       = f.label :issue_id
