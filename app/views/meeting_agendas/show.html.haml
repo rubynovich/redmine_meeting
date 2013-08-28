@@ -56,12 +56,12 @@
       %th=l(:field_job_title)
       %th=l(:field_member)
       %th=l(:field_status)
-    - @object.users.each do |user|
+    - @object.meeting_members.each do |member|
       %tr.issue
-        %td=h user.company rescue ""
-        %td=h user.job_title rescue ""
-        %td=link_to_user(user)
-        %td=h user.status
+        %td=h member.user.company rescue ""
+        %td=h member.user.job_title rescue ""
+        %td=link_to_user(member.user)
+        %td=h member.issue.try(:status) || l(:label_meeting_member_was_not_invite)
 
   %br
   %h3=l(:label_meeting_question_plural)
