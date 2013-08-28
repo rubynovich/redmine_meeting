@@ -49,6 +49,12 @@ class MeetingAgenda < ActiveRecord::Base
     end
   }
 
+  scope :eql_date_field, ->(q, field) {
+    if q.present? && field.present?
+      where("DATE(#{field}) = ?", q)
+    end
+  }
+
   def to_s
     self.subject
   end

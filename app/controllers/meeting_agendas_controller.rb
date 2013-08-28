@@ -69,7 +69,7 @@ class MeetingAgendasController < ApplicationController
       time_period(params[:time_period_created_on], 'meeting_agendas.created_on').
       time_period(params[:time_period_meet_on], 'meeting_agendas.meet_on').
       eql_field(params[:author_id], 'meeting_agendas.author_id').
-      eql_field(params[:created_on], 'DATE(meeting_agendas.created_on)').
+      eql_date_field(params[:created_on], 'meeting_agendas.created_on').
       eql_field(params[:meet_on], 'meeting_agendas.meet_on').
       like_field(params[:subject], 'meeting_agendas.subject').
       eql_project_id(params[:project_id]).

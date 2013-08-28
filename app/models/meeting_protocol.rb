@@ -40,6 +40,12 @@ class MeetingProtocol < ActiveRecord::Base
     end
   }
 
+  scope :eql_date_field, ->(q, field) {
+    if q.present? && field.present?
+      where("DATE(#{field}) = ?", q)
+    end
+  }
+
 private
 
   def presence_of_meeting_answers
