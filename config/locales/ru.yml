@@ -31,7 +31,7 @@ ru:
   label_meeting_member_present: "Присутствовал"
   label_meeting_member_extra: "Не был заявлен"
   label_meeting_invite_close_status: "Статус закрытия приглашения"
-  label_resend_invites: "Перепослать приглашения участникам"
+  label_resend_invites: "Повторно отправить приглашения участникам"
   label_send_invites: "Отправить приглашения участникам"
   label_meeting_member_was_not_invite: "Не отправлено"
 
