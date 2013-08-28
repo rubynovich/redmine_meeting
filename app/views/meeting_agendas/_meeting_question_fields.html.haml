@@ -7,7 +7,7 @@
   .splitcontentleft
     %p
       = f.label :user_id, t(:label_meeting_question_user)
-      = f.collection_select :user_id, User.active.order(:lastname, :firstname), :id, :name, prompt: t(:prompt_please_select), include_blank: true
+      = f.collection_select :user_id, User.active.order(:lastname, :firstname), :id, :name, prompt: t(:prompt_please_select), include_blank: t(:prompt_please_select)
   .splitcontentright
     %p
       = f.label :issue_id
