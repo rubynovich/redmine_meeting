@@ -39,19 +39,13 @@ class MeetingAgenda < ActiveRecord::Base
 
   scope :eql_field, ->(q, field) {
     if q.present? && field.present?
-      where(field => q)
+      where("#{field} = ?", q)
     end
   }
 
   scope :eql_project_id, ->(q) {
     if q.present?
       joins(meeting_questions: :issue).where("issues.project_id = ?", q)
-    end
-  }
-
-  scope :eql_date_field, ->(q, field) {
-    if q.present? && field.present?
-      where("DATE(#{field}) = ?", q)
     end
   }
 
