@@ -61,7 +61,7 @@
         %td=h member.user.company rescue ""
         %td=h member.user.job_title rescue ""
         %td=link_to_user(member.user)
-        %td=h member.issue.try(:status) || l(:label_meeting_member_was_not_invite)
+        %td=link_to(member.issue.try(:status), controller: 'issues', action: 'show', id: member.issue_id) rescue h l(:label_meeting_member_was_not_invite)
 
   %br
   %h3=l(:label_meeting_question_plural)
