@@ -7,7 +7,7 @@
   .splitcontentleft
     %p
       = f.label :reporter_id, t(:label_meeting_answer_reporter)
-      = f.collection_select :reporter_id, User.active.all, :id, :to_s, prompt: t(:prompt_please_select)
+      = f.collection_select :reporter_id, User.active.order(:lastname, :firstname), :id, :to_s, prompt: t(:prompt_please_select), include_blank: true
   .splitcontentright
     %p
       = f.label :issue_id
@@ -19,7 +19,7 @@
     = f.text_area :description, cols: 60, rows: 15, class: 'wiki-edit'
   %p
     = f.label :user_id, t(:label_meeting_answer_user)
-    = f.collection_select :user_id, User.active.all, :id, :to_s, prompt: t(:prompt_please_select)
+    = f.collection_select :user_id, User.active.order(:lastname, :firstname), :id, :to_s, prompt: t(:prompt_please_select)
   .splitcontentleft
     %p
       = f.label :start_date

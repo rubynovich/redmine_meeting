@@ -2,7 +2,7 @@ class MeetingAgenda < ActiveRecord::Base
   unloadable
 
   has_one :meeting_protocol
-  has_many :meeting_questions, dependent: :delete_all, order: :title
+  has_many :meeting_questions, dependent: :delete_all, order: :id
   has_many :issues, through: :meeting_questions, order: :id
   has_many :projects, through: :issues, order: :title
   has_many :statuses, through: :issues
