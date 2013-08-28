@@ -39,14 +39,19 @@
       %th= l(:label_meeting_agenda_end_time)+":"
       %td= format_time(@object.end_time, false)
     %tr
+      %th= l(:field_priority)+":"
+      %td= h(@object.priority)
+      %th= l(:field_author)+":"
+      %td= link_to_user @object.author
+    %tr
       %th= l(:label_meeting_protocol)+":"
       %td
         - if @object.meeting_protocol.present?
           = link_to "#{t(:label_meeting_protocol)} ##{@object.meeting_protocol.id}", controller: 'meeting_protocols', action: 'show', id: @object.meeting_protocol.id
         - else
           = link_to t(:button_add), {controller: 'meeting_protocols', action: 'new', meeting_protocol: {meeting_agenda_id: @object.id}}, {class: 'icon icon-add'}
-      %th= l(:field_author)+":"
-      %td= link_to_user @object.author
+
+
   %hr
 
   %h3= l(:field_meeting_members)

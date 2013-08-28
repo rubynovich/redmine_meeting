@@ -19,6 +19,9 @@
       = f.label :meet_on
       = f.text_field :meet_on, size: 10, class: "calendar_for"
       = calendar_for('meeting_agenda_meet_on')
+    %p
+      = f.label :priority_id, l(:field_priority)
+      = f.collection_select :priority_id, IssuePriority.all, :id, :name, :prompt => t(:prompt_please_select)
   .splitcontentright
     %p
       = f.label :start_time, l(:label_meeting_agenda_start_time)

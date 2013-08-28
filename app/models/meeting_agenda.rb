@@ -9,6 +9,7 @@ class MeetingAgenda < ActiveRecord::Base
   has_many :meeting_members, dependent: :delete_all
   has_many :users, through: :meeting_members, order: [:lastname, :firstname]
   belongs_to :author, class_name: 'User', foreign_key: 'author_id'
+  belongs_to :priority, class_name: 'IssuePriority', foreign_key: 'priority_id'
 
   accepts_nested_attributes_for :meeting_questions, allow_destroy: true
   accepts_nested_attributes_for :meeting_members, allow_destroy: true
@@ -17,10 +18,10 @@ class MeetingAgenda < ActiveRecord::Base
 
   attr_accessible :meeting_members_attributes
   attr_accessible :meeting_questions_attributes
-  attr_accessible :subject, :place, :meet_on, :start_time, :end_time
+  attr_accessible :subject, :place, :meet_on, :start_time, :end_time, :priority_id
 
   validates_uniqueness_of :subject, scope: :meet_on
-  validates_presence_of :subject, :place, :meet_on, :start_time, :end_time
+  validates_presence_of :subject, :place, :meet_on, :start_time, :end_time, :priority_id
   validate :end_time_less_than_start_time, if: -> {self.start_time && self.end_time && (self.end_time <= self.start_time)}
   validate :meet_on_less_than_today, if: -> {self.meet_on && (self.meet_on < Date.today)}
   validate :presence_of_meeting_questions, if: -> {self.meeting_questions.blank?}

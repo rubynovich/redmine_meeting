@@ -16,8 +16,8 @@ class MeetingMember < ActiveRecord::Base
 
   def send_invite(url = nil)
     @url = url
-    self.update_attribute(:issue_id, create_issue.try(:id)) if self.issue.blank?
-  #rescue
+    self.update_attribute(:issue_id, create_issue.try(:id))
+  rescue
   end
 
   def resend_invite(url = nil)
@@ -28,7 +28,7 @@ class MeetingMember < ActiveRecord::Base
       self.update_attribute(:issue_id, nil)
       self.send_invite(url)
     end
-  #rescue
+  rescue
   end
 
 private
@@ -61,15 +61,15 @@ private
   def create_issue
     settings = Setting[:plugin_redmine_meeting]
     Issue.create!(
-      :status => IssueStatus.default,
-      :tracker => Tracker.find(settings[:issue_tracker]),
-      :subject => issue_subject,
-      :project => Project.find(settings[:project_id]),
-      :description => issue_description,
-      :author => User.current,
-      :start_date => Date.today,
-      :due_date => self.meeting_agenda.meet_on,
-      :priority => IssuePriority.find(settings[:issue_priority]),
-      :assigned_to => self.user)
+      status: IssueStatus.default,
+      tracker: Tracker.find(settings[:issue_tracker]),
+      subject: issue_subject,
+      project: Project.find(settings[:project_id]),
+      description: issue_description,
+      author: User.current,
+      start_date: Date.today,
+      due_date: self.meeting_agenda.meet_on,
+      priority: self.meeting_agenda.priority || IssuePriority.default,
+      assigned_to: self.user)
   end
 end
