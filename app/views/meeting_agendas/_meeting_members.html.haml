@@ -7,7 +7,7 @@
   #meeting_members img.gravatar {margin: 0 4px 2px 0;}
 
 %ul
-  - reporters = @object.meeting_questions.map(&:user)
+  - reporters = @object.meeting_questions.map(&:user) rescue []
   - @users.each do |user|
     %li{class: "user-#{user.id}"}
       = avatar(user, :size => "16")

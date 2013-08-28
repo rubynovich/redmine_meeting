@@ -34,6 +34,7 @@ ru:
   label_resend_invites: "Повторно отправить приглашения участникам"
   label_send_invites: "Отправить приглашения участникам"
   label_meeting_member_was_not_invite: "Не отправлено"
+  label_new_meeting_member: "Добавление нового участника"
 
   label_period: Период
   label_period_any: любой
