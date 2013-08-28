@@ -38,7 +38,7 @@ private
       subject: self.meeting_agenda.subject,
       meet_on: self.meeting_agenda.meet_on.strftime("%d.%m.%Y"),
       start_time: self.meeting_agenda.start_time.strftime("%H:%M"),
-      due_date: self.meeting_agenda.end_time.strftime("%H:%M"),
+      end_time: self.meeting_agenda.end_time.strftime("%H:%M"),
       author: self.meeting_agenda.author.name,
       place: self.meeting_agenda.place,
       url: @url
