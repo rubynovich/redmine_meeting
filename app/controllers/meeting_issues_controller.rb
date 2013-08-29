@@ -13,6 +13,7 @@ class MeetingIssuesController < ApplicationController
   end
 
   def create
+    @issue.author = User.current
     if @issue.save
       @object.update_attribute(:issue_id, @issue.id)
     else
