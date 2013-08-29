@@ -1,3 +1,9 @@
+- heads_for_wiki_formatter
+:css
+  .meeting_comments_history a.delete {opacity: 0.4; vertical-align: middle;}
+  .meeting_comments_history a.delete:hover {opacity: 1;}
+
+
 .contextual
   -#= link_to l(:button_add), {action: 'new'}, class: 'icon icon-add'
   = link_to l(:button_update), {action: 'edit', id: @object.id}, class: 'icon icon-edit'
@@ -99,3 +105,5 @@
         %div{style: 'margin-left: 40px;'}
           =textilizable(answer, :description)
         %br
+      %h4= l(:label_meeting_comment_plural)+":"
+      = render partial: 'meeting_comments/history', locals: {answer: answer}

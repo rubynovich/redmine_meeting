@@ -1,0 +1,1 @@
+$("#meeting_comment_history_for_#{@object.meeting_answer_id}").html('#{ escape_javascript(render partial: 'meeting_comments/history', locals: {answer: @object.meeting_answer}) }');

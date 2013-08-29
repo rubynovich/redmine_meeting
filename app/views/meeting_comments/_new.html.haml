@@ -1,0 +1,7 @@
+%h3.title= l(:label_new_meeting_comment)
+
+= form_for(@object, url: {controller: 'meeting_comments', action: 'create'}, method: :post, remote: true) do |f|
+  = render partial: 'meeting_comments/form', locals: {f: f}
+  %p.buttons
+    = f.submit l(:button_add), :name => nil, :onclick => "hideModal(this);"
+    = f.submit l(:button_cancel), :name => nil, :onclick => "hideModal(this);", :type => 'button'

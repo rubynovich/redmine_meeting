@@ -1,0 +1,3 @@
+$('#ajax-modal').html('#{ escape_javascript(render partial: 'meeting_comments/new', locals: {answer: @object.meeting_answer}) }');
+showModal('ajax-modal', '400px');
+$('#ajax-modal').addClass('new-comment');

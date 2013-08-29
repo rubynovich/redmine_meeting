@@ -9,6 +9,7 @@ class MeetingAnswer < ActiveRecord::Base
   has_one :status, through: :issue
   has_one :project, through: :issue
   has_many :meeting_answers, through: :meeting_protocol
+  has_many :meeting_comments, order: ["created_on DESC"]
 
   validates_presence_of :user_id, :description, :start_date, :due_date, :meeting_question_id
 
