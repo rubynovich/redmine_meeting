@@ -81,14 +81,20 @@
           %th=t(:label_meeting_question)+":"
           %td{colspan: 3}=h answer.meeting_question
         %tr
-          %th=t(:label_meeting_answer_user)+":"
-          %td=link_to_user answer.user
           %th=t(:label_meeting_question_user)+":"
           %td
             - if answer.reporter.present?
               = link_to_user answer.reporter
             - elsif answer.meeting_question.present?
               = link_to_user answer.meeting_question.user
+          %th=t(:field_start_date)+":"
+          %td= format_date(answer.start_date)
+        %tr
+          %th=t(:label_meeting_answer_user)+":"
+          %td=link_to_user answer.user
+          %th=t(:field_due_date)+":"
+          %td= format_date(answer.due_date)
+
       = render partial: 'meeting_issues/show', locals: {answer: answer}
       %p
         %strong=t(:label_meeting_answer)+":"
