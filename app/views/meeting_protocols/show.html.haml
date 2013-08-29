@@ -94,13 +94,13 @@
           %td=link_to_user answer.user
           %th=t(:field_due_date)+":"
           %td= format_date(answer.due_date)
-
-      = render partial: 'meeting_issues/show', locals: {answer: answer}
       %p
         %strong=t(:label_meeting_answer)+":"
         %br
         %div{style: 'margin-left: 40px;'}
           =textilizable(answer, :description)
         %br
+      = render partial: 'meeting_issues/show', locals: {answer: answer}
+
       %h4= l(:label_meeting_comment_plural)+":"
       = render partial: 'meeting_comments/history', locals: {answer: answer}
