@@ -33,7 +33,7 @@
             %td{align: 'left'}= link_to h(item.meeting_agenda.subject), action: 'show', id: item.id rescue ''
             %td{align: 'center'}= link_to_user item.author
             %td{align: 'center'}
-              - if item.meeting_answer.all?{ |answer| answer.issue.present? }
+              - if item.meeting_answers.all?{ |answer| answer.issue.present? }
                 - if item.issues.all?{ |issue| issue.is_closed? }
                   = t(:label_meeting_project_is_done)
                 - else
