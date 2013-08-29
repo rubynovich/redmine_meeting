@@ -43,6 +43,9 @@ ru:
   button_add_comment: "Добавить комментарий"
   label_new_meeting_issue: "Создать задачу"
   label_meeting_issue_new: "Создание задачи"
+  label_meeting_project_not_completed: "Решения не исполнены"
+  label_meeting_project_is_done: "Все решения исполнены"
+  label_meeting_project_is_not_full: "Не передан на исполнение"
 
   label_period: Период
   label_period_any: любой
