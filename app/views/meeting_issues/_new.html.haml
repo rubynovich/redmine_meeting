@@ -1,5 +1,7 @@
 %h3.title= l(:label_meeting_issue_new)
 
+= error_messages_for @issue
+
 = render partial: 'meeting_issues/attributes', locals: {issue: @issue}
 
 = labelled_form_for(@issue, url: {controller: 'meeting_issues', action: 'create', meeting_answer_id: @object.id}, method: :post, remote: true) do |f|

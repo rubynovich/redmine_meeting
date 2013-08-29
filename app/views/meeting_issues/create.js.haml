@@ -1,0 +1,1 @@
+$("#meeting_issue_for_#{@object.id}").html('#{ escape_javascript(render partial: 'meeting_comments/show', locals: {answer: @object}) }');
