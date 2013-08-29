@@ -1,0 +1,15 @@
+.issue
+  %table.attributes
+    %tr
+      %th= l(:label_tracker)+":"
+      %td= h issue.tracker
+      %th= l(:field_start_date)+":"
+      %td= format_date(issue.start_date)
+    %tr
+      %th= l(:field_assigned_to)+":"
+      %td= link_to_user issue.assigned_to
+      %th= l(:field_due_date)+":"
+      %td= format_date(issue.due_date)
+    %tr
+      %th= l(:field_description)+":"
+      %td{colspan: 3}= textilizable(issue, :description)

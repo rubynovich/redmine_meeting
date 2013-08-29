@@ -1,0 +1,9 @@
+%h3.title= l(:label_meeting_issue_new)
+
+= render partial: 'meeting_issues/attributes', locals: {issue: @issue}
+
+= labelled_form_for(@issue, url: {controller: 'meeting_issues', action: 'create', meeting_answer_id: @object.id}, method: :post, remote: true) do |f|
+  = render partial: 'meeting_issues/form', locals: {f: f}
+  %p.buttons
+    = f.submit l(:button_add), :name => nil, :onclick => "hideModal(this);"
+    = f.submit l(:button_cancel), :name => nil, :onclick => "hideModal(this);", :type => 'button'

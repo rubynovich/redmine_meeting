@@ -23,4 +23,5 @@ resources :meeting_participators do
 end
 
 resources :meeting_comments
+resources :meeting_issues
 resources :meeting_protocols

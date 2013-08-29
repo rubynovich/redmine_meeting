@@ -1,0 +1,14 @@
+%div{id: "meeting_issue_for_#{answer.id}"}
+  - if answer.issue.present?
+    %p
+      %table.list.issues
+        %tr.issue
+          %td.subject=link_to_issue(answer.issue, :project => false)
+          %td=link_to_user(answer.issue.assigned_to)
+          %td=format_date(answer.issue.start_date)
+          %td=format_date(answer.issue.due_date)
+          %td=h answer.status
+          %td=progress_bar(answer.issue.done_ratio, :width => '80px')
+  - else
+    %p
+      = link_to l(:label_new_meeting_issue), {controller: 'meeting_issues', action: 'new', meeting_answer_id: answer.id}, remote: true, class: 'icon icon-add'

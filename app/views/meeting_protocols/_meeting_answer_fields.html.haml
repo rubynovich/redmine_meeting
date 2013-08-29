@@ -4,15 +4,9 @@
   %p
     = f.label :meeting_question_id, t(:label_meeting_question)
     = f.collection_select :meeting_question_id, @object.meeting_agenda.meeting_questions, :id, :to_s, prompt: t(:prompt_please_select)
-  .splitcontentleft
-    %p
-      = f.label :reporter_id, t(:label_meeting_answer_reporter)
-      = f.collection_select :reporter_id, User.active.order(:lastname, :firstname), :id, :to_s, include_blank: t(:prompt_please_select)
-  .splitcontentright
-    %p
-      = f.label :issue_id
-      = f.text_field :issue_id, size: 10, class: "autocomplete_for_issue"
-  %div{:style=>"clear:both"}
+  %p
+    = f.label :reporter_id, t(:label_meeting_answer_reporter)
+    = f.collection_select :reporter_id, User.active.order(:lastname, :firstname), :id, :to_s, include_blank: t(:prompt_please_select)
 
   %p
     = f.label :description, t(:label_meeting_answer_description)
@@ -22,9 +16,12 @@
     = f.collection_select :user_id, User.active.order(:lastname, :firstname), :id, :to_s, prompt: t(:prompt_please_select)
   .splitcontentleft
     %p
+      = f.label :issue_id
+      = f.text_field :issue_id, size: 10, class: "autocomplete_for_issue"
+  .splitcontentright
+    %p
       = f.label :start_date
       = f.text_field :start_date, size: 10, class: 'datepickme'
-  .splitcontentright
     %p
       = f.label :due_date
       = f.text_field :due_date, size: 10, class: 'datepickme'

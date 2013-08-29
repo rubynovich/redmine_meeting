@@ -36,10 +36,13 @@ ru:
   label_meeting_member_was_not_invite: "Не отправлено"
   label_new_meeting_member: "Добавление участника"
   label_new_meeting_participator: "Добавление фактического участника"
-  label_new_meeting_comment: "Добавление комментария к решению"
+  label_new_meeting_comment: "Добавить комментарий к решению"
+  label_meeting_comment_new: "Добавление комментария к решению"
   label_meeting_comment: "Комментарий к решению"
   label_meeting_comment_plural: "Комментарии к решению"
   button_add_comment: "Добавить комментарий"
+  label_new_meeting_issue: "Создать задачу"
+  label_meeting_issue_new: "Создание задачи"
 
   label_period: Период
   label_period_any: любой

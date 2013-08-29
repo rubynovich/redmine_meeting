@@ -1,4 +1,4 @@
-%h3.title= l(:label_new_meeting_comment)
+%h3.title= l(:label_meeting_comment_new)
 
 = form_for(@object, url: {controller: 'meeting_comments', action: 'create'}, method: :post, remote: true) do |f|
   = render partial: 'meeting_comments/form', locals: {f: f}

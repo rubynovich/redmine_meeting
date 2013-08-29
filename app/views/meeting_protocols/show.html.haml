@@ -89,16 +89,7 @@
               = link_to_user answer.reporter
             - elsif answer.meeting_question.present?
               = link_to_user answer.meeting_question.user
-      - if answer.issue.present?
-        %p
-          %table.list.issues
-            %tr.issue
-              %td.subject=link_to_issue(answer.issue, :project => false)
-              %td=link_to_user(answer.issue.assigned_to)
-              %td=format_date(answer.issue.start_date)
-              %td=format_date(answer.issue.due_date)
-              %td=answer.status
-              %td=progress_bar(answer.issue.done_ratio, :width => '80px')
+      = render partial: 'meeting_issues/show', locals: {answer: answer}
       %p
         %strong=t(:label_meeting_answer)+":"
         %br
