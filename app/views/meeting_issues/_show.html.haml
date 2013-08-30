@@ -9,6 +9,7 @@
           %td=format_date(answer.issue.due_date)
           %td=h answer.status
           %td=progress_bar(answer.issue.done_ratio, :width => '80px')
+          %td=link_to l(:button_dettach), {controller: 'meeting_issues', action: 'destroy', id: answer.id}, remote: true, class: 'icon icon-add'
   - else
     %p
       = link_to l(:label_new_meeting_issue), {controller: 'meeting_issues', action: 'new', meeting_answer_id: answer.id}, remote: true, class: 'icon icon-add'

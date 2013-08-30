@@ -72,7 +72,7 @@ private
   end
 
   def presence_of_meeting_members
-    if self.meeting_questions_attributes.blank? || self.meeting_questions_attributes.all?{ |h| h[:user_id].blank? }
+    if self.meeting_questions.blank? || self.meeting_questions.all?{ |q| q.user.blank? }
       errors.add(:meeting_members, :must_exist)
     end
   end

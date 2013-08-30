@@ -46,6 +46,7 @@ ru:
   label_meeting_project_not_completed: "Решения не исполнены"
   label_meeting_project_is_done: "Все решения исполнены"
   label_meeting_project_is_not_full: "Не передан на исполнение"
+  button_dettach: "Открепить"
 
   label_period: Период
   label_period_any: любой

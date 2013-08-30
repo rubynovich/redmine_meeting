@@ -1,7 +1,7 @@
 class MeetingIssuesController < ApplicationController
   unloadable
 
-  before_filter :find_object, only: [:new, :create, :destroy]
+  before_filter :find_object, only: [:new, :create]
   before_filter :new_issue, only: [:new, :create]
 
   def new
@@ -16,13 +16,16 @@ class MeetingIssuesController < ApplicationController
     @issue.author = User.current
     if @issue.save
       @object.update_attribute(:issue_id, @issue.id)
+      redirect_to controller: 'meeting_protocols', action: 'show', id: @object.meeting_protocol_id
     else
       render action: :new
     end
   end
 
   def destroy
+    @object = MeetingAnswer.find(params[:id])
     @object.update_attribute(:issue_id, nil)
+    redirect_to controller: 'meeting_protocols', action: 'show', id: @object.meeting_protocol_id
   end
 
 private
