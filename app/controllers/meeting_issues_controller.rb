@@ -16,12 +16,9 @@ class MeetingIssuesController < ApplicationController
     @issue.author = User.current
     @issue.description += "\n\n" +
       t(:message_description_protocol_information, url: url_for(controller: 'meeting_protocols', action: 'show', id: @object.meeting_protocol_id))
+    @issue.parent_issue_id = params[:issue][:parent_issue_id]
     if @issue.save
       @object.update_attribute(:issue_id, @issue.id)
-      if params[:issue][:parent_issue_id].present?
-        @issue.parent_issue_id = params[:issue][:parent_issue_id]
-        @issue.save
-      end
     else
       render action: :new
     end
