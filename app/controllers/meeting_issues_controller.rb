@@ -50,6 +50,7 @@ private
 
   def key_words
     {
+      id: @object.meeting_protocol_id,
       subject: @object.meeting_agenda.subject,
       meet_on: format_date(@object.meeting_agenda.meet_on),
       start_date: format_date(@object.start_date),
