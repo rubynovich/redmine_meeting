@@ -104,3 +104,5 @@
 
       %h4= l(:label_meeting_comment_plural)+":"
       = render partial: 'meeting_comments/history', locals: {answer: answer}
+
+= link_to_attachments @object, thumbnails: true

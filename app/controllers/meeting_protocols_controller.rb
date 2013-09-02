@@ -39,13 +39,12 @@ class MeetingProtocolsController < ApplicationController
   end
 
   def create
-#    @object.save_attachments(params[:attachments])
+    @object.save_attachments(params[:attachments] || (params[:issue] && params[:issue][:uploads]))
     @object.meeting_participators_attributes = session[:meeting_participator_ids].map{ |user_id| {user_id: user_id} }
     if @object.save
       flash[:notice] = l(:notice_successful_create)
-#      render_attachment_warning_if_needed(@object)
+      render_attachment_warning_if_needed(@object)
       redirect_to action: 'show', id: @object.id
-#      redirect_to :action => :show, :id => @object.id
     else
       @members = User.order(:lastname, :firstname).find(session[:meeting_participator_ids])
       render action: 'new'
@@ -53,10 +52,10 @@ class MeetingProtocolsController < ApplicationController
   end
 
   def update
-#    @object.save_attachments(params[:attachments])
+    @object.save_attachments(params[:attachments] || (params[:issue] && params[:issue][:uploads]))
     if @object.update_attributes(params[model_sym])
       flash[:notice] = l(:notice_successful_update)
-#      render_attachment_warning_if_needed(@object)
+      render_attachment_warning_if_needed(@object)
       redirect_to action: 'show', id: @object.id
     else
       @members = @object.users
