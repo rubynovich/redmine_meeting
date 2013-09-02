@@ -10,10 +10,10 @@ class MeetingCommentsController < ApplicationController
     end
   end
 
-  def destroy
-    @answer = @object.meeting_answer
-    @object.destroy
-  end
+#  def destroy
+#    @answer = @object.meeting_answer
+#    @object.destroy
+#  end
 
 private
 

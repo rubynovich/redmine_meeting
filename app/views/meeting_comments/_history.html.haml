@@ -5,7 +5,7 @@
       %p
         = link_to_user comment.author
         = "(#{format_time(comment.created_on)})"
-        - if comment.author == User.current
+        -#FIXME if comment.author == User.current
           - url = {controller: 'meeting_comments', action: 'destroy', id: comment.id}
           = link_to(image_tag('delete.png'), url, remote: true, method: 'delete', class: "delete")
   = link_to l(:button_add_comment), {controller: 'meeting_comments', action: 'new', meeting_comment: {meeting_answer_id: answer.id}}, remote: true, class: 'icon icon-add'
