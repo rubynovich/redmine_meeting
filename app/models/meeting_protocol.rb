@@ -1,7 +1,7 @@
 class MeetingProtocol < ActiveRecord::Base
   unloadable
 
-  acts_as_attachable
+  acts_as_attachable :after_add => :attachment_added, :after_remove => :attachment_removed
 
   belongs_to :author, class_name: 'User', foreign_key: 'author_id'
   belongs_to :meeting_agenda
