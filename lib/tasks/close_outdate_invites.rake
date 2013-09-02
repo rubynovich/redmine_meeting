@@ -12,7 +12,7 @@ namespace :redmine do
       joins(:status).
       where("meeting_agendas.meet_on < ?", Date.today).
       where("issue_statuses.is_closed = ?", false).each do |member|
-        p member.issue.update_attribute(status_id, Setting[:plugin_redmine_meeting][:issue_status])
+        p member.issue.update_attribute(:status_id, Setting[:plugin_redmine_meeting][:issue_status])
       end
   end
 end
