@@ -1,6 +1,9 @@
 class MeetingProtocolsController < ApplicationController
   unloadable
 
+  helper :attachments
+  include AttachmentsHelper
+
   before_filter :find_object, only: [:edit, :show, :destroy, :update]
   before_filter :new_object, only: [:new, :create]
 
