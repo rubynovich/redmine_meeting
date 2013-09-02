@@ -16,6 +16,7 @@
   %fieldset
     %legend
       = l(:label_attachment_plural)
+    = link_to_attachments @object if @object.attachments.any?
     %p= render partial: 'attachments/form', locals: {container: @object}
 
 
