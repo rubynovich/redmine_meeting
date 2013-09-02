@@ -56,7 +56,7 @@
 
   %hr
 
-  %h3= l(:field_meeting_members)
+  %h3= l(:field_meeting_members)+":"
   %table.list.issues
     %tr
       %th=l(:field_company)
@@ -71,26 +71,34 @@
         %td=link_to(member.issue.try(:status), controller: 'issues', action: 'show', id: member.issue_id) rescue h l(:label_meeting_member_was_not_invite)
 
   %br
-  %h3=l(:label_meeting_question_plural)
-  %table.list.issues
-    %tr
-      %th=l(:field_title)
-      %th=l(:field_issue)
-      %th=l(:label_meeting_question_user)
-      %th=l(:field_status)
-      %th=l(:field_done_ratio)
-    - @object.meeting_questions.each do |question|
-      %tr.issue
-        %td.subject=h question.title
-        %td.subject
-          - if question.issue.present?
-            = link_to_issue(question.issue, tracker: false)
-        %td
-          - if question.user.present?
-            = link_to_user question.user
-        %td
-          - if question.status.present?
-            = h question.status
-        %td{width: '80px'}
-          - if question.issue.present?
-            =progress_bar(question.issue.done_ratio, width: '80px')
+
+  %h3=l(:label_meeting_question_plural)+":"
+  - @object.meeting_questions.group_by(&:project).sort_by{ |project, questions| project.to_s }.each do |project, questions|
+    %h4{align: 'center'}
+      - if project.present?
+        = link_to_project project
+      - else
+        = t(:label_without_project)
+
+    %table.list.issues
+      %tr
+        %th=l(:field_title)
+        %th=l(:field_issue)
+        %th=l(:label_meeting_question_user)
+        %th=l(:field_status)
+        %th=l(:field_done_ratio)
+      - questions.each do |question|
+        %tr.issue
+          %td.subject=h question.title
+          %td.subject
+            - if question.issue.present?
+              = link_to_issue(question.issue, tracker: false)
+          %td
+            - if question.user.present?
+              = link_to_user question.user
+          %td
+            - if question.status.present?
+              = h question.status
+          %td{width: '80px'}
+            - if question.issue.present?
+              =progress_bar(question.issue.done_ratio, width: '80px')
