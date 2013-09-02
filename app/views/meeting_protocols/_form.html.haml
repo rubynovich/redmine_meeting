@@ -13,6 +13,12 @@
     = f.fields_for :meeting_answers
     = f.link_to_add l(:button_add), :meeting_answers, class: 'icon icon-add'
 
+  %fieldset
+    %legend
+      = l(:label_attachment_plural)
+    %p= render partial: 'attachments/form', locals: {container: @object}
+
+
 
   :javascript
     $(function() {

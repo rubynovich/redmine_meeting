@@ -1,6 +1,8 @@
 class MeetingProtocol < ActiveRecord::Base
   unloadable
 
+  acts_as_attachable
+
   belongs_to :author, class_name: 'User', foreign_key: 'author_id'
   belongs_to :meeting_agenda
   has_many :meeting_answers, dependent: :delete_all, order: [:meeting_question_id]

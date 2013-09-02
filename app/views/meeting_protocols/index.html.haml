@@ -34,7 +34,7 @@
             %td{align: 'center'}= link_to_user item.author
             %td{align: 'center'}
               - if item.meeting_answers.all?{ |answer| answer.issue.present? }
-                - if item.issues.all?{ |issue| issue.is_closed? }
+                - if item.issues.all?{ |issue| issue.closed? }
                   = t(:label_meeting_project_is_done)
                 - else
                   = t(:label_meeting_project_not_completed)

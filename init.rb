@@ -29,7 +29,7 @@ Redmine::Plugin.register :redmine_meeting do
     {controller: 'meeting_agendas', action: 'index'},
     caption: :label_meeting_agenda_plural,
     param: 'project_id',
-    if: -> {
+    if: Proc.new{
       User.current.allowed_to?({controller: 'meeting_agendas', action: 'index'}, nil, {global: true})
     }
 
@@ -37,7 +37,7 @@ Redmine::Plugin.register :redmine_meeting do
     {controller: 'meeting_protocols', action: 'index'},
     caption: :label_meeting_protocol_plural,
     param: 'project_id',
-    if: -> {
+    if: Proc.new{
       User.current.allowed_to?({controller: 'meeting_protocols', action: 'index'}, nil, {global: true})
     }
 end
