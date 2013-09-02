@@ -77,6 +77,7 @@ private
 
   def update_issue(issue)
     issue.init_journal(User.current, issue_note)
+    issue.status = IssueStatus.default
     issue
   end
 end
