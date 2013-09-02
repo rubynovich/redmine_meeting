@@ -62,12 +62,14 @@
       %th=l(:field_company)
       %th=l(:field_job_title)
       %th=l(:field_member)
+      %th=l(:field_issue)
       %th=l(:field_status)
     - @object.meeting_members.each do |member|
       %tr.issue
         %td=h member.user.company rescue ""
         %td=h member.user.job_title rescue ""
         %td=link_to_user(member.user)
+        %td=link_to_issue(member.issue, subject: false, tracker: false, project: false) if member.issue.present?
         %td=link_to(member.issue.try(:status), controller: 'issues', action: 'show', id: member.issue_id) rescue h l(:label_meeting_member_was_not_invite)
 
   %br
@@ -85,6 +87,7 @@
         %th=l(:field_title)
         %th=l(:field_issue)
         %th=l(:label_meeting_question_user)
+        %th=l(:field_issue)
         %th=l(:field_status)
         %th=l(:field_done_ratio)
       - questions.each do |question|
