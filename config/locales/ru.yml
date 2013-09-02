@@ -50,6 +50,9 @@ ru:
   button_dettach: "Открепить"
   message_description_protocol_information: 'Задача поставлена на основании решения "протокола":%{url}'
   label_meeting_issue_update_note: "Текст заметки при обновлении задачи"
+  label_meeting_issue_type_statuses:
+    new: "Создана"
+    update: "Обновлена"
 
   label_period: Период
   label_period_any: любой

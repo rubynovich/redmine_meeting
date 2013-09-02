@@ -9,6 +9,7 @@
           %td=format_date(answer.issue.due_date)
           %td=h answer.status
           %td=progress_bar(answer.issue.done_ratio, :width => '80px')
+          %td=t(answer.issue_type || 'new', scope: :label_meeting_issue_type_statuses)
           %td=link_to l(:button_dettach), {controller: 'meeting_issues', action: 'destroy', id: answer.id}, confirm: l(:text_are_you_sure), method: :delete, remote: true, class: 'icon icon-del'
   - else
     %p

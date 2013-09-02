@@ -19,6 +19,7 @@ class MeetingIssuesController < ApplicationController
     @issue.parent_issue_id = params[:issue][:parent_issue_id]
     if @issue.save
       @object.update_attribute(:issue_id, @issue.id)
+      @object.update_attribute(:issue_type, :new)
     else
       render action: :new
     end
@@ -27,6 +28,7 @@ class MeetingIssuesController < ApplicationController
   def destroy
     @object = MeetingAnswer.find(params[:id])
     @object.update_attribute(:issue_id, nil)
+    @object.update_attribute(:issue_type, nil)
   end
 
   def update
@@ -34,6 +36,7 @@ class MeetingIssuesController < ApplicationController
    issue = @object.meeting_question.issue
    update_issue(issue).save
    @object.update_attribute(:issue_id, issue.id)
+   @object.update_attribute(:issue_type, :update)
   end
 
 private
