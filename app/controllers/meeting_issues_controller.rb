@@ -13,7 +13,7 @@ class MeetingIssuesController < ApplicationController
   end
 
   def create
-    @issue.author = User.current
+    @issue.author_id = params[:issue][:author_id]
     @issue.description += "\n\n" +
       t(:message_description_protocol_information, url: url_for(controller: 'meeting_protocols', action: 'show', id: @object.meeting_protocol_id))
     @issue.parent_issue_id = params[:issue][:parent_issue_id]
