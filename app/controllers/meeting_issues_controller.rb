@@ -1,6 +1,9 @@
 class MeetingIssuesController < ApplicationController
   unloadable
 
+  helper :attachments
+  include AttachmentsHelper
+
   before_filter :find_object, only: [:new, :create]
   before_filter :new_issue, only: [:new, :create]
 
