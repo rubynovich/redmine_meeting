@@ -15,7 +15,7 @@
     = f.label :user_id, t(:label_meeting_answer_user)
     = f.collection_select :user_id, User.active.order(:lastname, :firstname), :id, :to_s, prompt: t(:prompt_please_select)
   .splitcontentleft
-    %p
+    -#%p
       = f.label :issue_id
       = f.text_field :issue_id, size: 10, class: "autocomplete_for_issue"
   .splitcontentright

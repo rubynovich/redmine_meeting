@@ -5,6 +5,16 @@
   = f.hidden_field :tracker_id
   = f.hidden_field :description
   %p
-    = f.select :project_id, project_tree_options_for_select(Project.active.visible, :selected => (@object.meeting_question.issue.project rescue nil)), prompt: t(:prompt_please_select), required: true
+    = f.select :project_id, project_tree_options_for_select(@issue.tracker.projects, selected: (@object.meeting_question.issue.project rescue nil)), prompt: t(:prompt_please_select), required: true
   %p
     = f.text_field :subject, size: 80, maxlength: 255, required: true, style: "width: 95%"
+  %p
+    = f.select :author_id, options_from_collection_for_select(@object.meeting_protocol.users, :id, :name, User.current.id), prompt: false, required: true
+  %p
+    = f.label :parent_issue_id
+    = f.text_field :parent_issue_id, size: 10, class: "autocomplete_for_issue"
+
+:javascript
+  $('.autocomplete_for_issue:not(.autocomplete)').each( function(index){
+    observeAutocompleteField( $(this).attr('id'), '#{escape_javascript autocomplete_for_issue_meeting_agendas_path}')
+  } );

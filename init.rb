@@ -8,7 +8,12 @@ Redmine::Plugin.register :redmine_meeting do
   url 'https://bitbucket.org/gorkapstroy/redmine_meeting'
   author_url 'http://roman.shipiev.me'
 
-  settings partial: 'meeting_members/settings', default: {issue_priority: IssuePriority.default.id}
+  settings partial: 'meeting_members/settings', default: {
+    issue_priority: IssuePriority.default.id,
+    subject: "%subject% %place% %meet_on% %start_time% %end_time%",
+    description: "%url%",
+    note: "%question%\n\n%description%\n\n%url%"
+  }
 end
 
 Rails.configuration.to_prepare do

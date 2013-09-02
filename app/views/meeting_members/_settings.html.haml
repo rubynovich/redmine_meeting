@@ -13,4 +13,9 @@
 %p
   %label= l(:field_description)
   = text_area_tag("settings[description]", @settings[:description], cols: 60, rows: 5, class: 'wiki-edit')
+%p
+  %label= l(:label_meeting_issue_update_note)
+  = text_area_tag("settings[note]", @settings[:note], cols: 60, rows: 5, class: 'wiki-edit')
+
 = wikitoolbar_for('settings_description')
+= wikitoolbar_for('settings_note')

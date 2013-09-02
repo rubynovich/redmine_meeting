@@ -3,11 +3,11 @@ class MeetingAgenda < ActiveRecord::Base
 
   has_one :meeting_protocol
   has_many :meeting_questions, dependent: :delete_all, order: :id
-  has_many :issues, through: :meeting_questions, order: :id
-  has_many :projects, through: :issues, order: :title
-  has_many :statuses, through: :issues
+  has_many :issues, through: :meeting_questions, order: :id, uniq: true
+  has_many :projects, through: :issues, order: :title, uniq: true
+  has_many :statuses, through: :issues, uniq: true
   has_many :meeting_members, dependent: :delete_all
-  has_many :users, through: :meeting_members, order: [:lastname, :firstname]
+  has_many :users, through: :meeting_members, order: [:lastname, :firstname], uniq: true
   belongs_to :author, class_name: 'User', foreign_key: 'author_id'
   belongs_to :priority, class_name: 'IssuePriority', foreign_key: 'priority_id'
 

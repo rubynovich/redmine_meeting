@@ -14,9 +14,14 @@ class MeetingIssuesController < ApplicationController
 
   def create
     @issue.author = User.current
+    @issue.description += "\n\n" +
+      t(:message_description_protocol_information, url: url_for(controller: 'meeting_protocols', action: 'show', id: @object.meeting_protocol_id))
     if @issue.save
       @object.update_attribute(:issue_id, @issue.id)
-      redirect_to controller: 'meeting_protocols', action: 'show', id: @object.meeting_protocol_id
+      if params[:issue][:parent_issue_id].present?
+        @issue.parent_issue_id = params[:issue][:parent_issue_id]
+        @issue.save
+      end
     else
       render action: :new
     end
@@ -25,7 +30,13 @@ class MeetingIssuesController < ApplicationController
   def destroy
     @object = MeetingAnswer.find(params[:id])
     @object.update_attribute(:issue_id, nil)
-    redirect_to controller: 'meeting_protocols', action: 'show', id: @object.meeting_protocol_id
+  end
+
+  def update
+   @object = MeetingAnswer.find(params[:id])
+   issue = @object.meeting_question.issue
+   update_issue(issue).save
+   @object.update_attribute(:issue_id, issue.id)
   end
 
 private
@@ -35,5 +46,36 @@ private
 
   def find_object
     @object = MeetingAnswer.find(params[:meeting_answer_id])
+  end
+
+  def key_words
+    {
+      subject: @object.meeting_agenda.subject,
+      meet_on: format_date(@object.meeting_agenda.meet_on),
+      start_date: format_date(@object.start_date),
+      due_date: format_date(@object.due_date),
+      start_time: format_time(@object.meeting_agenda.start_time),
+      end_time: format_time(@object.meeting_agenda.end_time),
+      question: @object.meeting_question.to_s,
+      description: @object.description,
+      assigned_to: @object.user.name,
+      place: @object.meeting_agenda.place,
+      url: meeting_protocol_url(@object.meeting_protocol)
+    }
+  end
+
+  def put_key_words(template)
+    key_words.inject(template){ |result, key_word|
+      result.gsub("%#{key_word[0]}%", key_word[1])
+    }
+  end
+
+  def issue_note
+    put_key_words(Setting[:plugin_redmine_meeting][:note])
+  end
+
+  def update_issue(issue)
+    issue.init_journal(User.current, issue_note)
+    issue
   end
 end

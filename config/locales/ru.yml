@@ -43,10 +43,13 @@ ru:
   button_add_comment: "Добавить комментарий"
   label_new_meeting_issue: "Создать задачу"
   label_meeting_issue_new: "Создание задачи"
+  label_update_meeting_issue: "Обновить задачу"
   label_meeting_project_not_completed: "Решения не исполнены"
   label_meeting_project_is_done: "Все решения исполнены"
   label_meeting_project_is_not_full: "Не передан на исполнение"
   button_dettach: "Открепить"
+  message_description_protocol_information: 'Задача поставлена на основании решения "протокола":%{url}'
+  label_meeting_issue_update_note: "Текст заметки при обновлении задачи"
 
   label_period: Период
   label_period_any: любой

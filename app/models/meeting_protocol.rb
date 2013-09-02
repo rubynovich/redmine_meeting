@@ -4,10 +4,10 @@ class MeetingProtocol < ActiveRecord::Base
   belongs_to :author, class_name: 'User', foreign_key: 'author_id'
   belongs_to :meeting_agenda
   has_many :meeting_answers, dependent: :delete_all, order: [:meeting_question_id]
-  has_many :issues, through: :meeting_answers
+  has_many :issues, through: :meeting_answers, uniq: true
   has_many :meeting_participators, dependent: :delete_all
-  has_many :users, through: :meeting_participators, order: [:lastname, :firstname]
-  has_many :meeting_members, through: :meeting_agenda
+  has_many :users, through: :meeting_participators, order: [:lastname, :firstname], uniq: true
+  has_many :meeting_members, through: :meeting_agenda, uniq: true
 
   accepts_nested_attributes_for :meeting_answers, allow_destroy: true
   accepts_nested_attributes_for :meeting_participators, allow_destroy: true
