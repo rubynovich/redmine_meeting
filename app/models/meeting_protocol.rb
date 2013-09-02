@@ -44,6 +44,14 @@ class MeetingProtocol < ActiveRecord::Base
     end
   }
 
+  def attachments_visible?(user=User.current)
+    user.allowed_to?({controller: 'meeting_protocols', action: 'show'}, nil, {global: true}
+  end
+
+  def attachments_deletable?(user=User.current)
+    user.allowed_to?({controller: 'meeting_protocols', action: 'edit'}, nil, {global: true}
+  end
+
 private
 
   def presence_of_meeting_answers
