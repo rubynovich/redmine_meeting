@@ -49,7 +49,8 @@ class MeetingProtocol < ActiveRecord::Base
   end
 
   def attachments_deletable?(user=User.current)
-    user.allowed_to?({controller: 'meeting_protocols', action: 'edit'}, nil, {global: true})
+#    user.allowed_to?({controller: 'meeting_protocols', action: 'edit'}, nil, {global: true})
+    false
   end
 
 private
