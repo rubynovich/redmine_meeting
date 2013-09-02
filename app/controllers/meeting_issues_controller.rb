@@ -27,6 +27,9 @@ class MeetingIssuesController < ApplicationController
 
   def destroy
     @object = MeetingAnswer.find(params[:id])
+    if @object.issue_type == "new"
+      @object.issue.update_attributes(status_id: Setting[:plugin_redmine_meeting][:issue_status])
+    end
     @object.update_attribute(:issue_id, nil)
     @object.update_attribute(:issue_type, nil)
   end
