@@ -1,1 +1,1 @@
-$("#meeting_comment_history_for_#{@answer.id}").html('#{ escape_javascript(render partial: 'meeting_comments/history', locals: {answer: @answer}) }');
+$("#meeting_comment_history_for_#{@container.id}").html('#{ escape_javascript(render partial: 'meeting_comments/history', locals: {meeting_container: @container}) }');

@@ -10,8 +10,7 @@ class MeetingAnswer < ActiveRecord::Base
   has_one :project, through: :issue
   has_one :meeting_agenda, through: :meeting_protocol
   has_many :meeting_answers, through: :meeting_protocol, uniq: true
-  has_many :meeting_comments, order: ["created_on DESC"], dependent: :delete_all, uniq: true
-
+  has_many :meeting_comments, as: :meeting_container, order: ["created_on DESC"], dependent: :delete_all, uniq: true
 
   validates_presence_of :user_id, :description, :start_date, :due_date, :meeting_question_id
 

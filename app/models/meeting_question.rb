@@ -9,7 +9,7 @@ class MeetingQuestion < ActiveRecord::Base
   has_many :meeting_questions, through: :meeting_agenda, uniq: true
   has_many :meeting_members, through: :meeting_agenda, uniq: true
   has_many :users, through: :meeting_agenda, uniq: true
-
+  has_many :meeting_comments, as: :meeting_container, order: ["created_on DESC"], dependent: :delete_all, uniq: true
 
   after_save :add_new_users_from_questions
 

@@ -87,7 +87,6 @@
         %th=l(:field_title)
         %th=l(:field_issue)
         %th=l(:label_meeting_question_user)
-        %th=l(:field_issue)
         %th=l(:field_status)
         %th=l(:field_done_ratio)
       - questions.each do |question|
@@ -105,3 +104,7 @@
           %td{width: '80px'}
             - if question.issue.present?
               =progress_bar(question.issue.done_ratio, width: '80px')
+        %tr
+          %td{colspan: 5}
+            %h4= l(:label_meeting_question_comment_plural)+":"
+            = render partial: 'meeting_comments/history', locals: {meeting_container: question}

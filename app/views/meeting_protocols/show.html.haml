@@ -102,7 +102,7 @@
 
       = render partial: 'meeting_issues/show', locals: {answer: answer}
 
-      %h4= l(:label_meeting_comment_plural)+":"
-      = render partial: 'meeting_comments/history', locals: {answer: answer}
+      %h4= l(:label_meeting_answer_comment_plural)+":"
+      = render partial: 'meeting_comments/history', locals: {meeting_container: answer}
 
 = link_to_attachments @object, thumbnails: true
