@@ -83,28 +83,30 @@
         = t(:label_without_project)
 
     %table.list.issues
-      %tr
-        %th=l(:field_title)
-        %th=l(:field_issue)
-        %th=l(:label_meeting_question_user)
-        %th=l(:field_status)
-        %th=l(:field_done_ratio)
-      - questions.each do |question|
-        %tr.issue{onclick: "$('#comments_block_for_#{question.id}').toggle(500);"}
-          %td.subject=h question.title
-          %td.subject
-            - if question.issue.present?
-              = link_to_issue(question.issue, tracker: false)
-          %td
-            - if question.user.present?
-              = link_to_user question.user
-          %td
-            - if question.status.present?
-              = h question.status
-          %td{width: '80px'}
-            - if question.issue.present?
-              =progress_bar(question.issue.done_ratio, width: '80px')
-        %tr{id: "comments_block_for_#{question.id}", style: 'display: none;'}
-          %td{colspan: 5}
-            %h4= l(:label_meeting_question_comment_plural)+":"
-            = render partial: 'meeting_comments/history', locals: {meeting_container: question}
+      %thead
+        %tr
+          %th=l(:field_title)
+          %th=l(:field_issue)
+          %th=l(:label_meeting_question_user)
+          %th=l(:field_status)
+          %th=l(:field_done_ratio)
+      %tbody
+        - questions.each do |question|
+          %tr.issue{onclick: "$('#comments_block_for_#{question.id}').toggle(1000);", style: (question.meeting_comments.present? ? "background: #fff0f5" : "background: #cdffc0")}
+            %td.subject=h question.title
+            %td.subject
+              - if question.issue.present?
+                = link_to_issue(question.issue, tracker: false)
+            %td
+              - if question.user.present?
+                = link_to_user question.user
+            %td
+              - if question.status.present?
+                = h question.status
+            %td{width: '80px'}
+              - if question.issue.present?
+                =progress_bar(question.issue.done_ratio, width: '80px')
+          %tr{id: "comments_block_for_#{question.id}", style: 'display: none;'}
+            %td{colspan: 5}
+              %h4= l(:label_meeting_question_comment_plural)+":"
+              = render partial: 'meeting_comments/history', locals: {meeting_container: question}
