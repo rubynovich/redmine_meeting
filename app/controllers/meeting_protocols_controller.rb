@@ -10,7 +10,7 @@ class MeetingProtocolsController < ApplicationController
   before_filter :require_meeting_participator, only: [:index, :show]
 
   def show
-    (render_403; return false) unless @object.users.include? User.current
+    (render_403; return false) unless User.current.meeting_manager? || @object.users.include? User.current
   end
 
   def index
