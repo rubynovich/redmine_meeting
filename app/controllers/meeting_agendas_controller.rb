@@ -9,7 +9,7 @@ class MeetingAgendasController < ApplicationController
   include ApplicationHelper
 
   def show
-    (render_403; return false) unless User.current.meeting_manager? || @object.users.include? User.current
+    (render_403; return false) unless User.current.meeting_manager? || @object.users.include?(User.current)
   end
 
   def send_invites
