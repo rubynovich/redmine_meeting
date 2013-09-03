@@ -9,11 +9,6 @@
         = link_to l(:label_resend_invites), {action: 'resend_invites', id: @object.id}, class: 'icon icon-issue'
       - else
         = link_to l(:label_send_invites), {action: 'send_invites', id: @object.id}, class: 'icon icon-issue'
-    - if (@object.meet_on <= Date.today)&&(@object.start_time.seconds_since_midnight <= Time.now.seconds_since_midnight)
-      - if @object.meeting_protocol.present?
-        = link_to l(:label_meeting_protocol), {controller: 'meeting_protocols', action: 'show', id: @object.meeting_protocol.id}, class: 'icon icon-edit'
-      - else
-        = link_to l(:label_new_meeting_protocol), {controller: 'meeting_protocols', action: 'new', meeting_protocol: {meeting_agenda_id: @object.id}}, class: 'icon icon-add'
 
 %h2
   = link_to l(:label_meeting_agenda_plural), action: 'index'
@@ -48,11 +43,11 @@
     %tr
       %th= l(:label_meeting_protocol)+":"
       %td
-        - if @object.meeting_protocol.present?
-          = link_to "#{t(:label_meeting_protocol)} ##{@object.meeting_protocol.id}", controller: 'meeting_protocols', action: 'show', id: @object.meeting_protocol.id
-        - else
-          = link_to t(:button_add), {controller: 'meeting_protocols', action: 'new', meeting_protocol: {meeting_agenda_id: @object.id}}, {class: 'icon icon-add'}
-
+        - if (@object.meet_on <= Date.today)&&(@object.start_time.seconds_since_midnight <= Time.now.seconds_since_midnight)
+          - if @object.meeting_protocol.present?
+            = link_to "#{t(:label_meeting_protocol)} ##{@object.meeting_protocol.id}", controller: 'meeting_protocols', action: 'show', id: @object.meeting_protocol.id
+          - else
+            = link_to t(:button_add), {controller: 'meeting_protocols', action: 'new', meeting_protocol: {meeting_agenda_id: @object.id}}, {class: 'icon icon-add'}
 
   %hr
 
