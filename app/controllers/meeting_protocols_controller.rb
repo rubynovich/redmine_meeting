@@ -111,4 +111,13 @@ private
   def new_object
     @object = model_class.new(params[model_sym])
   end
+
+  def require_meeting_manager
+    (render_403; return false) unless User.current.meeting_manager?
+  end
+
+  def require_meeting_participator
+    (render_403; return false) unless User.current.meeting_participator?
+  end
+
 end
