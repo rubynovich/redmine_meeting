@@ -83,6 +83,8 @@ ru:
           "должны присутствовать"
         less_than_today:
           "установлена ранее текущего дня"
+        less_than_now:
+          "уже прошло"
         less_than_start_time:
           "должно быть позже, чем Время начала"
   field_meeting_questions:
