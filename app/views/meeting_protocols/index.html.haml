@@ -40,10 +40,14 @@
                   = t(:label_meeting_project_not_completed)
               - else
                 = t(:label_meeting_project_is_not_full)
-            %td{align: 'center'}= link_to "#{t(:label_meeting_agenda)} ##{item.meeting_agenda_id}", controller: 'meeting_agendas', action: 'show', id: item.meeting_agenda_id
+            %td{align: 'center'}
+              - if meeting_member?
+                = link_to "#{t(:label_meeting_agenda)} ##{item.meeting_agenda_id}", controller: 'meeting_agendas', action: 'show', id: item.meeting_agenda_id
+              - else
+                = "#{t(:label_meeting_agenda)} ##{item.meeting_agenda_id}"
             %td{align: 'center'}= format_time(item.created_on)
             %td.buttons
-              - if item.author == User.current || User.current.admin?
+              - if meeting_manager? && (item.author == User.current)
                 = link_to l(:button_update), {action: 'edit', id: item.id}, class: 'icon icon-edit'
                 = link_to(l(:button_delete), {action: 'destroy', id: item.id}, method: 'delete', confirm: l(:text_are_you_sure), class: 'icon icon-del')
 

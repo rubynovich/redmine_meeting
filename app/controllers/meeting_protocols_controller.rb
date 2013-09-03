@@ -6,6 +6,12 @@ class MeetingProtocolsController < ApplicationController
 
   before_filter :find_object, only: [:edit, :show, :destroy, :update]
   before_filter :new_object, only: [:new, :create]
+  before_filter :require_meeting_manager, only: [:edit, :update, :new, :create, :destroy]
+  before_filter :require_meeting_participator, only: [:index, :show]
+
+  def show
+    (render_403; return false) unless @object.users.include? User.current
+  end
 
   def index
     @limit = per_page_option

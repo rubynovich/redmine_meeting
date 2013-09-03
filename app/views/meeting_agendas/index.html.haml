@@ -31,11 +31,14 @@
             %td{align: 'center'}= format_time(item.created_on)
             %td{align: 'center'}
               - if item.meeting_protocol.present?
-                = link_to "#{t(:label_meeting_protocol)} ##{item.meeting_protocol.id}", controller: 'meeting_protocols', action: 'show', id: item.meeting_protocol.id
-              - else
+                - if meeting_participator?
+                  = link_to "#{t(:label_meeting_protocol)} ##{item.meeting_protocol.id}", controller: 'meeting_protocols', action: 'show', id: item.meeting_protocol.id
+                - else
+                  = "#{t(:label_meeting_protocol)} ##{item.meeting_protocol.id}"
+              - elsif meeting_manager?
                 = link_to t(:button_add), {controller: 'meeting_protocols', action: 'new', meeting_protocol: {meeting_agenda_id: item.id}}, {class: 'icon icon-add'}
             %td.buttons
-              - if item.author == User.current || User.current.admin?
+              - if meeting_manager? && (item.author == User.current)
                 = link_to l(:button_update), {action: 'edit', id: item.id}, class: 'icon icon-edit'
                 = link_to(l(:button_delete), {action: 'destroy', id: item.id}, method: 'delete', confirm: l(:text_are_you_sure), class: 'icon icon-del')
 

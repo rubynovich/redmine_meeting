@@ -10,4 +10,20 @@ module MeetingAgendasHelper
   def project_id_for_select
     Project.active
   end
+
+  def meeting_member?
+    User.current.meeting_member?
+  end
+
+  def meeting_manager?
+    User.current.meeting_manager?
+  end
+
+  def meeting_participator?
+    User.current.meeting_participator?
+  end
+
+  def author?
+    @object.author == User.current
+  end
 end

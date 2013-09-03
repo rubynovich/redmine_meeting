@@ -3,8 +3,14 @@ class MeetingAgendasController < ApplicationController
 
   before_filter :find_object, only: [:edit, :show, :destroy, :update, :send_invites, :resend_invites]
   before_filter :new_object, only: [:new, :create]
+  before_filter :require_meeting_manager, only: [:edit, :update, :new, :create, :destroy, :send_invites, :resend_invites]
+  before_filter :require_meeting_member, only: [:index, :show]
 
   include ApplicationHelper
+
+  def show
+    (render_403; return false) unless @object.users.include? User.current
+  end
 
   def send_invites
     @object.meeting_members.each do |member|
@@ -144,5 +150,13 @@ private
 
   def new_object
     @object = model_class.new(params[model_sym])
+  end
+
+  def require_meeting_manager
+    (render_403; return false) unless User.current.meeting_manager?
+  end
+
+  def require_meeting_member
+    (render_403; return false) unless User.current.meeting_member?
   end
 end

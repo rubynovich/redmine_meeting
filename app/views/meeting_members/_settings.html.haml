@@ -1,11 +1,14 @@
 %p
+  %label= l(:label_meeting_manager_plural)
+  = select_tag("settings[principal_id]", principals_options_for_select(Principal.active.all, (Principal.find(@settings[:principal_id]) rescue nil)), :prompt => t(:prompt_please_select))
+%p
   %label= l(:label_project)
   = select_tag("settings[project_id]", project_tree_options_for_select(Project.active.all, :selected => (Project.find(@settings[:project_id]) rescue nil)), :prompt => t(:prompt_please_select))
 %p
   %label= l(:field_tracker)
   = select_tag("settings[issue_tracker]", options_from_collection_for_select(Tracker.all, :id, :name, @settings[:issue_tracker].try(:to_i)), :prompt => t(:prompt_please_select))
 %p
-  = content_tag(:label, l(:label_meeting_invite_close_status))
+  %label= l(:label_meeting_invite_close_status)
   = select_tag("settings[issue_status]", options_from_collection_for_select(IssueStatus.where(is_closed: true), :id, :name, @settings[:issue_status].try(:to_i)), :prompt => t(:prompt_please_select))
 %p
   %label= l(:field_subject)

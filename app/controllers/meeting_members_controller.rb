@@ -1,6 +1,7 @@
 class MeetingMembersController < ApplicationController
   unloadable
-  before_filter :find_object, :only => [:new, :create, :destroy, :autocomplete_for_user]
+  before_filter :find_object, only: [:new, :create, :destroy, :autocomplete_for_user]
+  before_filter :require_meeting_manager
 
   def new
     @no_members = User.active.order(:lastname, :firstname)
@@ -73,5 +74,9 @@ private
 
   def model_sym_id
     :meeting_agenda_id
+  end
+
+  def require_meeting_manager
+    (render_403; return false) unless User.current.meeting_manager?
   end
 end

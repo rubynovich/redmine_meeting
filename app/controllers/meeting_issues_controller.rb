@@ -3,6 +3,7 @@ class MeetingIssuesController < ApplicationController
 
   before_filter :find_object, only: [:new, :create]
   before_filter :new_issue, only: [:new, :create]
+  before_filter :require_meeting_manager
 
   def new
     @issue.assigned_to = @object.user
@@ -82,5 +83,9 @@ private
     issue.init_journal(User.current, issue_note)
     issue.status = IssueStatus.default
     issue
+  end
+
+  def require_meeting_manager
+    (render_403; return false) unless User.current.meeting_manager?
   end
 end

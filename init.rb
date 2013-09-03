@@ -10,27 +10,18 @@ Redmine::Plugin.register :redmine_meeting do
 
   settings partial: 'meeting_members/settings', default: {
     issue_priority: IssuePriority.default.id,
+    principal_id: User.where(admin: true).first.try(:id),
     subject: "%subject% %place% %meet_on% %start_time% %end_time%",
     description: "%url%",
     note: "%question%\n\n%description%\n\n%url%"
   }
-
-  permission :view_meeting_agendas, meeting_agendas: [:index, :show]
-  permission :add_meeting_agendas, meeting_agendas: [:new, :create]
-  permission :edit_meeting_agendas, meeting_agendas: [:edit, :update]
-  permission :delete_meeting_agendas, meeting_agendas: [:destroy]
-
-  permission :view_meeting_protocols, meeting_protocols: [:index, :show]
-  permission :add_meeting_protocols, meeting_protocols: [:new, :create]
-  permission :edit_meeting_protocols, meeting_protocols: [:edit, :update]
-  permission :delete_meeting_protocols, meeting_protocols: [:destroy]
 
   menu :application_menu, :meeting_agendas,
     {controller: 'meeting_agendas', action: 'index'},
     caption: :label_meeting_agenda_plural,
     param: 'project_id',
     if: Proc.new{
-      User.current.allowed_to?({controller: 'meeting_agendas', action: 'index'}, nil, {global: true})
+      User.current.meeting_member?
     }
 
   menu :application_menu, :meeting_protocols,
@@ -38,7 +29,7 @@ Redmine::Plugin.register :redmine_meeting do
     caption: :label_meeting_protocol_plural,
     param: 'project_id',
     if: Proc.new{
-      User.current.allowed_to?({controller: 'meeting_protocols', action: 'index'}, nil, {global: true})
+      User.current.meeting_participator?
     }
 end
 
@@ -46,10 +37,12 @@ Rails.configuration.to_prepare do
   require_dependency 'meeting_agenda'
   require_dependency 'meeting_protocol'
   require 'time_period_scope'
+  require 'meeting_user_patch'
 
   [
    [MeetingAgenda, TimePeriodScope],
-   [MeetingProtocol, TimePeriodScope]
+   [MeetingProtocol, TimePeriodScope],
+   [User, MeetingPlugin::UserPatch]
   ].each do |cl, patch|
     cl.send(:include, patch) unless cl.included_modules.include? patch
   end

@@ -5,10 +5,13 @@
 
 
 .contextual
-  -#= link_to l(:button_add), {action: 'new'}, class: 'icon icon-add'
-  = link_to l(:button_update), {action: 'edit', id: @object.id}, class: 'icon icon-edit'
-  = link_to l(:button_delete), {action: 'destroy', id: @object.id}, :confirm => l(:text_are_you_sure), :method => :delete, :class => 'icon icon-del'
-  = link_to l(:label_meeting_agenda), {controller: 'meeting_agendas', action: 'show', id: @object.meeting_agenda_id}, class: 'icon icon-edit'
+  - if meeting_manager? && author?
+    -#= link_to l(:button_add), {action: 'new'}, class: 'icon icon-add'
+    = link_to l(:button_update), {action: 'edit', id: @object.id}, class: 'icon icon-edit'
+    = link_to l(:button_delete), {action: 'destroy', id: @object.id}, :confirm => l(:text_are_you_sure), :method => :delete, :class => 'icon icon-del'
+  - if meeting_member?
+    = link_to l(:label_meeting_agenda), {controller: 'meeting_agendas', action: 'show', id: @object.meeting_agenda_id}, class: 'icon icon-edit'
+
 
 %h2
   = link_to l(:label_meeting_protocol_plural), action: 'index'
@@ -37,7 +40,11 @@
       %td= format_time(@object.meeting_agenda.end_time, false)
     %tr
       %th= l(:label_meeting_agenda)+":"
-      %td= link_to "#{t(:label_meeting_agenda)} ##{@object.meeting_agenda.id}", controller: 'meeting_agendas', action: 'show', id: @object.meeting_agenda_id
+      %td
+        - if meeting_member?
+          = link_to "#{t(:label_meeting_agenda)} ##{@object.meeting_agenda.id}", controller: 'meeting_agendas', action: 'show', id: @object.meeting_agenda_id
+        - else
+          = "#{t(:label_meeting_agenda)} ##{@object.meeting_agenda.id}"
       %th= l(:field_author)+":"
       %td= link_to_user @object.author
 
