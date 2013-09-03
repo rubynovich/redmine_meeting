@@ -54,8 +54,8 @@ class MeetingAgendasController < ApplicationController
 
   def new
     @object.priority = IssuePriority.default
-    @users = []
-    session[:meeting_member_ids] = []
+    @users = [User.current]
+    session[:meeting_member_ids] = [User.current.id]
   end
 
   def edit
