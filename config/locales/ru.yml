@@ -1,5 +1,7 @@
 # Russian strings go here for Rails i18n
 ru:
+  label_meeting_question_issue: "Задача из вопроса"
+  label_meeting_question_issue_missing: "Отсутствует"
   label_meeting_manager_plural: "Авторы повесток и совещаний"
   field_meeting_participators: "Фактические участники"
   field_meeting_members: "Заявленные участники"

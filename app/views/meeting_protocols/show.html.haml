@@ -86,7 +86,13 @@
       %table.attributes
         %tr
           %th=t(:label_meeting_question)+":"
-          %td{colspan: 3}=h answer.meeting_question
+          %td=h answer.meeting_question
+          %th=t(:label_meeting_question_issue)+":"
+          %td
+            - if answer.meeting_question.try(:issue).present?
+              =link_to_issue answer.meeting_question.issue, project: false, tracker: false, subject: false
+            - else
+              =t(:label_meeting_question_issue_missing)
         %tr
           %th=t(:label_meeting_question_user)+":"
           %td
