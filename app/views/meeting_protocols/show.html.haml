@@ -57,7 +57,8 @@
     %th=l(:field_company)
     %th=l(:field_job_title)
     %th=l(:field_member)
-    %th=l(:field_status)
+    %th=l(:label_meeting_invite_status)
+    %th=l(:label_meeting_notice_status)
   - @object.meeting_members.each do |member|
     %tr.issue
       %td=h member.user.company rescue ""
@@ -70,12 +71,21 @@
           = t(:label_meeting_member_present)
         - else
           = t(:label_meeting_member_blank)
+      %td
+        - if member.meeting_participator.try(:issue).present?
+          - if member.meeting_participator.status == IssueStatus.default
+            = link_to t(:label_meeting_notice_blank), controller: 'issues', action: 'show', id: member.meeting_participator.issue_id
+          - else
+            = link_to t(:label_meeting_notice_present), controller: 'issues', action: 'show', id: member.meeting_participator.issue_id
+        - else
+          = t(:label_meeting_notice_extra)
   - @object.meeting_participators.reject(&:meeting_member).map(&:user).compact.each do |member|
     %tr.issue
       %td=h member.company
       %td=h member.job_title
       %td=link_to_user(member)
       %td= t(:label_meeting_member_extra)
+      %td= t(:label_meeting_notice_extra)
 %br
 %h3=l(:label_meeting_answer_plural)+":"
 - @object.meeting_answers.group_by(&:project).sort_by{ |project, answers| project.to_s }.each do |project, answers|

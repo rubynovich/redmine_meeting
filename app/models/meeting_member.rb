@@ -33,6 +33,8 @@ class MeetingMember < ActiveRecord::Base
   end
 
 private
+  #FIXME Перенести сие в контроллер Повестки
+
   def key_words
     {
       subject: self.meeting_agenda.subject,
