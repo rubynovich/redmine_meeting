@@ -1,7 +1,7 @@
 .contextual
   - if meeting_manager?
     = link_to l(:button_add), {action: 'new'}, class: 'icon icon-add'
-    - if author?
+    - if author?(@object)
       - if @object.meeting_protocol.blank?
         = link_to l(:button_update), {action: 'edit', id: @object.id}, class: 'icon icon-edit'
         = link_to l(:button_delete), {action: 'destroy', id: @object.id}, confirm: l(:text_are_you_sure), method: 'delete', class: 'icon icon-del'

@@ -23,8 +23,8 @@ module MeetingAgendasHelper
     User.current.meeting_participator?
   end
 
-  def author?
-    @object.author == User.current
+  def author?(item)
+    item.author == User.current
   end
 
   def can_create_protocol?(item)

@@ -38,7 +38,7 @@
               - elsif can_create_protocol?(item)
                 = link_to t(:button_add), {controller: 'meeting_protocols', action: 'new', meeting_protocol: {meeting_agenda_id: item.id}}, {class: 'icon icon-add'}
             %td.buttons
-              - if meeting_manager? && (item.author == User.current)
+              - if meeting_manager? && author?(item)
                 = link_to l(:button_update), {action: 'edit', id: item.id}, class: 'icon icon-edit'
                 = link_to(l(:button_delete), {action: 'destroy', id: item.id}, method: 'delete', confirm: l(:text_are_you_sure), class: 'icon icon-del')
 
