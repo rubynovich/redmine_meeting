@@ -44,7 +44,7 @@
     %tr
       %th= l(:label_meeting_protocol)+":"
       %td
-        - if (@object.meet_on <= Date.today)&&(@object.start_time.seconds_since_midnight <= Time.now.seconds_since_midnight)
+        - if (@object.meet_on > Date.today)||(@object.meet_on == Date.today) && (@object.start_time.seconds_since_midnight > Time.now.seconds_since_midnight)
           - if @object.meeting_protocol.present?
             - if meeting_participator?
               = link_to "#{t(:label_meeting_protocol)} ##{@object.meeting_protocol.id}", controller: 'meeting_protocols', action: 'show', id: @object.meeting_protocol.id
