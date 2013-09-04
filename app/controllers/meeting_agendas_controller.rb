@@ -17,7 +17,7 @@ class MeetingAgendasController < ApplicationController
       member.send_invite(url_for(controller: 'meeting_agendas', action: 'show', id: @object.id))
     end if invite_actual?
 
-    redirect_to action: 'show', id: @object.id
+    redirect_to controller: 'meeting_agendas', action: 'show', id: @object.id
   end
 
   def resend_invites
@@ -25,7 +25,7 @@ class MeetingAgendasController < ApplicationController
       member.resend_invite(url_for(controller: 'meeting_agendas', action: 'show', id: @object.id))
     end if invite_actual?
 
-    redirect_to action: 'show', id: @object.id
+    redirect_to controller: 'meeting_agendas', action: 'show', id: @object.id
   end
 
   def autocomplete_for_issue

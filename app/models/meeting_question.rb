@@ -24,7 +24,7 @@ private
 
   def add_new_users_from_questions
     (self.meeting_questions.map(&:user) - self.users).each do |user|
-      MeetingMember.create(user: user, meeting_agenda: self.meeting_agenda)
+      MeetingMember.create(user_id: user.id, meeting_agenda_id: self.meeting_agenda_id)
     end
   end
 

@@ -8,5 +8,5 @@
         -#FIXME if comment.author == User.current
           - url = {controller: 'meeting_comments', action: 'destroy', id: comment.id}
           = link_to(image_tag('delete.png'), url, remote: true, method: 'delete', class: "delete")
-  - if @object.users.include? User.current
+  - if meeting_container.users.include? User.current
     = link_to l(:button_add_comment), {controller: 'meeting_comments', action: 'new', meeting_comment: {meeting_container_id: meeting_container.id, meeting_container_type: meeting_container.class}}, remote: true, class: 'icon icon-add'

@@ -24,4 +24,9 @@ end
 
 resources :meeting_comments
 resources :meeting_issues
-resources :meeting_protocols
+resources :meeting_protocols do
+  member do
+    get 'send_notices'
+    get 'resend_notices'
+  end
+end

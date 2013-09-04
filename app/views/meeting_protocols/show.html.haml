@@ -5,12 +5,15 @@
 
 
 .contextual
-  - if meeting_manager? && author?
+  - if meeting_manager? && author?(@object)
     -#= link_to l(:button_add), {action: 'new'}, class: 'icon icon-add'
     = link_to l(:button_update), {action: 'edit', id: @object.id}, class: 'icon icon-edit'
     = link_to l(:button_delete), {action: 'destroy', id: @object.id}, :confirm => l(:text_are_you_sure), :method => :delete, :class => 'icon icon-del'
-  - if meeting_member?
-    = link_to l(:label_meeting_agenda), {controller: 'meeting_agendas', action: 'show', id: @object.meeting_agenda_id}, class: 'icon icon-edit'
+    - if can_send_notices?
+      - if @object.meeting_participators.all?(&:issue)
+        = link_to l(:label_resend_notices), {action: 'resend_notices', id: @object.id}, class: 'icon icon-issue'
+      - else
+        = link_to l(:label_send_notices), {action: 'send_notices', id: @object.id}, class: 'icon icon-issue'
 
 
 %h2

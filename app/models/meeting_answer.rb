@@ -11,6 +11,7 @@ class MeetingAnswer < ActiveRecord::Base
   has_one :meeting_agenda, through: :meeting_protocol
   has_many :meeting_answers, through: :meeting_protocol, uniq: true
   has_many :meeting_comments, as: :meeting_container, order: ["created_on DESC"], dependent: :delete_all, uniq: true
+  has_many :users, through: :meeting_protocol, uniq: true
 
   validates_presence_of :user_id, :description, :start_date, :due_date, :meeting_question_id
 
@@ -19,8 +20,8 @@ class MeetingAnswer < ActiveRecord::Base
 private
 
   def add_new_users_from_answers
-    (self.meeting_answers.map(&:reporter) - self.meeting_protocol.users).each do |user|
-      MeetingParticipator.create(user: user, meeting_protocol: self.meeting_protocol)
+    (self.meeting_answers.map(&:reporter) - self.users).each do |user|
+      MeetingParticipator.create(user_id: user.id, meeting_protocol_id: self.meeting_protocol_id)
     end
   end
 

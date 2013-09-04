@@ -4,10 +4,9 @@ class MeetingParticipator < ActiveRecord::Base
   belongs_to :meeting_protocol
   belongs_to :user
   belongs_to :meeting_member
+  belongs_to :issue
+  has_one :status, through: :issue
   has_one :meeting_agenda, through: :meeting_protocol
-#  has_one :member, through: :meeting_member
-#  has_one :issue, through: :meeting_member
-#  has_one :status, through: :issue
 
   validates_presence_of :user_id
   validates_uniqueness_of :user_id, scope: :meeting_protocol_id

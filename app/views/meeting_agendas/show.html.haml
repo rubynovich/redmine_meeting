@@ -5,8 +5,8 @@
       - if @object.meeting_protocol.blank?
         = link_to l(:button_update), {action: 'edit', id: @object.id}, class: 'icon icon-edit'
         = link_to l(:button_delete), {action: 'destroy', id: @object.id}, confirm: l(:text_are_you_sure), method: 'delete', class: 'icon icon-del'
-      - if @object.meet_on.present? && @object.meet_on >= Date.today
-        - if @object.meeting_members.all?{ |q| q.issue.present? }
+      - if can_send_invites?
+        - if @object.meeting_members.all?(&:issue)
           = link_to l(:label_resend_invites), {action: 'resend_invites', id: @object.id}, class: 'icon icon-issue'
         - else
           = link_to l(:label_send_invites), {action: 'send_invites', id: @object.id}, class: 'icon icon-issue'

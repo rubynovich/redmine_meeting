@@ -28,6 +28,11 @@ module MeetingAgendasHelper
   end
 
   def can_create_protocol?(item)
-    meeting_manager? && (item.meet_on > Date.today)||(item.meet_on == Date.today) && (item.start_time.seconds_since_midnight < Time.now.seconds_since_midnight)
+    meeting_manager? && item.meet_on && (item.meet_on < Date.today) ||
+      item.meet_on && (item.meet_on == Date.today) && (item.start_time.seconds_since_midnight < Time.now.seconds_since_midnight)
+  end
+
+  def can_send_invites?
+    @object.meet_on.present? && @object.meet_on >= Date.today
   end
 end

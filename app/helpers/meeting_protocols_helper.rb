@@ -23,7 +23,13 @@ module MeetingProtocolsHelper
     User.current.meeting_participator?
   end
 
-  def author?
-    @object.author == User.current
+  def author?(item)
+    item.author == User.current
+  end
+
+  def can_send_notices?
+    (@object.meeting_agenda.meet_on < Date.today) ||
+      (@object.meeting_agenda.meet_on == Date.today) &&
+      (@object.meeting_agenda.start_time.seconds_since_midnight < Time.now.seconds_since_midnight)
   end
 end

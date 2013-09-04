@@ -13,7 +13,10 @@ Redmine::Plugin.register :redmine_meeting do
     principal_id: User.where(admin: true).first.try(:id),
     subject: "%subject% %place% %meet_on% %start_time% %end_time%",
     description: "%url%",
-    note: "%question%\n\n%description%\n\n%url%"
+    note: "%question%\n\n%description%\n\n%url%",
+    notice_subject: "%subject% %place% %meet_on% %start_time% %end_time%",
+    notice_description: "%url%",
+    notice_duration: 1
   }
 
   menu :application_menu, :meeting_agendas,
