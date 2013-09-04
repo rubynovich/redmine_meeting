@@ -79,13 +79,20 @@
             = link_to t(:label_meeting_notice_present), controller: 'issues', action: 'show', id: member.meeting_participator.issue_id
         - else
           = t(:label_meeting_notice_extra)
-  - @object.meeting_participators.reject(&:meeting_member).map(&:user).compact.each do |member|
+  - @object.meeting_participators.reject(&:meeting_member).each do |member|
     %tr.issue
-      %td=h member.company
-      %td=h member.job_title
-      %td=link_to_user(member)
+      %td=h member.user.company
+      %td=h member.user.job_title
+      %td=link_to_user(member.user)
       %td= t(:label_meeting_member_extra)
-      %td= t(:label_meeting_notice_extra)
+      %td
+        - if member.issue.present?
+          - if member.status == IssueStatus.default
+            = link_to t(:label_meeting_notice_blank), controller: 'issues', action: 'show', id: member.issue_id
+          - else
+            = link_to t(:label_meeting_notice_present), controller: 'issues', action: 'show', id: member.issue_id
+        - else
+          = t(:label_meeting_notice_extra)
 %br
 %h3=l(:label_meeting_answer_plural)+":"
 - @object.meeting_answers.group_by(&:project).sort_by{ |project, answers| project.to_s }.each do |project, answers|
