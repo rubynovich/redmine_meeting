@@ -35,7 +35,7 @@
                   = link_to "#{t(:label_meeting_protocol)} ##{item.meeting_protocol.id}", controller: 'meeting_protocols', action: 'show', id: item.meeting_protocol.id
                 - else
                   = "#{t(:label_meeting_protocol)} ##{item.meeting_protocol.id}"
-              - elsif meeting_manager?
+              - elsif can_create_protocol?
                 = link_to t(:button_add), {controller: 'meeting_protocols', action: 'new', meeting_protocol: {meeting_agenda_id: item.id}}, {class: 'icon icon-add'}
             %td.buttons
               - if meeting_manager? && (item.author == User.current)

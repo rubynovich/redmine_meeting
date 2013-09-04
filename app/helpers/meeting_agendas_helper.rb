@@ -26,4 +26,8 @@ module MeetingAgendasHelper
   def author?
     @object.author == User.current
   end
+
+  def can_create_protocol?
+    meeting_manager? && (@object.meet_on > Date.today)||(@object.meet_on == Date.today) && (@object.start_time.seconds_since_midnight < Time.now.seconds_since_midnight)
+  end
 end
