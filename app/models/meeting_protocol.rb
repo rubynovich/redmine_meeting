@@ -20,6 +20,7 @@ class MeetingProtocol < ActiveRecord::Base
   attr_accessible :meeting_agenda_id
 
   before_create :add_author_id
+  after_save :add_new_users_from_answers
 
   validates_uniqueness_of :meeting_agenda_id
   validates_presence_of :meeting_agenda_id
@@ -45,11 +46,10 @@ class MeetingProtocol < ActiveRecord::Base
   }
 
   def attachments_visible?(user=User.current)
-    user.allowed_to?({controller: 'meeting_protocols', action: 'show'}, nil, {global: true})
+    true
   end
 
   def attachments_deletable?(user=User.current)
-#    user.allowed_to?({controller: 'meeting_protocols', action: 'edit'}, nil, {global: true})
     false
   end
 
@@ -67,5 +67,11 @@ private
 
   def add_author_id
     self.author_id = User.current.id
+  end
+
+  def add_new_users_from_answers
+    (self.meeting_answers.map(&:reporter) - self.users).each do |user|
+      MeetingParticipator.create(user_id: user.id, meeting_protocol_id: self.meeting_protocol_id)
+    end
   end
 end

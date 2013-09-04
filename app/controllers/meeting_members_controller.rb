@@ -15,7 +15,7 @@ class MeetingMembersController < ApplicationController
   end
 
   def create
-    members = params[model_sym][:user_ids] if params[model_sym].present?
+    members = (params[model_sym].present? ? params[model_sym][:user_ids] : [])
 
     @users = if @object.present?
       @object.meeting_members << members.map{ |user_id| MeetingMember.new(user_id: user_id) }.compact

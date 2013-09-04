@@ -15,6 +15,7 @@ class MeetingAgenda < ActiveRecord::Base
   accepts_nested_attributes_for :meeting_members, allow_destroy: true
 
   before_create :add_author_id
+  after_save :add_new_users_from_questions
 
   attr_accessible :meeting_members_attributes
   attr_accessible :meeting_questions_attributes
@@ -92,6 +93,13 @@ private
   def presence_of_meeting_members
     if self.meeting_questions.blank? || self.meeting_questions.all?{ |q| q.user.blank? }
       errors.add(:meeting_members, :must_exist)
+    end
+  end
+
+  def add_new_users_from_questions
+    (self.meeting_questions.map(&:user) - self.users).each do |user|
+      raise self.users.inspect
+      MeetingMember.create(user_id: user.id, meeting_agenda_id: self.id)
     end
   end
 end

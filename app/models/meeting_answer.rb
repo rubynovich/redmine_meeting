@@ -14,15 +14,4 @@ class MeetingAnswer < ActiveRecord::Base
   has_many :users, through: :meeting_protocol, uniq: true
 
   validates_presence_of :user_id, :description, :start_date, :due_date, :meeting_question_id
-
-  after_save :add_new_users_from_answers
-
-private
-
-  def add_new_users_from_answers
-    (self.meeting_answers.map(&:reporter) - self.users).each do |user|
-      MeetingParticipator.create(user_id: user.id, meeting_protocol_id: self.meeting_protocol_id)
-    end
-  end
-
 end
