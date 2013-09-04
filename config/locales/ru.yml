@@ -59,8 +59,8 @@ ru:
   label_meeting_notice_close_status: "Статус закрытия просьбы ознакомиться"
   label_meeting_notice_duration: "Дней на ознакомление"
   label_meeting_issue_update: "Обновление задачи"
-  label_resend_notices: "Повторно разослать просьбы ознакомиться с протоколом"
-  label_send_notices: "Разослать просьбы ознакомиться с протоколом"
+  label_resend_notices: "Повторно разослать протокол участникам"
+  label_send_notices: "Разослать протокол участникам"
 
   label_meeting_issue_type_statuses:
     new: "Создана"
