@@ -98,7 +98,6 @@ private
 
   def add_new_users_from_questions
     (self.meeting_questions.map(&:user) - self.users).each do |user|
-      raise self.users.inspect
       MeetingMember.create(user_id: user.id, meeting_agenda_id: self.id)
     end
   end
