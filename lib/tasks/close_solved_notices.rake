@@ -6,7 +6,7 @@ Example:
 END_DESC
 
 namespace :redmine do
-  task :close_outdate_invites => :environment do
+  task :close_solved_notices => :environment do
     default_status = IssueStatus.default
     MeetingParticipator.
       joins(:issue).
