@@ -58,6 +58,7 @@
     %th=l(:field_job_title)
     %th=l(:field_member)
     %th=l(:label_meeting_invite_status)
+    %th=l(:field_issue)
     %th=l(:label_meeting_notice_status)
   - @object.meeting_members.each do |member|
     %tr.issue
@@ -71,6 +72,7 @@
           = t(:label_meeting_member_present)
         - else
           = t(:label_meeting_member_blank)
+      %td= link_to_issue(member.meeting_participator.issue, project: false, tracker: false, subject: false) rescue ""
       %td
         - if member.meeting_participator.try(:issue).present?
           - if member.meeting_participator.status == IssueStatus.default
@@ -85,6 +87,7 @@
       %td=h member.user.job_title
       %td=link_to_user(member.user)
       %td= t(:label_meeting_member_extra)
+      %td= link_to_issue(member.meeting_participator.issue, project: false, tracker: false, subject: false) rescue ""
       %td
         - if member.issue.present?
           - if member.status == IssueStatus.default
