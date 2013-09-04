@@ -49,7 +49,7 @@
             = link_to "#{t(:label_meeting_protocol)} ##{@object.meeting_protocol.id}", controller: 'meeting_protocols', action: 'show', id: @object.meeting_protocol.id
           - else
             = "#{t(:label_meeting_protocol)} ##{@object.meeting_protocol.id}"
-        - elsif can_create_protocol?
+        - elsif can_create_protocol?(@object)
           = link_to t(:button_add), {controller: 'meeting_protocols', action: 'new', meeting_protocol: {meeting_agenda_id: @object.id}}, {class: 'icon icon-add'}
 
   %hr
