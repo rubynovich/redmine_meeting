@@ -36,7 +36,7 @@
     = select_tag("settings[notice_issue_status]", options_from_collection_for_select(IssueStatus.where(is_closed: true), :id, :name, @settings[:notice_issue_status].try(:to_i)), :prompt => t(:prompt_please_select))
   %p
     %label= l(:label_meeting_notice_duration)
-    = text_field_tag("settings[duration]", @settings[:notice_duration], size: 5)
+    = text_field_tag("settings[notice_duration]", @settings[:notice_duration], size: 5)
   %p
     %label= l(:field_subject)
     = text_field_tag("settings[notice_subject]", @settings[:notice_subject], size: 80, maxlength: 255)
