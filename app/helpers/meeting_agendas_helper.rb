@@ -23,6 +23,10 @@ module MeetingAgendasHelper
     User.current.meeting_participator?
   end
 
+  def admin?
+    User.current.admin?
+  end
+
   def author?(item)
     item.author == User.current
   end
@@ -40,35 +44,36 @@ module MeetingAgendasHelper
   end
 
   def can_create_protocol?(agenda)
-    meeting_manager? && agenda.meet_on && (
-      (agenda.meet_on < Date.today) ||
-      (agenda.meet_on == Date.today) && (agenda.start_time.seconds_since_midnight < Time.now.seconds_since_midnight)
-    )
+    (meeting_manager? || admin?) &&
+      agenda.meet_on && (
+        (agenda.meet_on < Date.today) ||
+        (agenda.meet_on == Date.today) && (agenda.start_time.seconds_since_midnight < Time.now.seconds_since_midnight)
+      )
   end
 
   def can_send_invites?(agenda)
-    meeting_manager? && author?(agenda) &&
+    (meeting_manager? && author?(agenda) || admin?) &&
       agenda.meet_on.present? && (agenda.meet_on >= Date.today)
   end
 
   def can_show_agenda?(agenda)
-    meeting_manager? || agenda.users.include?(User.current)
+    admin? || meeting_manager? || agenda.users.include?(User.current)
   end
 
   def can_create_agenda?
-    meeting_manager?
+    admin? || meeting_manager?
   end
 
   def can_update_agenda?(agenda)
-    meeting_manager? && author?(agenda) && agenda.meeting_protocol.blank?
+    (admin? || meeting_manager? && author?(agenda)) && agenda.meeting_protocol.blank?
   end
 
   def can_destroy_agenda?(agenda)
-    meeting_manager? && author?(agenda) && agenda.meeting_protocol.blank?
+    (admin? || meeting_manager? && author?(agenda)) && agenda.meeting_protocol.blank?
   end
 
   def can_show_comments?(question)
-    meeting_manager? || item.users.include?(User.current)
+    admin? || meeting_manager? || item.users.include?(User.current)
   end
 
   def can_create_comments?(question)

@@ -85,7 +85,7 @@ class MeetingAgendasController < ApplicationController
       eql_project_id(params[:project_id]).
       uniq
 
-    @scope = @scope.joins(:meeting_members).where("meeting_members.user_id = ?", User.current.id) #unless meeting_manager?
+    @scope = @scope.joins(:meeting_members).where("meeting_members.user_id = ?", User.current.id) unless admin?
 
     @count = @scope.count
 

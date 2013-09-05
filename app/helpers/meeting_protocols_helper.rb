@@ -23,6 +23,10 @@ module MeetingProtocolsHelper
     User.current.meeting_participator?
   end
 
+  def admin?
+    User.current.admin?
+  end
+
   def author?(item)
     item.author == User.current
   end
@@ -84,53 +88,53 @@ module MeetingProtocolsHelper
   end
 
   def can_send_notices?(protocol)
-    meeting_manager? && author?(protocol) &&
+    (admin? || meeting_manager? && author?(protocol)) &&
       (protocol.meeting_agenda.meet_on < Date.today) ||
       (protocol.meeting_agenda.meet_on == Date.today) &&
       (protocol.meeting_agenda.start_time.seconds_since_midnight < Time.now.seconds_since_midnight)
   end
 
   def can_show_agenda?(protocol)
-    meeting_manager? || protocol.users.include?(User.current)
+    admin? || meeting_manager? || protocol.users.include?(User.current)
   end
 
   def can_create_protocol?(protocol)
     item = protocol.meeting_agenda
-    meeting_manager? && item.meet_on && (
+    (admin? || meeting_manager?) && item.meet_on && (
       (item.meet_on < Date.today) ||
       (item.meet_on == Date.today) && (item.start_time.seconds_since_midnight < Time.now.seconds_since_midnight)
     )
   end
 
   def can_show_protocol?(protocol)
-    meeting_manager? || protocol.users.include?(User.current)
+    admin? || meeting_manager? || protocol.users.include?(User.current)
   end
 
   def can_update_protocol?(protocol)
-    meeting_manager? && author?(protocol)
+    admin? || meeting_manager? && author?(protocol)
   end
 
   def can_destroy_protocol?(protocol)
-    meeting_manager? && author?(protocol)
+    admin? || meeting_manager? && author?(protocol)
   end
 
   def can_show_comments?(answer)
-    meeting_manager? || answer.users.include?(User.current)
+    admin? || meeting_manager? || answer.users.include?(User.current)
   end
 
   def can_create_comments?(answer)
-    meeting_manager? || answer.users.include?(User.current)
+    admin? || meeting_manager? || answer.users.include?(User.current)
   end
 
   def can_create_issue?(answer)
-    meeting_manager? && author?(answer.meeting_protocol)
+    admin? || meeting_manager? && author?(answer.meeting_protocol)
   end
 
   def can_update_issue?(answer)
-    meeting_manager? && author?(answer.meeting_protocol) && answer.meeting_question.present? && answer.meeting_question.issue.present?
+    admin? || meeting_manager? && author?(answer.meeting_protocol) && answer.meeting_question.present? && answer.meeting_question.issue.present?
   end
 
   def can_destroy_issue?(answer)
-    meeting_manager? && author?(answer.meeting_protocol)
+    admin? || meeting_manager? && author?(answer.meeting_protocol)
   end
 end
