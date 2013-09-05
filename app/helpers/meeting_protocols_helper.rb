@@ -89,27 +89,45 @@ module MeetingProtocolsHelper
       (@object.meeting_agenda.start_time.seconds_since_midnight < Time.now.seconds_since_midnight)
   end
 
-  def can_show_agenda?(item)
-    meeting_manager? || item.users.include?(User.current)
+  def can_show_agenda?(protocol)
+    meeting_manager? || protocol.users.include?(User.current)
   end
 
-  def can_show_protocol?(item)
-    meeting_manager? || item.users.include?(User.current)
+  def can_create_protocol?(protocol)
+    item = protocol.meeting_agenda
+    meeting_manager? && item.meet_on && (item.meet_on < Date.today) ||
+      item.meet_on && (item.meet_on == Date.today) && (item.start_time.seconds_since_midnight < Time.now.seconds_since_midnight)
   end
 
-  def can_update_protocol?(item)
-    meeting_manager? && author?(item)
+  def can_show_protocol?(protocol)
+    meeting_manager? || protocol.users.include?(User.current)
   end
 
-  def can_destroy_protocol?(item)
-    meeting_manager? && author?(item)
+  def can_update_protocol?(protocol)
+    meeting_manager? && author?(protocol)
   end
 
-  def can_show_comments?(item)
-    meeting_manager? || item.users.include?(User.current)
+  def can_destroy_protocol?(protocol)
+    meeting_manager? && author?(protocol)
   end
 
-  def can_create_comments?(item)
-    meeting_manager? || item.users.include?(User.current)
+  def can_show_comments?(answer)
+    meeting_manager? || answer.users.include?(User.current)
+  end
+
+  def can_create_comments?(answer)
+    meeting_manager? || answer.users.include?(User.current)
+  end
+
+  def can_create_issue?(answer)
+    meeting_manager? && author?(answer.meeting_protocol)
+  end
+
+  def can_update_issue?(answer)
+    meeting_manager? && author?(answer.meeting_protocol) && answer.meeting_question.present? && answer.meeting_question.issue.present?
+  end
+
+  def can_destroy_issue?(answer)
+    meeting_manager? && author?(answer.meeting_protocol)
   end
 end

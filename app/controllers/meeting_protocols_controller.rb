@@ -3,6 +3,8 @@ class MeetingProtocolsController < ApplicationController
 
   helper :attachments
   include AttachmentsHelper
+  helper :meeting_protocols
+  include MeetingProtocolsHelper
 
   before_filter :find_object, only: [:edit, :show, :destroy, :update, :send_notices, :resend_notices]
   before_filter :new_object, only: [:new, :create]
@@ -10,6 +12,7 @@ class MeetingProtocolsController < ApplicationController
   before_filter :require_meeting_participator, only: [:index, :show]
 
   def send_notices
+    (render_403; return false) unless can_send_notices?(@object)
     @object.meeting_participators.each do |member|
       send_notice(member)
     end
@@ -18,6 +21,7 @@ class MeetingProtocolsController < ApplicationController
   end
 
   def resend_notices
+    (render_403; return false) unless can_send_notices?(@object)
     @object.meeting_participators.each do |member|
       resend_notice(member)
     end
@@ -26,7 +30,7 @@ class MeetingProtocolsController < ApplicationController
   end
 
   def show
-    (render_403; return false) unless User.current.meeting_manager? || @object.users.include?(User.current)
+    (render_403; return false) unless can_show_protocol?(@object)
   end
 
   def index
@@ -64,6 +68,7 @@ class MeetingProtocolsController < ApplicationController
   end
 
   def create
+    (render_403; return false) unless can_create_protocol?(@object)
     @object.save_attachments(params[:attachments] || (params[:issue] && params[:issue][:uploads]))
     @object.meeting_participators_attributes = session[:meeting_participator_ids].map{ |user_id| {user_id: user_id} }
     if @object.save
@@ -77,6 +82,7 @@ class MeetingProtocolsController < ApplicationController
   end
 
   def update
+    (render_403; return false) unless can_update_protocol?(@object)
     @object.save_attachments(params[:attachments] || (params[:issue] && params[:issue][:uploads]))
     if @object.update_attributes(params[model_sym])
       flash[:notice] = l(:notice_successful_update)
@@ -89,6 +95,7 @@ class MeetingProtocolsController < ApplicationController
   end
 
   def new
+    (render_403; return false) unless can_create_protocol?(@object)
     @members = @object.meeting_agenda.users
     session[:meeting_participator_ids] = @object.meeting_agenda.user_ids
     @object.meeting_answers_attributes = @object.meeting_agenda.meeting_questions.map do |question|
@@ -102,10 +109,12 @@ class MeetingProtocolsController < ApplicationController
   end
 
   def edit
+    (render_403; return false) unless can_update_protocol?(@object)
     @members = @object.users
   end
 
   def destroy
+    (render_403; return false) unless can_destroy_protocol?(@object)
     flash[:notice] = l(:notice_successful_delete) if @object.destroy
     redirect_to action: 'index'
   end

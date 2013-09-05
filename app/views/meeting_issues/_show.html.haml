@@ -10,9 +10,12 @@
           %td=h answer.status
           %td=progress_bar(answer.issue.done_ratio, :width => '80px')
           %td=t(answer.issue_type || 'new', scope: :label_meeting_issue_type_statuses)
-          %td=link_to l(:button_dettach), {controller: 'meeting_issues', action: 'destroy', id: answer.id}, confirm: l(:text_are_you_sure), method: :delete, remote: true, class: 'icon icon-del'
-  - elsif meeting_manager? && author?(answer.meeting_protocol)
+          %td
+            - if can_destroy_issue?(answer)
+              =link_to l(:button_dettach), {controller: 'meeting_issues', action: 'destroy', id: answer.id}, confirm: l(:text_are_you_sure), method: :delete, remote: true, class: 'icon icon-del'
+  - else
     %p
-    - if answer.meeting_question.present? && answer.meeting_question.issue.present?
+    - if can_update_issue?(answer)
       = link_to l(:label_update_meeting_issue), {controller: 'meeting_issues', action: 'update', id: answer.id}, method: 'put', remote: true, class: 'icon icon-edit'
-    = link_to l(:label_new_meeting_issue), {controller: 'meeting_issues', action: 'new', meeting_answer_id: answer.id}, remote: true, class: 'icon icon-add'
+    - if can_create_issue?(answer)
+      = link_to l(:label_new_meeting_issue), {controller: 'meeting_issues', action: 'new', meeting_answer_id: answer.id}, remote: true, class: 'icon icon-add'
