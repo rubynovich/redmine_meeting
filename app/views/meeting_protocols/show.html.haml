@@ -5,16 +5,15 @@
 
 
 .contextual
-  - if meeting_manager? && author?(@object)
-    -#= link_to l(:button_add), {action: 'new'}, class: 'icon icon-add'
+  - if can_update_protocol?(@object)
     = link_to l(:button_update), {action: 'edit', id: @object.id}, class: 'icon icon-edit'
+  - if can_destroy_protocol?(@object)
     = link_to l(:button_delete), {action: 'destroy', id: @object.id}, :confirm => l(:text_are_you_sure), :method => :delete, :class => 'icon icon-del'
-    - if can_send_notices?
-      - if @object.meeting_participators.all?(&:issue)
-        = link_to l(:label_resend_notices), {action: 'resend_notices', id: @object.id}, class: 'icon icon-issue'
-      - else
-        = link_to l(:label_send_notices), {action: 'send_notices', id: @object.id}, class: 'icon icon-issue'
-
+  - if can_send_notices?
+    - if @object.meeting_participators.all?(&:issue)
+      = link_to l(:label_resend_notices), {action: 'resend_notices', id: @object.id}, class: 'icon icon-issue'
+    - else
+      = link_to l(:label_send_notices), {action: 'send_notices', id: @object.id}, class: 'icon icon-issue'
 
 %h2
   = link_to l(:label_meeting_protocol_plural), action: 'index'
@@ -43,11 +42,7 @@
       %td= format_time(@object.meeting_agenda.end_time, false)
     %tr
       %th= l(:label_meeting_agenda)+":"
-      %td
-        - if meeting_member?
-          = link_to "#{t(:label_meeting_agenda)} ##{@object.meeting_agenda.id}", controller: 'meeting_agendas', action: 'show', id: @object.meeting_agenda_id
-        - else
-          = "#{t(:label_meeting_agenda)} ##{@object.meeting_agenda.id}"
+      %td= link_to_agenda(@object)
       %th= l(:field_author)+":"
       %td= link_to_user @object.author
 
@@ -62,40 +57,20 @@
     %th=l(:label_meeting_notice_status)
   - @object.meeting_members.each do |member|
     %tr.issue
-      %td=h member.user.company rescue ""
-      %td=h member.user.job_title rescue ""
-      %td
-        - if member.user.present?
-          =link_to_user(member.user)
-      %td
-        - if member.meeting_participator.try(:user) == member.user
-          = t(:label_meeting_member_present)
-        - else
-          = t(:label_meeting_member_blank)
+      %td= h member.user.company rescue ""
+      %td= h member.user.job_title rescue ""
+      %td= link_to_user(member.user) if member.user.present?
+      %td= member_status(member)
       %td= link_to_issue(member.meeting_participator.issue, project: false, tracker: false, subject: false) rescue ""
-      %td
-        - if member.meeting_participator.try(:issue).present?
-          - if member.meeting_participator.status == IssueStatus.default
-            = link_to t(:label_meeting_notice_blank), controller: 'issues', action: 'show', id: member.meeting_participator.issue_id
-          - else
-            = link_to t(:label_meeting_notice_present), controller: 'issues', action: 'show', id: member.meeting_participator.issue_id
-        - else
-          = t(:label_meeting_notice_extra)
+      %td= link_to_meeting_notice(member.meeting_participator)
   - @object.meeting_participators.reject(&:meeting_member).each do |member|
     %tr.issue
-      %td=h member.user.company
-      %td=h member.user.job_title
-      %td=link_to_user(member.user)
+      %td= h member.user.company
+      %td= h member.user.job_title
+      %td= link_to_user(member.user)
       %td= t(:label_meeting_member_extra)
       %td= link_to_issue(member.meeting_participator.issue, project: false, tracker: false, subject: false) rescue ""
-      %td
-        - if member.issue.present?
-          - if member.status == IssueStatus.default
-            = link_to t(:label_meeting_notice_blank), controller: 'issues', action: 'show', id: member.issue_id
-          - else
-            = link_to t(:label_meeting_notice_present), controller: 'issues', action: 'show', id: member.issue_id
-        - else
-          = t(:label_meeting_notice_extra)
+      %td= link_to_meeting_notice(member)
 %br
 %h3=l(:label_meeting_answer_plural)+":"
 - @object.meeting_answers.group_by(&:project).sort_by{ |project, answers| project.to_s }.each do |project, answers|
@@ -108,27 +83,19 @@
     .issue.details
       %table.attributes
         %tr
-          %th=t(:label_meeting_question)+":"
-          %td=h answer.meeting_question
-          %th=t(:label_meeting_question_issue)+":"
-          %td
-            - if answer.meeting_question.try(:issue).present?
-              =link_to_issue answer.meeting_question.issue, project: false, tracker: false, subject: false
-            - else
-              =t(:label_meeting_question_issue_missing)
+          %th= t(:label_meeting_question)+":"
+          %td= h answer.meeting_question
+          %th= t(:label_meeting_question_issue)+":"
+          %td= link_to_question_issue(answer.meeting_question)
         %tr
-          %th=t(:label_meeting_question_user)+":"
-          %td
-            - if answer.reporter.present?
-              = link_to_user answer.reporter
-            - elsif answer.meeting_question.present?
-              = link_to_user answer.meeting_question.user
-          %th=t(:field_start_date)+":"
+          %th= t(:label_meeting_question_user)+":"
+          %td= link_to_reporter(answer)
+          %th= t(:field_start_date)+":"
           %td= format_date(answer.start_date)
         %tr
-          %th=t(:label_meeting_answer_user)+":"
-          %td=link_to_user answer.user
-          %th=t(:field_due_date)+":"
+          %th= t(:label_meeting_answer_user)+":"
+          %td= link_to_user answer.user
+          %th= t(:field_due_date)+":"
           %td= format_date(answer.due_date)
       %p
         %strong=t(:label_meeting_answer)+":"
@@ -138,7 +105,8 @@
 
       = render partial: 'meeting_issues/show', locals: {answer: answer}
 
-      %h4= l(:label_meeting_answer_comment_plural)+":"
-      = render partial: 'meeting_comments/history', locals: {meeting_container: answer}
+      - if can_show_comments?(@object)
+        %h4= l(:label_meeting_answer_comment_plural)+":"
+        = render partial: 'meeting_comments/history', locals: {meeting_container: answer}
 
 = link_to_attachments @object, thumbnails: true

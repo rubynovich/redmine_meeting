@@ -27,9 +27,89 @@ module MeetingProtocolsHelper
     item.author == User.current
   end
 
+  def link_to_agenda(item)
+    if can_show_agenda?(item)
+      link_to "#{t(:label_meeting_agenda)} ##{item.meeting_agenda_id}", controller: 'meeting_agendas', action: 'show', id: item.meeting_agenda_id
+    else
+      "#{t(:label_meeting_agenda)} ##{item.meeting_agenda_id}"
+    end
+  end
+
+  def link_to_question_issue(question)
+    if question.try(:issue).present?
+      link_to_issue question.issue, project: false, tracker: false, subject: false
+    else
+      t(:label_meeting_question_issue_missing)
+    end
+  end
+
+  def link_to_reporter(answer)
+    if answer.reporter.present?
+      link_to_user answer.reporter
+    elsif answer.meeting_question.present? && answer.meeting_question.user.present?
+      link_to_user answer.meeting_question.user
+    end
+  end
+
+  def link_to_meeting_notice(item)
+    if item.try(:issue).present?
+      if item.status == IssueStatus.default
+        link_to t(:label_meeting_notice_blank), controller: 'issues', action: 'show', id: item.issue_id
+      else
+        link_to t(:label_meeting_notice_present), controller: 'issues', action: 'show', id: item.issue_id
+      end
+    else
+      t(:label_meeting_notice_extra)
+    end
+  end
+
+  def member_status(member)
+    if member.meeting_participator.try(:user) == member.user
+      t(:label_meeting_member_present)
+    else
+      t(:label_meeting_member_blank)
+    end
+  end
+
+  def protocol_status(item)
+    if item.meeting_answers.all?(&:issue)
+      if item.issues.all?(&:closed?)
+        t(:label_meeting_project_is_done)
+      else
+        t(:label_meeting_project_not_completed)
+      end
+    else
+      t(:label_meeting_project_is_not_full)
+    end
+  end
+
   def can_send_notices?
     (@object.meeting_agenda.meet_on < Date.today) ||
       (@object.meeting_agenda.meet_on == Date.today) &&
       (@object.meeting_agenda.start_time.seconds_since_midnight < Time.now.seconds_since_midnight)
+  end
+
+  def can_show_agenda?(item)
+    meeting_manager? || item.users.include?(User.current)
+  end
+
+  def can_show_protocol?(item)
+    meeting_manager? || item.users.include?(User.current)
+  end
+
+  def can_update_protocol?(item)
+    meeting_manager? && author?(item)
+  end
+
+  def can_destroy_protocol?(item)
+    meeting_manager? && author?(item)
+  end
+
+  def can_show_comments?(item)
+    meeting_manager? || item.users.include?(User.current)
+  end
+
+  def can_create_comments?(item)
+    meeting_manager? || item.users.include?(User.current)
   end
 end

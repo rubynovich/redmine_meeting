@@ -24,31 +24,18 @@
         - @collection.each do |item|
           %tr{:class=>cycle("odd", "even")}
             %td{align: 'center'}= link_to item.id, action: 'show', id: item.id
-            %td{align: 'center'}
-              = format_date(item.meeting_agenda.meet_on) rescue ''
-            %td{align: 'center'}
-              = format_time(item.meeting_agenda.start_time, false) rescue ''
-            %td{align: 'center'}
-              = format_time(item.meeting_agenda.end_time, false) rescue ''
+            %td{align: 'center'}= format_date(item.meeting_agenda.meet_on) rescue ''
+            %td{align: 'center'}= format_time(item.meeting_agenda.start_time, false) rescue ''
+            %td{align: 'center'}= format_time(item.meeting_agenda.end_time, false) rescue ''
             %td{align: 'left'}= link_to h(item.meeting_agenda.subject), action: 'show', id: item.id rescue ''
             %td{align: 'center'}= link_to_user item.author
-            %td{align: 'center'}
-              - if item.meeting_answers.all?{ |answer| answer.issue.present? }
-                - if item.issues.all?{ |issue| issue.closed? }
-                  = t(:label_meeting_project_is_done)
-                - else
-                  = t(:label_meeting_project_not_completed)
-              - else
-                = t(:label_meeting_project_is_not_full)
-            %td{align: 'center'}
-              - if meeting_member?
-                = link_to "#{t(:label_meeting_agenda)} ##{item.meeting_agenda_id}", controller: 'meeting_agendas', action: 'show', id: item.meeting_agenda_id
-              - else
-                = "#{t(:label_meeting_agenda)} ##{item.meeting_agenda_id}"
+            %td{align: 'center'}= protocol_status(item)
+            %td{align: 'center'}= link_to_agenda(item)
             %td{align: 'center'}= format_time(item.created_on)
             %td.buttons
-              - if meeting_manager? && author?(item)
+              - if can_update_protocol?(item)
                 = link_to l(:button_update), {action: 'edit', id: item.id}, class: 'icon icon-edit'
+              - if can_destroy_protocol?(item)
                 = link_to(l(:button_delete), {action: 'destroy', id: item.id}, method: 'delete', confirm: l(:text_are_you_sure), class: 'icon icon-del')
 
   %p.pagination= pagination_links_full @pages, @count

@@ -27,15 +27,15 @@ module MeetingAgendasHelper
     item.author == User.current
   end
 
-  def link_to_protocol(protocol)
-    if protocol.present?
-      if can_show_protocol?(protocol)
-        link_to "#{t(:label_meeting_protocol)} ##{protocol.id}", controller: 'meeting_protocols', action: 'show', id: protocol.id
+  def link_to_protocol(item)
+    if item.meeting_protocol.present?
+      if can_show_protocol?(item.meeting_protocol)
+        link_to "#{t(:label_meeting_protocol)} ##{item.meeting_protocol.id}", controller: 'meeting_protocols', action: 'show', id: item.meeting_protocol.id
       else
-        "#{t(:label_meeting_protocol)} ##{protocol.id}"
+        "#{t(:label_meeting_protocol)} ##{item.meeting_protocol.id}"
       end
-    elsif can_create_protocol?(protocol.meeting_agenda)
-      link_to t(:button_add), {controller: 'meeting_protocols', action: 'new', meeting_protocol: {meeting_agenda_id: protocol.meeting_agenda_id}}, {class: 'icon icon-add'}
+    elsif can_create_protocol?(item)
+      link_to t(:button_add), {controller: 'meeting_protocols', action: 'new', meeting_protocol: {meeting_agenda_id: item.id}}, {class: 'icon icon-add'}
     end
   end
 

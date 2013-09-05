@@ -6,13 +6,16 @@ class MeetingAgendasController < ApplicationController
   before_filter :require_meeting_manager, only: [:edit, :update, :new, :create, :destroy, :send_invites, :resend_invites]
   before_filter :require_meeting_member, only: [:index, :show]
 
+  helper :meeting_agendas
+  include MeetingAgendasHelper
   include ApplicationHelper
 
   def show
-    (render_403; return false) unless User.current.meeting_manager? || @object.users.include?(User.current)
+    (render_403; return false) unless can_show_agenda?(@object)
   end
 
   def send_invites
+    (render_403; return false) unless can_send_invites?(@object)
     @object.meeting_members.each do |member|
       member.send_invite(url_for(controller: 'meeting_agendas', action: 'show', id: @object.id))
     end if invite_actual?
@@ -21,6 +24,7 @@ class MeetingAgendasController < ApplicationController
   end
 
   def resend_invites
+    (render_403; return false) unless can_send_invites?(@object)
     @object.meeting_members.each do |member|
       member.resend_invite(url_for(controller: 'meeting_agendas', action: 'show', id: @object.id))
     end if invite_actual?

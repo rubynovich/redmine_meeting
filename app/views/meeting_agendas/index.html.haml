@@ -1,5 +1,5 @@
 .contextual
-  - can_create_agenda?
+  - if can_create_agenda?
     = link_to t(:label_new_meeting_agenda), {action: 'new'}, class: 'icon icon-add'
 
 %h2= t(:label_meeting_agenda_plural)
@@ -30,7 +30,7 @@
             %td{align: 'left'}= link_to h(item.subject), action: 'show', id: item.id
             %td{align: 'center'}= link_to_user item.author
             %td{align: 'center'}= format_time(item.created_on)
-            %td{align: 'center'}= link_to_protocol(item.meeting_protocol)
+            %td{align: 'center'}= link_to_protocol(item)
             %td.buttons
               - if can_update_agenda?(item)
                 = link_to l(:button_update), {action: 'edit', id: item.id}, class: 'icon icon-edit'
