@@ -1,5 +1,6 @@
 .contextual
-  = link_to t(:label_new_meeting_agenda), {action: 'new'}, class: 'icon icon-add'
+  - can_create_agenda?
+    = link_to t(:label_new_meeting_agenda), {action: 'new'}, class: 'icon icon-add'
 
 %h2= t(:label_meeting_agenda_plural)
 
@@ -29,18 +30,12 @@
             %td{align: 'left'}= link_to h(item.subject), action: 'show', id: item.id
             %td{align: 'center'}= link_to_user item.author
             %td{align: 'center'}= format_time(item.created_on)
-            %td{align: 'center'}
-              - if item.meeting_protocol.present?
-                - if meeting_participator?
-                  = link_to "#{t(:label_meeting_protocol)} ##{item.meeting_protocol.id}", controller: 'meeting_protocols', action: 'show', id: item.meeting_protocol.id
-                - else
-                  = "#{t(:label_meeting_protocol)} ##{item.meeting_protocol.id}"
-              - elsif can_create_protocol?(item)
-                = link_to t(:button_add), {controller: 'meeting_protocols', action: 'new', meeting_protocol: {meeting_agenda_id: item.id}}, {class: 'icon icon-add'}
+            %td{align: 'center'}= link_to_protocol(item.meeting_protocol)
             %td.buttons
-              - if meeting_manager? && author?(item) && item.meeting_protocol.blank?
+              - if can_update_agenda?(item)
                 = link_to l(:button_update), {action: 'edit', id: item.id}, class: 'icon icon-edit'
-                = link_to(l(:button_delete), {action: 'destroy', id: item.id}, method: 'delete', confirm: l(:text_are_you_sure), class: 'icon icon-del')
+              - if can_destroy_agenda?(item)
+                = link_to l(:button_delete), {action: 'destroy', id: item.id}, method: 'delete', confirm: l(:text_are_you_sure), class: 'icon icon-del'
 
   %p.pagination= pagination_links_full @pages, @count
 - else

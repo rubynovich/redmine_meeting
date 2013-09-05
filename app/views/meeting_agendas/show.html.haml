@@ -1,15 +1,15 @@
 .contextual
-  - if meeting_manager?
+  - if can_create_agenda?
     = link_to l(:button_add), {action: 'new'}, class: 'icon icon-add'
-    - if author?(@object)
-      - if @object.meeting_protocol.blank?
-        = link_to l(:button_update), {action: 'edit', id: @object.id}, class: 'icon icon-edit'
-        = link_to l(:button_delete), {action: 'destroy', id: @object.id}, confirm: l(:text_are_you_sure), method: 'delete', class: 'icon icon-del'
-      - if can_send_invites?
-        - if @object.meeting_members.all?(&:issue)
-          = link_to l(:label_resend_invites), {action: 'resend_invites', id: @object.id}, class: 'icon icon-issue'
-        - else
-          = link_to l(:label_send_invites), {action: 'send_invites', id: @object.id}, class: 'icon icon-issue'
+  - if can_update_agenda?(@object)
+    = link_to l(:button_update), {action: 'edit', id: @object.id}, class: 'icon icon-edit'
+  - if can_destroy_agenda?(@object)
+    = link_to l(:button_delete), {action: 'destroy', id: @object.id}, confirm: l(:text_are_you_sure), method: 'delete', class: 'icon icon-del'
+  - if can_send_invites?(@object)
+    - if @object.meeting_members.all?(&:issue)
+      = link_to l(:label_resend_invites), {action: 'resend_invites', id: @object.id}, class: 'icon icon-issue'
+    - else
+      = link_to l(:label_send_invites), {action: 'send_invites', id: @object.id}, class: 'icon icon-issue'
 
 %h2
   = link_to l(:label_meeting_agenda_plural), action: 'index'
@@ -43,14 +43,7 @@
       %td= link_to_user @object.author
     %tr
       %th= l(:label_meeting_protocol)+":"
-      %td
-        - if @object.meeting_protocol.present?
-          - if meeting_participator?
-            = link_to "#{t(:label_meeting_protocol)} ##{@object.meeting_protocol.id}", controller: 'meeting_protocols', action: 'show', id: @object.meeting_protocol.id
-          - else
-            = "#{t(:label_meeting_protocol)} ##{@object.meeting_protocol.id}"
-        - elsif can_create_protocol?(@object)
-          = link_to t(:button_add), {controller: 'meeting_protocols', action: 'new', meeting_protocol: {meeting_agenda_id: @object.id}}, {class: 'icon icon-add'}
+      %td= link_to_protocol(@object.meeting_protocol)
 
   %hr
 
@@ -66,9 +59,9 @@
       %tr.issue
         %td=h member.user.company rescue ""
         %td=h member.user.job_title rescue ""
-        %td=link_to_user(member.user)
-        %td=link_to_issue(member.issue, subject: false, tracker: false, project: false) if member.issue.present?
-        %td=link_to(member.issue.try(:status), controller: 'issues', action: 'show', id: member.issue_id) rescue h l(:label_meeting_member_was_not_invite)
+        %td= link_to_user(member.user)
+        %td= link_to_issue(member.issue, subject: false, tracker: false, project: false) if member.issue.present?
+        %td= link_to(member.issue.try(:status), controller: 'issues', action: 'show', id: member.issue_id) rescue h l(:label_meeting_member_was_not_invite)
 
   %br
 
@@ -100,11 +93,12 @@
                 = link_to_user question.user
             %td
               - if question.status.present?
-                = h question.status
+                =h question.status
             %td{width: '80px'}
               - if question.issue.present?
-                =progress_bar(question.issue.done_ratio, width: '80px')
-          %tr{id: "comments_block_for_#{question.id}", style: 'display: none;'}
-            %td{colspan: 5}
-              %h4= l(:label_meeting_question_comment_plural)+":"
-              = render partial: 'meeting_comments/history', locals: {meeting_container: question}
+                = progress_bar(question.issue.done_ratio, width: '80px')
+          - if can_show_comments?(@object)
+            %tr{id: "comments_block_for_#{question.id}", style: 'display: none;'}
+              %td{colspan: 5}
+                %h4= l(:label_meeting_question_comment_plural)+":"
+                = render partial: 'meeting_comments/history', locals: {meeting_container: question}

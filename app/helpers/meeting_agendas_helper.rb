@@ -27,12 +27,52 @@ module MeetingAgendasHelper
     item.author == User.current
   end
 
+  def link_to_protocol(protocol)
+    if protocol.present?
+      if can_show_protocol?(protocol)
+        link_to "#{t(:label_meeting_protocol)} ##{protocol.id}", controller: 'meeting_protocols', action: 'show', id: protocol.id
+      else
+        "#{t(:label_meeting_protocol)} ##{protocol.id}"
+      end
+    elsif can_create_protocol?(protocol.meeting_agenda)
+      link_to t(:button_add), {controller: 'meeting_protocols', action: 'new', meeting_protocol: {meeting_agenda_id: protocol.meeting_agenda_id}}, {class: 'icon icon-add'}
+    end
+  end
+
   def can_create_protocol?(item)
     meeting_manager? && item.meet_on && (item.meet_on < Date.today) ||
       item.meet_on && (item.meet_on == Date.today) && (item.start_time.seconds_since_midnight < Time.now.seconds_since_midnight)
   end
 
-  def can_send_invites?
-    @object.meet_on.present? && @object.meet_on >= Date.today
+  def can_send_invites?(item)
+    item.meet_on.present? && item.meet_on >= Date.today
+  end
+
+  def can_show_agenda?(item)
+    meeting_manager? || item.users.include?(User.current)
+  end
+
+  def can_create_agenda?
+    meeting_manager?
+  end
+
+  def can_update_agenda?(item)
+    meeting_manager? && author?(item) && item.meeting_protocol.blank?
+  end
+
+  def can_destroy_agenda?(item)
+    meeting_manager? && author?(item) && item.meeting_protocol.blank?
+  end
+
+  def can_show_comments?(item)
+    meeting_manager? || item.users.include?(User.current)
+  end
+
+  def can_create_comments?(item)
+    meeting_manager? || item.users.include?(User.current)
+  end
+
+  def can_show_protocol?(item)
+    meeting_manager? || item.users.include?(User.current)
   end
 end
