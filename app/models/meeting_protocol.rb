@@ -71,7 +71,7 @@ private
 
   def add_new_users_from_answers
     (self.meeting_answers.map(&:reporter) - self.users).each do |user|
-      MeetingParticipator.create(user_id: user.id, meeting_protocol_id: self.meeting_protocol_id)
+      MeetingParticipator.create(user_id: user.id, meeting_protocol_id: self.id)
     end
   end
 end
