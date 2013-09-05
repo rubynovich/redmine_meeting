@@ -10,6 +10,7 @@ class MeetingMember < ActiveRecord::Base
 
   validates_uniqueness_of :user_id, scope: :meeting_agenda_id
   validates_presence_of :user_id
+  validate :validate_meeting_agenda, if: -> {self.meeting_agenda.present? && !self.meeting_agenda.valid?}
 
   def to_s
     self.user.try(:name) || ''
@@ -74,5 +75,9 @@ private
       due_date: self.meeting_agenda.meet_on,
       priority: self.meeting_agenda.priority || IssuePriority.default,
       assigned_to: self.user)
+  end
+
+  def validate_meeting_agenda
+    errors[:base] << ::I18n.t(:error_messages_meeting_agenda_not_valid)
   end
 end
