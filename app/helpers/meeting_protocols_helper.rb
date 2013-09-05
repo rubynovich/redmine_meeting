@@ -83,10 +83,11 @@ module MeetingProtocolsHelper
     end
   end
 
-  def can_send_notices?
-    (@object.meeting_agenda.meet_on < Date.today) ||
-      (@object.meeting_agenda.meet_on == Date.today) &&
-      (@object.meeting_agenda.start_time.seconds_since_midnight < Time.now.seconds_since_midnight)
+  def can_send_notices?(protocol)
+    meeting_manager? && author?(protocol) &&
+      (protocol.meeting_agenda.meet_on < Date.today) ||
+      (protocol.meeting_agenda.meet_on == Date.today) &&
+      (protocol.meeting_agenda.start_time.seconds_since_midnight < Time.now.seconds_since_midnight)
   end
 
   def can_show_agenda?(protocol)
@@ -95,8 +96,10 @@ module MeetingProtocolsHelper
 
   def can_create_protocol?(protocol)
     item = protocol.meeting_agenda
-    meeting_manager? && item.meet_on && (item.meet_on < Date.today) ||
-      item.meet_on && (item.meet_on == Date.today) && (item.start_time.seconds_since_midnight < Time.now.seconds_since_midnight)
+    meeting_manager? && item.meet_on && (
+      (item.meet_on < Date.today) ||
+      (item.meet_on == Date.today) && (item.start_time.seconds_since_midnight < Time.now.seconds_since_midnight)
+    )
   end
 
   def can_show_protocol?(protocol)

@@ -9,7 +9,7 @@
     = link_to l(:button_update), {action: 'edit', id: @object.id}, class: 'icon icon-edit'
   - if can_destroy_protocol?(@object)
     = link_to l(:button_delete), {action: 'destroy', id: @object.id}, :confirm => l(:text_are_you_sure), :method => :delete, :class => 'icon icon-del'
-  - if can_send_notices?
+  - if can_send_notices?(@object)
     - if @object.meeting_participators.all?(&:issue)
       = link_to l(:label_resend_notices), {action: 'resend_notices', id: @object.id}, class: 'icon icon-issue'
     - else
