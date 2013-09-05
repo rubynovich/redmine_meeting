@@ -46,6 +46,8 @@ class MeetingProtocolsController < ApplicationController
       like_field(params[:subject], 'meeting_agendas.subject').
       uniq
 
+    @scope = @scope.joins(:meeting_participators).joins(:meeting_answers).where("meeting_participators.user_id = :user_id OR meeting_answers.reporter_id = :user_id", user_id: User.current.id) #unless meeting_manager?
+
     @count = @scope.count
 
     @pages = begin
@@ -151,7 +153,7 @@ private
   end
 
   def resend_notice(member)
-    close_status_id = IssueStatus.find(Setting[:plugin_redmine_meeting][:notice_issue_status]).id
+    close_status_id = IssueStatus.find(Setting[:plugin_redmine_meeting][:issue_status]).id
     if member.issue.present? && !member.issue.closed?
       member.issue.update_attribute(:status_id, close_status_id)
       member.update_attribute(:issue_id, nil)
