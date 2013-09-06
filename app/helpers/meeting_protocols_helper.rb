@@ -118,23 +118,23 @@ module MeetingProtocolsHelper
     admin? || meeting_manager? && author?(protocol)
   end
 
-  def can_show_comments?(answer)
-    admin? || meeting_manager? || answer.users.include?(User.current)
-  end
+#  def can_show_comments?(answer)
+#    admin? || meeting_manager? || answer.users.include?(User.current)
+#  end
 
-  def can_create_comments?(answer)
-    admin? || meeting_manager? || answer.users.include?(User.current)
-  end
+#  def can_create_comments?(answer)
+#    admin? || meeting_manager? || answer.users.include?(User.current)
+#  end
 
-  def can_create_issue?(answer)
-    admin? || meeting_manager? && author?(answer.meeting_protocol)
-  end
+#  def can_create_issue?(answer)
+#    admin? || meeting_manager? && author?(answer.meeting_protocol)
+#  end
 
-  def can_update_issue?(answer)
-    (admin? || meeting_manager? && author?(answer.meeting_protocol)) && answer.meeting_question.present? && answer.meeting_question.issue.present?
-  end
+#  def can_update_issue?(answer)
+#    (admin? || meeting_manager? && author?(answer.meeting_protocol)) && answer.meeting_question.present? && answer.meeting_question.issue.present?
+#  end
 
-  def can_destroy_issue?(answer)
-    admin? || meeting_manager? && author?(answer.meeting_protocol)
-  end
+#  def can_destroy_issue?(answer)
+#    admin? || meeting_manager? && author?(answer.meeting_protocol)
+#  end
 end

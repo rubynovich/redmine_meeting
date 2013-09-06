@@ -72,13 +72,13 @@ module MeetingAgendasHelper
     (admin? || meeting_manager? && author?(agenda)) && agenda.meeting_protocol.blank?
   end
 
-  def can_show_comments?(question)
-    admin? || meeting_manager? || item.users.include?(User.current)
-  end
+#  def can_show_comments?(question)
+#    admin? || meeting_manager? || item.users.include?(User.current)
+#  end
 
-  def can_create_comments?(question)
-    meeting_manager? || item.users.include?(User.current)
-  end
+#  def can_create_comments?(question)
+#    meeting_manager? || item.users.include?(User.current)
+#  end
 
   def can_show_protocol?(protocol)
     meeting_manager? || protocol.users.include?(User.current)

@@ -5,6 +5,11 @@ class MeetingProtocolsController < ApplicationController
   include AttachmentsHelper
   helper :meeting_protocols
   include MeetingProtocolsHelper
+  helper :meeting_issues
+  include MeetingIssuesHelper
+  helper :meeting_comments
+  include MeetingCommentsHelper
+
 
   before_filter :find_object, only: [:edit, :show, :destroy, :update, :send_notices, :resend_notices]
   before_filter :new_object, only: [:new, :create]

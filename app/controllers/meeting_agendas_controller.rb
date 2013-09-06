@@ -6,6 +6,8 @@ class MeetingAgendasController < ApplicationController
 
   helper :meeting_agendas
   include MeetingAgendasHelper
+  helper :meeting_comments
+  include MeetingCommentsHelper
   include ApplicationHelper
 
   def show
