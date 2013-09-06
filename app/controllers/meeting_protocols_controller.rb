@@ -8,8 +8,6 @@ class MeetingProtocolsController < ApplicationController
 
   before_filter :find_object, only: [:edit, :show, :destroy, :update, :send_notices, :resend_notices]
   before_filter :new_object, only: [:new, :create]
-  before_filter :require_meeting_manager, only: [:edit, :update, :new, :create, :destroy]
-  before_filter :require_meeting_participator, only: [:index, :show]
 
   def send_notices
     (render_403; return false) unless can_send_notices?(@object)
@@ -137,14 +135,6 @@ private
 
   def new_object
     @object = model_class.new(params[model_sym])
-  end
-
-  def require_meeting_manager
-    (render_403; return false) unless User.current.meeting_manager?
-  end
-
-  def require_meeting_participator
-    (render_403; return false) unless User.current.meeting_participator?
   end
 
   def send_notice(member)
