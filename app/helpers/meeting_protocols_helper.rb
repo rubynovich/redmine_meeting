@@ -131,7 +131,7 @@ module MeetingProtocolsHelper
   end
 
   def can_update_issue?(answer)
-    admin? || meeting_manager? && author?(answer.meeting_protocol) && answer.meeting_question.present? && answer.meeting_question.issue.present?
+    (admin? || meeting_manager? && author?(answer.meeting_protocol)) && answer.meeting_question.present? && answer.meeting_question.issue.present?
   end
 
   def can_destroy_issue?(answer)
