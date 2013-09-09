@@ -70,7 +70,7 @@ private
   end
 
   def add_new_users_from_answers
-    (self.meeting_answers.map(&:reporter) - self.users).each do |user|
+    (self.meeting_answers.map(&:reporter) - self.users).compact.each do |user|
       MeetingParticipator.create(user_id: user.id, meeting_protocol_id: self.id)
     end
   end
