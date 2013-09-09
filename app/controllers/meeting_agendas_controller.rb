@@ -18,7 +18,7 @@ class MeetingAgendasController < ApplicationController
     (render_403; return false) unless can_send_invites?(@object)
     @object.meeting_members.each do |member|
       member.send_invite(url_for(controller: 'meeting_agendas', action: 'show', id: @object.id))
-    end if invite_actual?
+    end
 
     redirect_to controller: 'meeting_agendas', action: 'show', id: @object.id
   end
@@ -27,7 +27,7 @@ class MeetingAgendasController < ApplicationController
     (render_403; return false) unless can_send_invites?(@object)
     @object.meeting_members.each do |member|
       member.resend_invite(url_for(controller: 'meeting_agendas', action: 'show', id: @object.id))
-    end if invite_actual?
+    end
 
     redirect_to controller: 'meeting_agendas', action: 'show', id: @object.id
   end
@@ -138,10 +138,6 @@ class MeetingAgendasController < ApplicationController
   end
 
 private
-  def invite_actual?
-    @object.meet_on >= Date.today
-  end
-
   def model_class
     MeetingAgenda
   end

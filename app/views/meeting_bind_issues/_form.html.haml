@@ -1,0 +1,9 @@
+.box.tabular
+  %p
+    = f.label :issue_id
+    = f.text_field :issue_id, size: 10, class: "autocomplete_for_issue"
+
+:javascript
+  $('.autocomplete_for_issue:not(.autocomplete)').each( function(index){
+    observeAutocompleteField( $(this).attr('id'), '#{escape_javascript autocomplete_for_issue_meeting_agendas_path}')
+  } );

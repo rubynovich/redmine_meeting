@@ -1,0 +1,3 @@
+-#location.reload();
+
+$("#meeting_bind_issue_for_#{@object.id}").html('#{ escape_javascript(render partial: 'meeting_bind_issues/show', locals: {meeting_bind_issue: @object}) }');

@@ -6,6 +6,7 @@ class MeetingQuestion < ActiveRecord::Base
   has_one :status, through: :issue
   has_one :project, through: :issue
   has_one :meeting_answer
+  has_one :author, through: :meeting_agenda
   has_many :meeting_questions, through: :meeting_agenda, uniq: true
   has_many :meeting_members, through: :meeting_agenda, uniq: true
   has_many :users, through: :meeting_agenda, uniq: true
