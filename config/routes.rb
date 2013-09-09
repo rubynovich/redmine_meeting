@@ -30,3 +30,5 @@ resources :meeting_protocols do
     get 'resend_notices'
   end
 end
+
+resources :meeting_bind_issues

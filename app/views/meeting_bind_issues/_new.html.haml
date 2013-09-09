@@ -2,7 +2,7 @@
 
 = error_messages_for @question
 
-= labelled_form_for(@question, url: {controller: 'meeting_bind_issues', action: 'create', meeting_answer_id: @object.id}, method: :post, remote: true) do |f|
+= labelled_form_for(@question, url: {controller: 'meeting_bind_issues', action: 'create', meeting_question_id: @question.id}, method: :post, remote: true) do |f|
   = render partial: 'meeting_bind_issues/form', locals: {f: f}
   %p.buttons
     = f.submit l(:button_add), :name => nil, :onclick => "hideModal(this);"

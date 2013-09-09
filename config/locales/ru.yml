@@ -66,6 +66,7 @@ ru:
   label_meeting_notice_present: "Ознакомлен"
   label_meeting_notice_blank: "Не ознакомлен"
   label_meeting_notice_extra: "Не уведомлен"
+  label_meeting_bind_issue_new: "Привязка задачи к вопросу"
 
   label_meeting_issue_type_statuses:
     new: "Создана"
