@@ -3,6 +3,7 @@ class MeetingMember < ActiveRecord::Base
 
   belongs_to :meeting_agenda
   belongs_to :user
+#  belongs_to :person, class_name: 'Person', foreign_key: 'user_id'
   belongs_to :issue
   has_one :status, through: :issue
   has_one :meeting_participator
