@@ -31,6 +31,10 @@ module MeetingAgendasHelper
     item.author == User.current
   end
 
+  def approver?(item)
+    item.meeting_approvers.map(&:user).include?(User.current)
+  end
+
   def link_to_protocol(item)
     if item.meeting_protocol.present?
       if can_show_protocol?(item.meeting_protocol)
@@ -61,7 +65,7 @@ module MeetingAgendasHelper
   end
 
   def can_show_agenda?(agenda)
-    admin? || meeting_manager? || agenda.users.include?(User.current)
+    admin? || meeting_manager? || agenda.users.include?(User.current) || approver?(agenda)
   end
 
   def can_create_agenda?

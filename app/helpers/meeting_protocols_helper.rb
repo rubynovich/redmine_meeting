@@ -31,6 +31,10 @@ module MeetingProtocolsHelper
     item.author == User.current
   end
 
+  def approver?(item)
+    item.meeting_approvers.map(&:user).include?(User.current)
+  end
+
   def link_to_agenda(item)
     if can_show_agenda?(item)
       link_to "#{t(:label_meeting_agenda)} ##{item.meeting_agenda_id}", controller: 'meeting_agendas', action: 'show', id: item.meeting_agenda_id
@@ -96,7 +100,7 @@ module MeetingProtocolsHelper
   end
 
   def can_show_agenda?(protocol)
-    admin? || meeting_manager? || protocol.users.include?(User.current)
+    admin? || meeting_manager? || protocol.users.include?(User.current) || approver?(protocol.meeting_agenda)
   end
 
   def can_create_protocol?(protocol)
@@ -108,7 +112,7 @@ module MeetingProtocolsHelper
   end
 
   def can_show_protocol?(protocol)
-    admin? || meeting_manager? || protocol.users.include?(User.current)
+    admin? || meeting_manager? || protocol.users.include?(User.current) || approver?(protocol)
   end
 
   def can_update_protocol?(protocol)

@@ -11,6 +11,7 @@ class MeetingProtocol < ActiveRecord::Base
   has_many :meeting_participators, dependent: :delete_all
   has_many :users, through: :meeting_participators, order: [:lastname, :firstname], uniq: true
   has_many :meeting_members, through: :meeting_agenda, uniq: true
+  has_many :meeting_approvers, as: :meeting_container
 
   accepts_nested_attributes_for :meeting_answers, allow_destroy: true
   accepts_nested_attributes_for :meeting_participators, allow_destroy: true

@@ -1,0 +1,38 @@
+- if true
+  #approval_page
+    :javascript
+      function approve_item(elem,url,id){
+          $.ajax({url: url,
+              type: 'PUT',
+              dataType: 'script',
+              data: 'meeting_approver_' + id})
+          var checkbox = $(elem)
+          if (checkbox.is(':checked'))
+              checkbox.removeAttr('checked')
+          else
+              checkbox.attr('checked', true)
+      }
+
+    :css
+      #approval_page p {margin: 0;  padding: 0;}
+      #approval_page p {list-style-type:none; margin: 0px 2px 0px 0px; padding: 0px 0px 0px 0px;}
+      #approval_page a.delete {opacity: 0.4;}
+      #approval_page a.delete:hover {opacity: 1;}
+      #approval_page img.gravatar {vertical-align: middle; margin: 0 4px 2px 0;}
+      #meeting_approvers p.meeting_approver.is-deleted {
+        text-decoration: line-through;
+        color: #999;
+      }
+
+
+    .contextual
+      - if true
+        = link_to l(:button_add), {controller: 'meeting_approvers', action: 'new', meeting_container_type: @object.class.to_s, meeting_container_id: @object.id}, remote: true, method: 'get'
+
+    %h3
+      = l(:label_meeting_approver_plural)
+      = "(#{@object.meeting_approvers.size})"
+
+    #meeting_approvers
+      - @object.meeting_approvers.each do |meeting_approver|
+        = render partial: 'meeting_approvers/meeting_approver', locals: {meeting_approver: meeting_approver}

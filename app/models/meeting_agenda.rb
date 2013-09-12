@@ -8,6 +8,7 @@ class MeetingAgenda < ActiveRecord::Base
   has_many :statuses, through: :issues, uniq: true
   has_many :meeting_members, dependent: :delete_all
   has_many :users, through: :meeting_members, order: [:lastname, :firstname], uniq: true
+  has_many :meeting_approvers, as: :meeting_container
   belongs_to :author, class_name: 'User', foreign_key: 'author_id'
   belongs_to :priority, class_name: 'IssuePriority', foreign_key: 'priority_id'
 

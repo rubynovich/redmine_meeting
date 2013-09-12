@@ -32,3 +32,8 @@ resources :meeting_protocols do
 end
 
 resources :meeting_bind_issues
+resources :meeting_approvers do
+  collection do
+    get 'autocomplete_for_user'
+  end
+end

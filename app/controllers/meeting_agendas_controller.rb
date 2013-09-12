@@ -8,6 +8,8 @@ class MeetingAgendasController < ApplicationController
   include MeetingAgendasHelper
   helper :meeting_comments
   include MeetingCommentsHelper
+  helper :meeting_approvers
+  include MeetingApproversHelper
   include ApplicationHelper
 
   def show
