@@ -53,7 +53,7 @@ module MeetingPlugin
         @author = author
         @container = container
         type = {MeetingAgenda => ::I18n.t(:label_meeting_agenda), MeetingProtocol => ::I18n.t(:label_meeting_protocol)}[container.class]
-        subject = ::I18n.t(:message_subject_meeting_approver_create, author: @authorname, type: type)
+        subject = ::I18n.t(:message_subject_meeting_approver_create, author: @author.name, type: type)
 
         mail(to: user.mail, subject: subject)
       end
@@ -63,7 +63,7 @@ module MeetingPlugin
         @author = author
         @container = container
         type = {MeetingAgenda => ::I18n.t(:label_meeting_agenda), MeetingProtocol => ::I18n.t(:label_meeting_protocol)}[container.class]
-        subject = ::I18n.t(:message_subject_meeting_approver_destroy, author: @authorname, type: type)
+        subject = ::I18n.t(:message_subject_meeting_approver_destroy, author: @author.name, type: type)
 
         mail(to: user.mail, subject: subject)
       end
@@ -73,7 +73,7 @@ module MeetingPlugin
         @author = author
         @container = container
         type = {MeetingAgenda => ::I18n.t(:label_meeting_agenda), MeetingProtocol => ::I18n.t(:label_meeting_protocol)}[container.class]
-        subject = ::I18n.t(:message_subject_meeting_approver_approve, user: @username, type: type)
+        subject = ::I18n.t(:message_subject_meeting_approver_approve, user: @user.name, type: type)
 
         mail(to: author.mail, subject: subject)
       end
@@ -84,7 +84,7 @@ module MeetingPlugin
         @container = container
         @comment = comment
         type = {MeetingAgenda => ::I18n.t(:label_meeting_agenda), MeetingProtocol => ::I18n.t(:label_meeting_protocol)}[container.class]
-        subject = ::I18n.t(:message_subject_meeting_comment_create, user: @username, type: type)
+        subject = ::I18n.t(:message_subject_meeting_comment_create, user: @user.name, type: type)
 
         mail(to: author.mail, subject: subject)
       end
