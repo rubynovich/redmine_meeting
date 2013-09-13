@@ -23,15 +23,15 @@ class MeetingApprover < ActiveRecord::Base
 
 private
   def message_approver_approve
-    Mailer.meeting_approver_approve.deliver
+    Mailer.meeting_approver_approve(self).deliver
   end
 
   def message_approver_create
-    Mailer.meeting_approver_create.deliver
+    Mailer.meeting_approver_create(self).deliver
   end
 
   def message_approver_destroy
-    Mailer.meeting_approver_destroy.deliver
+    Mailer.meeting_approver_destroy(self).deliver
   end
 
   def add_approved_on
