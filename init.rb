@@ -39,13 +39,16 @@ end
 Rails.configuration.to_prepare do
   require_dependency 'meeting_agenda'
   require_dependency 'meeting_protocol'
+  require_dependency 'mailer'
   require 'time_period_scope'
   require 'meeting_user_patch'
+  require 'meeting_mailer_patch'
 
   [
    [MeetingAgenda, TimePeriodScope],
    [MeetingProtocol, TimePeriodScope],
-   [User, MeetingPlugin::UserPatch]
+   [User, MeetingPlugin::UserPatch],
+   [Mailer, MeetingPlugin::MailerPatch]
   ].each do |cl, patch|
     cl.send(:include, patch) unless cl.included_modules.include? patch
   end
