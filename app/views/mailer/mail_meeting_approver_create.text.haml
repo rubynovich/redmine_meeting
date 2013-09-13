@@ -1,0 +1,8 @@
+= l(:mail_body_greeting) + ' ' + @username + ', ' + t(:mail_body_meeting_approver_create_greating, author: @authorname)
+
+= t(:mail_body_meeting_approver_create_greating, author: @authorname)
+
+- if @container.is_a? MeetingAgenda
+  = t(:mail_body_meeting_approver_create_body_agenda) + " " + @container.subject + ": " + url_for(controller: 'meeting_agenda', action: 'show', id: @container.id, only_path: false)
+- elsif @container.is_a? MeetingProtocol
+  = t(:mail_body_meeting_approver_create_body_protocol) + " " + @container.meeting_agenda.subject + ": " + url_for(controller: 'meeting_protocol', action: 'show', id: @container.id, only_path: false)

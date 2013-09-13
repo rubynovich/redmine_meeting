@@ -12,11 +12,28 @@ class MeetingApprover < ActiveRecord::Base
   before_validation :add_approved_on, if: -> { self.approved? && !self.class.find(self.id).approved? }
   before_create :add_author_id
 
+  before_update :message_approver_approve, if: -> { self.approved? && !self.class.find(self.id).approved? }
+  after_create :message_approver_create
+  before_destroy :message_approver_destroy
+
+
   scope :open, ->(status = true) {
     where("#{self.table_name}.deleted = ?", !status)
   }
 
 private
+  def message_approver_approve
+    Mailer.meeting_approver_approve.deliver
+  end
+
+  def message_approver_create
+    Mailer.meeting_approver_create.deliver
+  end
+
+  def message_approver_destroy
+    Mailer.meeting_approver_destroy.deliver
+  end
+
   def add_approved_on
     self.approved_on = Time.now
   end
