@@ -14,21 +14,21 @@ module MeetingPlugin
 
     module ClassMethods
       def meeting_approver_create(approver)
-        author = approver.author
+        author = approver.meeting_container.author
         user = approver.user
         container = approver.meeting_container
         mail_meeting_approver_create(author, user, container)
       end
 
       def meeting_approver_destroy(approver)
-        author = approver.author
+        author = approver.meeting_container.author
         user = approver.user
         container = approver.meeting_container
         mail_meeting_approver_destroy(author, user, container)
       end
 
       def meeting_approver_approve(approver)
-        author = approver.author
+        author = approver.meeting_container.author
         user = approver.user
         container = approver.meeting_container
         mail_meeting_approver_approve(author, user, container)
