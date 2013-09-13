@@ -14,7 +14,7 @@ class MeetingApprover < ActiveRecord::Base
 
   before_update :message_approver_approve, if: -> { self.approved? && !self.class.find(self.id).approved? }
   after_create :message_approver_create
-  before_destroy :message_approver_destroy
+  before_save :message_approver_destroy, if: -> { !self.deleted? && self.class.find(self.id).deleted? }
 
 
   scope :open, ->(status = true) {
