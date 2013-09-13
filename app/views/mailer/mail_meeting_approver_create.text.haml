@@ -1,4 +1,4 @@
-= l(:mail_body_greeting, lastname: @user.lastname, firstname: @user.firstname) + ', ' + t(:mail_body_meeting_approver_create_greating, author: @author.name)
+= l(:mail_body_greeting, lastname: @user.lastname, firstname: @user.firstname) + t(:mail_body_meeting_approver_create_greating, author: @author.name)
 
 - if @container.is_a? MeetingAgenda
   = t(:mail_body_meeting_approver_create_agenda) + " " + @container.subject + ": " + url_for(controller: 'meeting_agendas', action: 'show', id: @container.id, only_path: false)

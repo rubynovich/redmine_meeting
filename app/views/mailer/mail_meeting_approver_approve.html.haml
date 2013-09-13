@@ -1,4 +1,4 @@
-= l(:mail_body_greeting, lastname: @author.lastname, firstname: @author.firstname) + ', ' + @user.name
+= l(:mail_body_greeting, lastname: @author.lastname, firstname: @author.firstname) + @user.name
 - if @container.is_a? MeetingAgenda
   = t(:mail_body_meeting_approver_approve_agenda)
   = link_to(@container.subject, controller: 'meeting_agendas', action: 'show', id: @container.id, only_path: false)
