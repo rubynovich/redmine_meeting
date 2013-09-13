@@ -1,7 +1,7 @@
-= l(:mail_body_greeting) + ' ' + @authorname + ', '
+= l(:mail_body_greeting, lastname: @author.lastname, firstname: @author.firstname) + ', '
 - if @container.is_a? MeetingAgenda
-  = @username + " " + t(:mail_body_meeting_comment_body_agenda) + " " + @container.subject + ": " + url_for(controller: 'meeting_agendas', action: 'show', id: @container.id, only_path: false)
+  = @user.name + " " + t(:mail_body_meeting_comment_body_agenda) + " " + @container.subject + ": " + url_for(controller: 'meeting_agendas', action: 'show', id: @container.id, only_path: false)
 - elsif @container.is_a? MeetingProtocol
-  = @username + " " + t(:mail_body_meeting_comment_body_protocol) + " " + @container.meeting_agenda.subject + ": " + url_for(controller: 'meeting_protocols', action: 'show', id: @container.id, only_path: false)
+  = @user.name + " " + t(:mail_body_meeting_comment_body_protocol) + " " + @container.meeting_agenda.subject + ": " + url_for(controller: 'meeting_protocols', action: 'show', id: @container.id, only_path: false)
 
 = @comment

@@ -49,8 +49,8 @@ module MeetingPlugin
 
     module InstanceMethods
       def mail_meeting_approver_create(author, user, container)
-        @username = user.name
-        @authorname = author.name
+        @user = user
+        @author = author
         @container = container
         type = {MeetingAgenda => ::I18n.t(:label_meeting_agenda), MeetingProtocol => ::I18n.t(:label_meeting_protocol)}[container.class]
         subject = ::I18n.t(:message_subject_meeting_approver_create, author: @authorname, type: type)
@@ -59,8 +59,8 @@ module MeetingPlugin
       end
 
       def mail_meeting_approver_destroy(author, user, container)
-        @username = user.name
-        @authorname = author.name
+        @user = user
+        @author = author
         @container = container
         type = {MeetingAgenda => ::I18n.t(:label_meeting_agenda), MeetingProtocol => ::I18n.t(:label_meeting_protocol)}[container.class]
         subject = ::I18n.t(:message_subject_meeting_approver_destroy, author: @authorname, type: type)
@@ -69,8 +69,8 @@ module MeetingPlugin
       end
 
       def mail_meeting_approver_approve(author, user, container)
-        @username = user.name
-        @authorname = author.name
+        @user = user
+        @author = author
         @container = container
         type = {MeetingAgenda => ::I18n.t(:label_meeting_agenda), MeetingProtocol => ::I18n.t(:label_meeting_protocol)}[container.class]
         subject = ::I18n.t(:message_subject_meeting_approver_approve, user: @username, type: type)
@@ -79,8 +79,8 @@ module MeetingPlugin
       end
 
       def mail_meeting_comment_create(author, user, container, comment)
-        @username = user.name
-        @authorname = author.name
+        @user = user
+        @author = author
         @container = container
         @comment = comment
         type = {MeetingAgenda => ::I18n.t(:label_meeting_agenda), MeetingProtocol => ::I18n.t(:label_meeting_protocol)}[container.class]
