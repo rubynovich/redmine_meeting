@@ -3,7 +3,7 @@
 
 - if @container.is_a? MeetingAgenda
   = t(:mail_body_meeting_approver_create_body_agenda)
-  = link_to(@container.subject, controller: 'meeting_agendas', action: 'show', id: @container.id)
+  = link_to(@container.subject, controller: 'meeting_agendas', action: 'show', id: @container.id, only_path: false)
 - elsif @container.is_a? MeetingProtocol
   = t(:mail_body_meeting_approver_create_body_protocol)
-  = link_to(@container.meeting_agenda.subject, controller: 'meeting_protocols', action: 'show', id: @container.id)
+  = link_to(@container.meeting_agenda.subject, controller: 'meeting_protocols', action: 'show', id: @container.id, only_path: false)
