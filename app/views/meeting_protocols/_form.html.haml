@@ -1,13 +1,14 @@
 - content_for(:header_tags) do
   = javascript_include_tag :jquery_nested_form, :plugin => 'redmine_meeting'
 
+= f.hidden_field :meeting_agenda_id
 = error_messages_for @object
 = back_url_hidden_field_tag
 - heads_for_wiki_formatter
 - include_calendar_headers_tags
 
 .box.tabular
-  = f.hidden_field :meeting_agenda_id
+
   .splitcontentleft
     %p
       = f.label :start_time, l(:label_meeting_protocol_start_time)
@@ -16,6 +17,8 @@
     %p
       = f.label :end_time, l(:label_meeting_protocol_end_time)
       = f.time_select :end_time, minute_step: 10
+
+  %div{style: "clear:both"}
 
   %h3=l :label_meeting_answer_plural
   = f.fields_for :meeting_answers
@@ -26,8 +29,6 @@
       = l(:label_attachment_plural)
     = link_to_attachments @object if @object.attachments.any?
     %p= render partial: 'attachments/form', locals: {container: @object}
-
-
 
   :javascript
     $(function() {
