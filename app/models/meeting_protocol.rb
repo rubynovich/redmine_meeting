@@ -18,7 +18,7 @@ class MeetingProtocol < ActiveRecord::Base
 
   attr_accessible :meeting_answers_attributes
   attr_accessible :meeting_participators_attributes
-  attr_accessible :meeting_agenda_id
+  attr_accessible :meeting_agenda_id, :start_time, :end_time
 
   before_create :add_author_id
   after_save :add_new_users_from_answers
