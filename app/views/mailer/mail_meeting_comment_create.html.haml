@@ -7,4 +7,6 @@
   = t(:mail_body_meeting_comment_protocol)
   = link_to(@container.meeting_agenda.subject, controller: 'meeting_protocols', action: 'show', id: @container.id, only_path: false)
 
+%quotes= @comment_for
+
 %p= @comment

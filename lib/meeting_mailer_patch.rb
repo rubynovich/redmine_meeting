@@ -37,13 +37,20 @@ module MeetingPlugin
       def meeting_comment_create(comment)
         author = comment.meeting_container.author
         user = comment.author
-        container = if comment.meeting_container_type == 'MeetingQuestion'
-          comment.meeting_container.meeting_agenda
-        elsif comment.meeting_container_type == 'MeetingAnswer'
-          comment.meeting_container.meeting_protocol
+        container = case comment.meeting_container_type
+          when 'MeetingQuestion'
+            comment.meeting_container.meeting_agenda
+          when 'MeetingAnswer'
+            comment.meeting_container.meeting_protocol
+        end
+        comment_for = case comment.meeting_container_type
+          when 'MeetingQuestion'
+            comment.meeting_container.title
+          when
+            comment.meeting_container.description
         end
         comment = comment.note
-        mail_meeting_comment_create(author, user, container, comment)
+        mail_meeting_comment_create(author, user, container, comment, comment_for)
       end
     end
 
@@ -78,11 +85,12 @@ module MeetingPlugin
         mail(to: author.mail, subject: subject)
       end
 
-      def mail_meeting_comment_create(author, user, container, comment)
+      def mail_meeting_comment_create(author, user, container, comment, comment_for)
         @user = user
         @author = author
         @container = container
         @comment = comment
+        @comment_for = comment_for
         type = {MeetingAgenda => ::I18n.t(:label_meeting_agenda), MeetingProtocol => ::I18n.t(:label_meeting_protocol)}[container.class]
         subject = ::I18n.t(:message_subject_meeting_comment_create, user: @user.name, type: type)
 
