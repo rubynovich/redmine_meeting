@@ -33,12 +33,12 @@
     %tr
       %th= l(:field_meet_on)+":"
       %td= format_date(@object.meeting_agenda.meet_on)
-      %th= l(:label_meeting_agenda_start_time)+":"
+      %th= l(:label_meeting_protocol_start_time)+":"
       %td= format_time(@object.start_time, false)
     %tr
       %th= l(:field_created_on)+":"
       %td= format_time(@object.created_on)
-      %th= l(:label_meeting_agenda_end_time)+":"
+      %th= l(:label_meeting_protocol_end_time)+":"
       %td= format_time(@object.end_time, false)
     %tr
       %th= l(:label_meeting_agenda)+":"
