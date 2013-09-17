@@ -18,10 +18,9 @@
       = f.time_select :end_time, minute_step: 10
   %div{:style=>"clear:both"}
 
-  %p
-    %h3=l :label_meeting_answer_plural
-    = f.fields_for :meeting_answers
-    = f.link_to_add l(:button_add), :meeting_answers, class: 'icon icon-add'
+  %h3=l :label_meeting_answer_plural
+  = f.fields_for :meeting_answers
+  = f.link_to_add l(:button_add), :meeting_answers, class: 'icon icon-add'
 
   %fieldset
     %legend
