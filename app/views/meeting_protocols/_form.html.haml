@@ -12,11 +12,11 @@
   .splitcontentleft
     %p
       = f.label :start_time, l(:label_meeting_protocol_start_time)
-      = f.time_select :start_time, minute_step: 10, blank: true
+      = f.time_select :start_time, minute_step: 10, include_blank: true
   .splitcontentright
     %p
       = f.label :end_time, l(:label_meeting_protocol_end_time)
-      = f.time_select :end_time, minute_step: 10, blank: true
+      = f.time_select :end_time, minute_step: 10, include_blank: true
 
   -#%div{style: "clear:both"}
 
