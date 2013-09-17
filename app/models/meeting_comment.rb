@@ -10,7 +10,7 @@ class MeetingComment < ActiveRecord::Base
 
 private
   def message_meeting_comment_create
-    Mailer.meeting_comment_create(self)
+    Mailer.meeting_comment_create(self).deliver
   end
 
   def add_author_id
