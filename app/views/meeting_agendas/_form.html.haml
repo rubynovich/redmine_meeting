@@ -25,10 +25,10 @@
   .splitcontentright
     %p
       = f.label :start_time, l(:label_meeting_agenda_start_time)
-      = f.time_select :start_time, minute_step: 15
+      = f.time_select :start_time, minute_step: 10
     %p
       = f.label :end_time, l(:label_meeting_agenda_end_time)
-      = f.time_select :end_time, minute_step: 15
+      = f.time_select :end_time, minute_step: 10
   %div{:style=>"clear:both"}
   -#
     %p

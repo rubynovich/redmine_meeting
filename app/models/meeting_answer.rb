@@ -15,4 +15,12 @@ class MeetingAnswer < ActiveRecord::Base
   has_many :users, through: :meeting_protocol, uniq: true
 
   validates_presence_of :user_id, :description, :start_date, :due_date, :meeting_question_id
+
+  def reporter
+    if super.present?
+      super
+    elsif self.meeting_question.present? && self.meeting_question.user.present?
+      self.meeting_question.user
+    end
+  end
 end

@@ -53,11 +53,13 @@ module MeetingProtocolsHelper
   end
 
   def link_to_reporter(answer)
-    if answer.reporter.present?
-      link_to_user answer.reporter
-    elsif answer.meeting_question.present? && answer.meeting_question.user.present?
-      link_to_user answer.meeting_question.user
-    end
+# NOTE move to answer model
+#    if answer.reporter.present?
+#      link_to_user answer.reporter
+#    elsif answer.meeting_question.present? && answer.meeting_question.user.present?
+#      link_to_user answer.meeting_question.user
+#    end
+    link_to_user answer.reporter
   end
 
   def link_to_meeting_notice(item)

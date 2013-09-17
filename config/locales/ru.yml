@@ -82,6 +82,8 @@ ru:
   mail_body_meeting_approver_approve_protocol: "согласовал(а) Протокол совещания"
   mail_body_meeting_comment_agenda: "оставил(а) комментарий к Повестке совещания"
   mail_body_meeting_comment_protocol: "оставил(а) комментарий к Протоколу совещания"
+  label_meeting_protocol_start_time: "Фактическое время начала"
+  label_meeting_protocol_end_time: "Фактическое время окончания"
 
   label_meeting_issue_type_statuses:
     new: "Создана"

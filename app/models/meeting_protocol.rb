@@ -24,7 +24,7 @@ class MeetingProtocol < ActiveRecord::Base
   after_save :add_new_users_from_answers
 
   validates_uniqueness_of :meeting_agenda_id
-  validates_presence_of :meeting_agenda_id
+  validates_presence_of :meeting_agenda_id, :start_time, :end_time
   validate :presence_of_meeting_answers, if: -> {self.meeting_answers.blank?}
   validate :presence_of_meeting_participators, if: -> {self.meeting_participators.blank?}
 
