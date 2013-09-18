@@ -4,7 +4,7 @@
 - elsif @container.is_a? MeetingProtocol
   = @user.name + " " + t(:mail_body_meeting_comment_body_protocol) + " " + @container.meeting_agenda.subject + ": " + url_for(controller: 'meeting_protocols', action: 'show', id: @container.id, only_path: false)
 
-= @comment_for.split("\n").map{|s| "> #{s}\n"}
+= @comment_for.to_s.split("\n").map{|s| "> #{s}\n"}
 
 = "---"
 
