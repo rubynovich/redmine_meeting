@@ -7,11 +7,11 @@ END_DESC
 
 namespace :redmine do
   task :close_solved_notices => :environment do
-    default_status = IssueStatus.default
+    solved_status = Setting[:plugin_redmine_meeting][:solved_issue_status]
     MeetingParticipator.
       joins(:issue).
-      where("issues.status_id <> ?", default_status.id).each do |member|
-        p member.issue.update_attribute(:status_id, Setting[:plugin_redmine_meeting][:notice_issue_status])
+      where("issues.status_id = ?", solved_status.id).each do |member|
+        p member.issue.update_attribute(:status_id, Setting[:plugin_redmine_meeting][:close_issue_status])
       end
   end
 end

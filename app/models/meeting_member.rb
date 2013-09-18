@@ -25,9 +25,9 @@ class MeetingMember < ActiveRecord::Base
 
   def resend_invite(url = nil)
     @url = url
-    close_status_id = IssueStatus.find(Setting[:plugin_redmine_meeting][:issue_status]).id
+    cancel_status_id = IssueStatus.find(Setting[:plugin_redmine_meeting][:cancel_issue_status]).id
     if self.issue.present? && !self.issue.closed?
-      self.issue.update_attribute(:status_id, close_status_id)
+      self.issue.update_attribute(:status_id, cancel_status_id)
       self.update_attribute(:issue_id, nil)
       self.send_invite(url)
     end

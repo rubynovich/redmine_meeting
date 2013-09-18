@@ -13,14 +13,14 @@ namespace :redmine do
       where("meeting_agendas.meet_on < ?", Date.today).
       joins(:issue).
       where("issues.status_id = ?", default_status.id).each do |member|
-        p member.issue.update_attribute(:status_id, Setting[:plugin_redmine_meeting][:issue_status])
+        p member.issue.update_attribute(:status_id, Setting[:plugin_redmine_meeting][:cancel_issue_status])
       end
     MeetingMember.
       joins(:meeting_agenda).
-      joins(:status).
       where("meeting_agendas.meet_on < ?", Date.today).
+      joins(:status).
       where("issue_statuses.is_closed = ?", false).each do |member|
-        p member.issue.update_attribute(:status_id, Setting[:plugin_redmine_meeting][:notice_issue_status])
+        p member.issue.update_attribute(:status_id, Setting[:plugin_redmine_meeting][:close_issue_status])
       end
   end
 end
