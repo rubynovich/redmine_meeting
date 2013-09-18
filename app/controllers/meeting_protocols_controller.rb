@@ -151,7 +151,7 @@ private
 
   def resend_notice(member)
     cancel_status_id = IssueStatus.find(Setting[:plugin_redmine_meeting][:cancel_issue_status]).id
-    if member.issue.present? && !member.issue.closed?
+    if member.issue.present?
       member.issue.update_attribute(:status_id, cancel_status_id)
       member.update_attribute(:issue_id, nil)
       send_notice(member)
