@@ -4,7 +4,8 @@ class MeetingQuestion < ActiveRecord::Base
   belongs_to :user
   belongs_to :meeting_agenda
   has_one :status, through: :issue
-  has_one :project, through: :issue
+#  has_one :project, through: :issue
+  belongs_to :project
   has_one :meeting_answer
   has_one :author, through: :meeting_agenda
   has_many :meeting_questions, through: :meeting_agenda, uniq: true
@@ -17,6 +18,14 @@ class MeetingQuestion < ActiveRecord::Base
 
   def to_s
     self.title
+  end
+
+  def project
+    if super.present?
+      super
+    elsif issue.present?
+      self.issue.project
+    end
   end
 
 end

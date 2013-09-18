@@ -4,6 +4,9 @@
   %p
     = f.label :title, t(:label_meeting_question_title)
     = f.text_field :title, size: 255, style: "width: 90%"
+  %p
+    = f.label :project_id, t(:field_project)
+    = f.collection_select :project_id, Project.active.visible.order(:name), :id, :name, include_blank: t(:prompt_please_select)
   .splitcontentleft
     %p
       = f.label :user_id, t(:label_meeting_question_user)
@@ -11,5 +14,5 @@
   .splitcontentright
     %p
       = f.label :issue_id
-      = f.text_field :issue_id, size: 60, class: "autocomplete_for_issue"
+      = f.text_field :issue_id, size: 60, class: "autocomplete_for_issue", style: "width:90%"
   %div{:style=>"clear:both"}
