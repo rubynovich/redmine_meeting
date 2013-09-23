@@ -87,6 +87,7 @@ ru:
   label_meeting_close_issue_status: "Закрытая задача"
   label_meeting_solved_issue_status: "Решенная задача"
   label_meeting_cancel_issue_status: "Отмененная задача"
+  label_meeting_extra_answer_plural: "Вопросы рассмотренные вне повестки"
 
   label_meeting_issue_type_statuses:
     new: "Создана"

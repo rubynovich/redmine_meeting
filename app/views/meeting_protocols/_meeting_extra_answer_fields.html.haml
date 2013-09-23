@@ -2,8 +2,8 @@
   .contextual
     = f.link_to_remove l(:button_delete), class: "icon icon-del"
   %p
-    = f.label :meeting_question_id, t(:label_meeting_question)
-    = f.collection_select :meeting_question_id, @object.meeting_agenda.meeting_questions, :id, :to_s, prompt: t(:prompt_please_select)
+    = f.label :meeting_question_name, t(:label_meeting_question)
+    = f.text_field :meeting_question_name, size: 100, style: "width: 80%"
   %p
     = f.label :reporter_id, t(:label_meeting_answer_reporter)
     = f.collection_select :reporter_id, User.active.order(:lastname, :firstname), :id, :to_s, include_blank: t(:prompt_please_select)

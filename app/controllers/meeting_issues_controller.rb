@@ -29,7 +29,12 @@ class MeetingIssuesController < ApplicationController
   end
 
   def destroy
-    @object = MeetingAnswer.find(params[:id])
+    @object = case params[:meeting_answer_type]
+      when 'MeetingAnswer'
+        MeetingAnswer.find(params[:id])
+      when 'MeetingExtraAnswer'
+        MeetingExtraAnswer.find(params[:id])
+      end
     if @object.issue_type == "new"
       @object.issue.update_attributes(status_id: Setting[:plugin_redmine_meeting][:cancel_issue_status])
     end
@@ -38,11 +43,11 @@ class MeetingIssuesController < ApplicationController
   end
 
   def update
-   @object = MeetingAnswer.find(params[:id])
-   issue = @object.meeting_question.issue
-   update_issue(issue).save
-   @object.update_attribute(:issue_id, issue.id)
-   @object.update_attribute(:issue_type, :update)
+    @object = MeetingAnswer.find(params[:id])
+    issue = @object.meeting_question.issue
+    update_issue(issue).save
+    @object.update_attribute(:issue_id, issue.id)
+    @object.update_attribute(:issue_type, :update)
   end
 
 private
@@ -51,7 +56,12 @@ private
   end
 
   def find_object
-    @object = MeetingAnswer.find(params[:meeting_answer_id])
+    @object = case params[:meeting_answer_type]
+      when 'MeetingAnswer'
+        MeetingAnswer.find(params[:meeting_answer_id])
+      when 'MeetingExtraAnswer'
+        MeetingExtraAnswer.find(params[:meeting_answer_id])
+      end
   end
 
   def key_words

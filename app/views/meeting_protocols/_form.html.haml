@@ -1,5 +1,5 @@
 - content_for(:header_tags) do
-  = javascript_include_tag :jquery_nested_form, :plugin => 'redmine_meeting'
+  = javascript_include_tag :jquery_nested_form, plugin: 'redmine_meeting'
 
 = f.hidden_field :meeting_agenda_id
 = error_messages_for @object
@@ -8,21 +8,25 @@
 - include_calendar_headers_tags
 
 .box.tabular
+  %fieldset
+    .splitcontentleft
+      %p
+        = f.label :start_time, l(:label_meeting_protocol_start_time)
+        = f.time_select :start_time, minute_step: 10, include_blank: true
+    .splitcontentright
+      %p
+        = f.label :end_time, l(:label_meeting_protocol_end_time)
+        = f.time_select :end_time, minute_step: 10, include_blank: true
 
-  .splitcontentleft
-    %p
-      = f.label :start_time, l(:label_meeting_protocol_start_time)
-      = f.time_select :start_time, minute_step: 10, include_blank: true
-  .splitcontentright
-    %p
-      = f.label :end_time, l(:label_meeting_protocol_end_time)
-      = f.time_select :end_time, minute_step: 10, include_blank: true
+    -#%div{style: "clear:both"}
 
-  -#%div{style: "clear:both"}
-
-  %h3=l :label_meeting_answer_plural
+  %h3{style: "margin-top: 33px"}=l :label_meeting_answer_plural
   = f.fields_for :meeting_answers
   = f.link_to_add l(:button_add), :meeting_answers, class: 'icon icon-add'
+
+  %h3{style: "margin-top: 33px"}=l :label_meeting_extra_answer_plural
+  = f.fields_for :meeting_extra_answers
+  = f.link_to_add l(:button_add), :meeting_extra_answers, class: 'icon icon-add'
 
   %fieldset
     %legend

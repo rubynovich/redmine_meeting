@@ -4,7 +4,7 @@
 
 = render partial: 'meeting_issues/attributes', locals: {issue: @issue}
 
-= labelled_form_for(@issue, url: {controller: 'meeting_issues', action: 'create', meeting_answer_id: @object.id}, method: :post, remote: true) do |f|
+= labelled_form_for(@issue, url: {controller: 'meeting_issues', action: 'create', meeting_answer_type: @object.class, meeting_answer_id: @object.id}, method: :post, remote: true) do |f|
   = render partial: 'meeting_issues/form', locals: {f: f}
   %p.buttons
     = f.submit l(:button_add), :name => nil, :onclick => "hideModal(this);"

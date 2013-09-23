@@ -7,6 +7,7 @@ class MeetingProtocol < ActiveRecord::Base
   belongs_to :author, class_name: 'User', foreign_key: 'author_id'
   belongs_to :meeting_agenda
   has_many :meeting_answers, dependent: :delete_all, order: [:meeting_question_id]
+  has_many :meeting_extra_answers, dependent: :delete_all
   has_many :issues, through: :meeting_answers, uniq: true
   has_many :meeting_participators, dependent: :delete_all
   has_many :users, through: :meeting_participators, order: [:lastname, :firstname], uniq: true
@@ -14,9 +15,11 @@ class MeetingProtocol < ActiveRecord::Base
   has_many :meeting_approvers, as: :meeting_container
 
   accepts_nested_attributes_for :meeting_answers, allow_destroy: true
+  accepts_nested_attributes_for :meeting_extra_answers, allow_destroy: true
   accepts_nested_attributes_for :meeting_participators, allow_destroy: true
 
   attr_accessible :meeting_answers_attributes
+  attr_accessible :meeting_extra_answers_attributes
   attr_accessible :meeting_participators_attributes
   attr_accessible :meeting_agenda_id, :start_time, :end_time
 
@@ -52,6 +55,10 @@ class MeetingProtocol < ActiveRecord::Base
 
   def attachments_deletable?(user=User.current)
     false
+  end
+
+  def meeting_answers
+    super + self.meeting_extra_answers
   end
 
 private
