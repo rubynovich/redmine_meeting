@@ -4,7 +4,7 @@ class MeetingMembersController < ApplicationController
   before_filter :require_meeting_manager
 
   def new
-    @no_members = User.active.order(:lastname, :firstname)
+    @no_members = User.active.sorted
     @users = []
     if @object.present?
       @users = @object.users
@@ -38,8 +38,8 @@ class MeetingMembersController < ApplicationController
       MeetingMember.where(model_sym_id => @object.id, user_id: user.id).try(:destroy_all) unless reporters.include?(user)
       @object.users
     else
-      session[:meeting_member_ids] -= [ params[:id].to_i ]
-      User.order(:lastname, :firstname).find(session[:meeting_member_ids])
+      session[:meeting_member_ids] -= [ params[:id] ]
+      User.sorted.find(session[:meeting_member_ids])
     end
 
     respond_to do |format|
@@ -52,7 +52,7 @@ class MeetingMembersController < ApplicationController
     @users -= if @object.present?
       @object.users
     else
-      User.order(:lastname, :firstname).find(session[:meeting_member_ids])
+      User.sorted.find(session[:meeting_member_ids])
     end
 
     render :layout => false

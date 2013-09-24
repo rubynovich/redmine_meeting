@@ -83,7 +83,8 @@ class MeetingProtocolsController < ApplicationController
       render_attachment_warning_if_needed(@object)
       redirect_to action: 'show', id: @object.id
     else
-      @members = User.order(:lastname, :firstname).find(session[:meeting_participator_ids])
+      @members = User.sorted.find(session[:meeting_participator_ids])
+      @contacts = Contact.order_by_name.find(session[:meeting_contact_ids])
       render action: 'new'
     end
   end
@@ -97,6 +98,7 @@ class MeetingProtocolsController < ApplicationController
       redirect_to action: 'show', id: @object.id
     else
       @members = @object.users
+      @contacts = @object.contacts
       render action: 'edit'
     end
   end
@@ -105,6 +107,9 @@ class MeetingProtocolsController < ApplicationController
     (render_403; return false) unless can_create_protocol?(@object)
     @members = @object.meeting_agenda.users
     session[:meeting_participator_ids] = @object.meeting_agenda.user_ids
+    @contacts = @object.meeting_agenda.contacts
+    session[:meeting_contacts_ids] = @object.meeting_agenda.contact_ids
+
 #    @object.meeting_answers_attributes = @object.meeting_agenda.meeting_questions.map do |question|
 #      {meeting_question_id: question.id, reporter_id: question.user_id}
 #    end
@@ -118,6 +123,7 @@ class MeetingProtocolsController < ApplicationController
   def edit
     (render_403; return false) unless can_update_protocol?(@object)
     @members = @object.users
+    @contacts = @object.contacts
   end
 
   def destroy

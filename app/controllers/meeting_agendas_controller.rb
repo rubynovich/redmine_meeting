@@ -76,10 +76,13 @@ class MeetingAgendasController < ApplicationController
     @object.priority = IssuePriority.default
     @users = [User.current]
     session[:meeting_member_ids] = [User.current.id]
+    @contacts = []
+    session[:meeting_contact_ids] = []
   end
 
   def edit
     @users = @object.users
+    @contacts = @object.contacts
   end
 
   def index
@@ -120,14 +123,14 @@ class MeetingAgendasController < ApplicationController
   end
 
   def create
-    if session[:meeting_member_ids].present?
-      @object.meeting_members_attributes = session[:meeting_member_ids].map{ |user_id| {user_id: user_id} }
-    end
+    @object.meeting_members_attributes = session[:meeting_member_ids].map{ |user_id| {user_id: user_id} } if session[:meeting_member_ids].present?
+    @object.meeting_contacts_attributes = session[:meeting_contacts_ids].map{ |contact_id| {contact_id: contact_id} } if session[:meeting_contact_ids].present?
     if @object.save
       flash[:notice] = l(:notice_successful_create)
       redirect_to action: 'show', id: @object.id
     else
-      @users = User.find(session[:meeting_member_ids])
+      @users = User.sorted.find(session[:meeting_member_ids])
+      @contacts = Contact.order_by_name.find(session[:meeting_contact_ids])
       render action: 'new'
     end
   end

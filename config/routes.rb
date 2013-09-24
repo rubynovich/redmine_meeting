@@ -37,3 +37,9 @@ resources :meeting_approvers do
     get 'autocomplete_for_user'
   end
 end
+
+resources :meeting_contacts do
+  collection do
+    get 'autocomplete_for_contact'
+  end
+end
