@@ -57,8 +57,8 @@ class MeetingProtocol < ActiveRecord::Base
     false
   end
 
-  def meeting_answers
-    super + self.meeting_extra_answers
+  def all_meeting_answers
+    self.meeting_answers + self.meeting_extra_answers
   end
 
 private

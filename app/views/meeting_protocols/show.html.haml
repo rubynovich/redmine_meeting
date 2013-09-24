@@ -70,7 +70,7 @@
       %td= link_to_meeting_notice(member)
 %br
 %h3=l(:label_meeting_answer_plural)+":"
-- @object.meeting_answers.group_by(&:project).sort_by{ |project, answers| project.to_s }.each do |project, answers|
+- @object.all_meeting_answers.group_by(&:project).sort_by{ |project, answers| project.to_s }.each do |project, answers|
   %h4{align: 'center'}
     - if project.present?
       = link_to_project project
