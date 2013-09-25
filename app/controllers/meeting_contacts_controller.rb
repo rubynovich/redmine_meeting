@@ -46,8 +46,8 @@ class MeetingContactsController < ApplicationController
   end
 
   def autocomplete_for_contact
-    @contacts = Contact.order_by_name.people.by_name(params[:q])
-    @contacts -= if @object.present?
+    @no_contacts = Contact.order_by_name.people.by_name(params[:q])
+    @no_contacts -= if @object.present?
       @object.contacts
     else
       Contact.order_by_name.people.find(session[:meeting_contact_ids])
