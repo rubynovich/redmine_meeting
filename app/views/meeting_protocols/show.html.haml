@@ -74,6 +74,9 @@
         %td
           = link_to_meeting_notice(user)
 
+- agenda_contacts = @object.meeting_agenda.contacts
+- protocol_contacts = @object.contacts
+- if (agenda_contacts|protocol_contacts).any?
 %h3= l(:field_meeting_contacts)+":"
 .autoscroll
   %table.list.issues
@@ -84,8 +87,6 @@
       %th=l(:field_email)
       %th=l(:field_contact)
       %th=l(:label_meeting_invite_status)
-    - agenda_contacts = @object.meeting_agenda.contacts
-    - protocol_contacts = @object.contacts
     - (agenda_contacts|protocol_contacts).compact.sort_by(&:name).each do |contact|
       %tr.issue
         %td= h contact.company
