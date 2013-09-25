@@ -61,6 +61,23 @@
         %td= link_to_user(member.user)
         %td= link_to(member.issue.try(:status), controller: 'issues', action: 'show', id: member.issue_id) rescue h l(:label_meeting_member_was_not_invite)
 
+  - if @object.contacts.any?
+    %h3= l(:field_meeting_contacts)+":"
+    %table.list.issues
+      %tr
+        %th=l(:field_company)
+        %th=l(:field_job_title)
+        %th=l(:field_phone)
+        %th=l(:field_email)
+        %th=l(:field_contact)
+      - @object.contacts.each do |contact|
+        %tr.issue
+          %td= h contact.company
+          %td= h contact.job_title
+          %td= h contact.phone
+          %td= mail_to(h contact.email)
+          %td= link_to_contact(contact)
+
   %br
 
   %h3=l(:label_meeting_question_plural)+":"

@@ -89,7 +89,7 @@ ru:
   label_meeting_cancel_issue_status: "Отмененная задача"
   label_meeting_extra_answer_plural: "Вопросы рассмотренные вне повестки"
   field_meeting_contacts: "Приглашенные участники"
-  label_meeting_contact_plural: "Понаехавшие"
+  label_meeting_contact_plural: "Понаехавшие участники"
 
   label_meeting_issue_type_statuses:
     new: "Создана"

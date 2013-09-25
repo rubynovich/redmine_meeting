@@ -6,7 +6,7 @@ class MeetingContact < ActiveRecord::Base
 
   before_create :add_author_id
 
-  validates_presence_of :meeting_container_id, :meeting_container_type, :contact_id
+  validates_presence_of :contact_id
   validates_uniqueness_of :contact_id,  scope: [:meeting_container_id, :meeting_container_type]
 
 private
