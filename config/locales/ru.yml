@@ -134,5 +134,11 @@ ru:
     start_date: "Начата"
     due_date: "Дата выполнения"
     meeting_question: "Рассмотренный вопрос"
+  field_meeting_extra_answers:
+    description: "Описание решения"
+    user: "Исполнитель"
+    start_date: "Начата"
+    due_date: "Дата выполнения"
+    meeting_question_name: "Рассмотренный вопрос"
   error_messages_meeting_answers_must_exist: "Рассмотренные вопросы должны присутствовать"
   error_messages_meeting_questions_must_exist: "Вопросы на рассмотрение должны присутствовать"
