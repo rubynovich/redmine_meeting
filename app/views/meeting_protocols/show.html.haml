@@ -77,32 +77,32 @@
 - agenda_contacts = @object.meeting_agenda.contacts
 - protocol_contacts = @object.contacts
 - if (agenda_contacts|protocol_contacts).any?
-%h3= l(:field_meeting_contacts)+":"
-.autoscroll
-  %table.list.issues
-    %tr
-      %th=l(:field_company)
-      %th=l(:field_job_title)
-      %th=l(:field_phone)
-      %th=l(:field_email)
-      %th=l(:field_contact)
-      %th=l(:label_meeting_invite_status)
-    - (agenda_contacts|protocol_contacts).compact.sort_by(&:name).each do |contact|
-      %tr.issue
-        %td= h contact.company
-        %td= h contact.job_title
-        %td= h contact.phone
-        %td= mail_to(h contact.email)
-        %td= link_to_contact(contact)
-        %td
-          - member = agenda_contacts.include?(conctact)
-          - participator = protocol_contacts.include?(contact)
-          - if member && participator
-            = t(:label_meeting_member_present)
-          - elsif member
-            = t(:label_meeting_member_blank)
-          - elsif participator
-            = t(:label_meeting_member_extra)
+  %h3= l(:field_meeting_contacts)+":"
+  .autoscroll
+    %table.list.issues
+      %tr
+        %th=l(:field_company)
+        %th=l(:field_job_title)
+        %th=l(:field_phone)
+        %th=l(:field_email)
+        %th=l(:field_contact)
+        %th=l(:label_meeting_invite_status)
+      - (agenda_contacts|protocol_contacts).compact.sort_by(&:name).each do |contact|
+        %tr.issue
+          %td= h contact.company
+          %td= h contact.job_title
+          %td= h contact.phone
+          %td= mail_to(h contact.email)
+          %td= link_to_contact(contact)
+          %td
+            - member = agenda_contacts.include?(conctact)
+            - participator = protocol_contacts.include?(contact)
+            - if member && participator
+              = t(:label_meeting_member_present)
+            - elsif member
+              = t(:label_meeting_member_blank)
+            - elsif participator
+              = t(:label_meeting_member_extra)
 
 %br
 %h3=l(:label_meeting_answer_plural)+":"
