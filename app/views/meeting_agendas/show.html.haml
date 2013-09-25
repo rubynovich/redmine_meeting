@@ -18,7 +18,7 @@
   ="##{h @object.id}"
 
 
-.issue.details
+.autoscroll.issue.details
   %table.attributes
     %tr
       %th=l(:field_subject)+":"
@@ -48,35 +48,37 @@
   %hr
 
   %h3= l(:field_meeting_members)+":"
-  %table.list.issues
-    %tr
-      %th=l(:field_company)
-      %th=l(:field_job_title)
-      %th=l(:field_member)
-      %th=l(:field_status)
-    - @object.meeting_members.each do |member|
-      %tr.issue
-        %td= h member.user.company rescue ""
-        %td= h member.user.job_title rescue ""
-        %td= link_to_user(member.user)
-        %td= link_to(member.issue.try(:status), controller: 'issues', action: 'show', id: member.issue_id) rescue h l(:label_meeting_member_was_not_invite)
-
-  - if @object.contacts.any?
-    %h3= l(:field_meeting_contacts)+":"
+  .autoscroll
     %table.list.issues
       %tr
         %th=l(:field_company)
         %th=l(:field_job_title)
-        %th=l(:field_phone)
-        %th=l(:field_email)
-        %th=l(:field_contact)
-      - @object.contacts.each do |contact|
+        %th=l(:field_member)
+        %th=l(:field_status)
+      - @object.meeting_members.each do |member|
         %tr.issue
-          %td= h contact.company
-          %td= h contact.job_title
-          %td= h contact.phone
-          %td= mail_to(h contact.email)
-          %td= link_to_contact(contact)
+          %td= h member.user.company rescue ""
+          %td= h member.user.job_title rescue ""
+          %td= link_to_user(member.user)
+          %td= link_to(member.issue.try(:status), controller: 'issues', action: 'show', id: member.issue_id) rescue h l(:label_meeting_member_was_not_invite)
+
+  - if @object.contacts.any?
+    %h3= l(:field_meeting_contacts)+":"
+    .autoscroll
+      %table.list.issues
+        %tr
+          %th=l(:field_company)
+          %th=l(:field_job_title)
+          %th=l(:field_phone)
+          %th=l(:field_email)
+          %th=l(:field_contact)
+        - @object.contacts.each do |contact|
+          %tr.issue
+            %td= h contact.company
+            %td= h contact.job_title
+            %td= h contact.phone
+            %td= mail_to(h contact.email)
+            %td= link_to_contact(contact)
 
   %br
 
@@ -87,36 +89,36 @@
         = link_to_project project
       - else
         = t(:label_without_project)
-
-    %table.list.issues
-      %thead
-        %tr
-          %th=l(:field_title)
-          %th=l(:field_issue)
-          %th=l(:label_meeting_question_user)
-          %th=l(:field_status)
-          %th=l(:field_done_ratio)
-      %tbody
-        - questions.each do |question|
-          %tr.issue{onclick: "$('#comments_block_for_#{question.id}').toggle();", style: (question.meeting_comments.present? ? "background: #fff0f5" : "")}
-            %td.subject=h question.title
-            %td.subject
-              - if question.issue.present?
-                = link_to_issue(question.issue, tracker: false)
-            %td
-              - if question.user.present?
-                = link_to_user question.user
-            %td
-              - if question.status.present?
-                =h question.status
-            %td{width: '80px'}
-              - if question.issue.present?
-                = progress_bar(question.issue.done_ratio, width: '80px')
-          - if can_show_comments?(@object)
-            %tr{id: "comments_block_for_#{question.id}", style: 'display: none;'}
-              %td{colspan: 5}
-                %h4= l(:label_meeting_question_comment_plural)+":"
-                = render partial: 'meeting_comments/history', locals: {meeting_container: question}
+    .autoscroll
+      %table.list.issues
+        %thead
+          %tr
+            %th=l(:field_title)
+            %th=l(:field_issue)
+            %th=l(:label_meeting_question_user)
+            %th=l(:field_status)
+            %th=l(:field_done_ratio)
+        %tbody
+          - questions.each do |question|
+            %tr.issue{onclick: "$('#comments_block_for_#{question.id}').toggle();", style: (question.meeting_comments.present? ? "background: #fff0f5" : "")}
+              %td.subject=h question.title
+              %td.subject
+                - if question.issue.present?
+                  = link_to_issue(question.issue, tracker: false)
+              %td
+                - if question.user.present?
+                  = link_to_user question.user
+              %td
+                - if question.status.present?
+                  =h question.status
+              %td{width: '80px'}
+                - if question.issue.present?
+                  = progress_bar(question.issue.done_ratio, width: '80px')
+            - if can_show_comments?(@object)
+              %tr{id: "comments_block_for_#{question.id}", style: 'display: none;'}
+                %td{colspan: 5}
+                  %h4= l(:label_meeting_question_comment_plural)+":"
+                  = render partial: 'meeting_comments/history', locals: {meeting_container: question}
 
 - content_for :sidebar do
   = render partial: 'meeting_approvers/show'

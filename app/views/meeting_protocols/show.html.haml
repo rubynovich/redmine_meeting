@@ -22,7 +22,7 @@
   ="##{h @object.id}"
 
 
-.issue.details
+.autoscroll.issue.details
   %table.attributes
     %tr
       %th=l(:field_subject)+":"
@@ -47,27 +47,62 @@
       %td= link_to_user @object.author
 
 %h3= l(:field_meeting_participators)+":"
-%table.list.issues
-  %tr
-    %th=l(:field_company)
-    %th=l(:field_job_title)
-    %th=l(:field_member)
-    %th=l(:label_meeting_invite_status)
-    %th=l(:label_meeting_notice_status)
-  - @object.meeting_members.each do |member|
-    %tr.issue
-      %td= h member.user.company rescue ""
-      %td= h member.user.job_title rescue ""
-      %td= link_to_user(member.user) if member.user.present?
-      %td= member_status(member)
-      %td= link_to_meeting_notice(member.meeting_participator)
-  - @object.meeting_participators.reject(&:meeting_member).each do |member|
-    %tr.issue
-      %td= h member.user.company
-      %td= h member.user.job_title
-      %td= link_to_user(member.user)
-      %td= t(:label_meeting_member_extra)
-      %td= link_to_meeting_notice(member)
+.autoscroll
+  %table.list.issues
+    %tr
+      %th=l(:field_company)
+      %th=l(:field_job_title)
+      %th=l(:field_member)
+      %th=l(:label_meeting_invite_status)
+      %th=l(:label_meeting_notice_status)
+    - agenda_users = @object.meeting_agenda.users
+    - protocol_users = @object.users
+    - (agenda_users|protocol_users).compact.sort_by(&:name).each do |user|
+      %tr.issue
+        %td= h user.company rescue ""
+        %td= h user.job_title rescue ""
+        %td= link_to_user(user)
+        %td
+          - member = agenda_users.include?(user)
+          - participator = protocol_users.include?(user)
+          - if member && participator
+            = t(:label_meeting_member_present)
+          - elsif member
+            = t(:label_meeting_member_blank)
+          - elsif participator
+            = t(:label_meeting_member_extra)
+        %td
+          = link_to_meeting_notice(user)
+
+%h3= l(:field_meeting_contacts)+":"
+.autoscroll
+  %table.list.issues
+    %tr
+      %th=l(:field_company)
+      %th=l(:field_job_title)
+      %th=l(:field_phone)
+      %th=l(:field_email)
+      %th=l(:field_contact)
+      %th=l(:label_meeting_invite_status)
+    - agenda_contacts = @object.meeting_agenda.contacts
+    - protocol_contacts = @object.contacts
+    - (agenda_contacts|protocol_contacts).compact.sort_by(&:name).each do |contact|
+      %tr.issue
+        %td= h contact.company
+        %td= h contact.job_title
+        %td= h contact.phone
+        %td= mail_to(h contact.email)
+        %td= link_to_contact(contact)
+        %td
+          - member = agenda_contacts.include?(conctact)
+          - participator = protocol_contacts.include?(contact)
+          - if member && participator
+            = t(:label_meeting_member_present)
+          - elsif member
+            = t(:label_meeting_member_blank)
+          - elsif participator
+            = t(:label_meeting_member_extra)
+
 %br
 %h3=l(:label_meeting_answer_plural)+":"
 - @object.all_meeting_answers.group_by(&:project).sort_by{ |project, answers| project.to_s }.each do |project, answers|
@@ -77,7 +112,7 @@
     - else
       = t(:label_without_project)
   - answers.each do |answer|
-    .issue.details
+    .autoscroll.issue.details
       %table.attributes
         %tr
           %th= t(:label_meeting_question)+":"

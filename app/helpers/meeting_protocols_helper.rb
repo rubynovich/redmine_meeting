@@ -63,7 +63,8 @@ module MeetingProtocolsHelper
     link_to_user answer.reporter
   end
 
-  def link_to_meeting_notice(item)
+  def link_to_meeting_notice(user)
+    item = @object.meeting_participators.select{ |m| m.user == user }.first
     if item.try(:issue).present?
       if item.status == IssueStatus.default
         link_to t(:label_meeting_notice_blank), controller: 'issues', action: 'show', id: item.issue_id
