@@ -108,7 +108,7 @@ class MeetingProtocolsController < ApplicationController
     @members = @object.meeting_agenda.users
     session[:meeting_participator_ids] = @object.meeting_agenda.user_ids
     @contacts = @object.meeting_agenda.contacts
-    session[:meeting_contacts_ids] = @object.meeting_agenda.contact_ids
+    session[:meeting_contact_ids] = @object.meeting_agenda.contact_ids
 
 #    @object.meeting_answers_attributes = @object.meeting_agenda.meeting_questions.map do |question|
 #      {meeting_question_id: question.id, reporter_id: question.user_id}
