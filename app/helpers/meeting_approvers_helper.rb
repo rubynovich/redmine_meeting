@@ -1,12 +1,4 @@
 module MeetingApproversHelper
-  def admin?
-    User.current.admin?
-  end
-
-  def author?(item)
-    item.author == User.current
-  end
-
   def can_create_approver?(item)
     author?(item) || admin?
   end

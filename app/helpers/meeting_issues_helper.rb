@@ -1,16 +1,4 @@
 module MeetingIssuesHelper
-  def meeting_manager?
-    User.current.meeting_manager?
-  end
-
-  def admin?
-    User.current.admin?
-  end
-
-  def author?(item)
-    item.author == User.current
-  end
-
   def can_create_issue?(answer)
     (admin? || meeting_manager? && author?(answer.meeting_protocol))
   end
