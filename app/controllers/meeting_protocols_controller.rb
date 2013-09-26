@@ -74,41 +74,12 @@ class MeetingProtocolsController < ApplicationController
       all
   end
 
-  def create
-    (render_403; return false) unless can_create_protocol?(@object)
-    @object.save_attachments(params[:attachments] || (params[:issue] && params[:issue][:uploads]))
-    @object.meeting_participators_attributes = session[:meeting_participator_ids].map{ |user_id| {user_id: user_id} }
-    if @object.save
-      flash[:notice] = l(:notice_successful_create)
-      render_attachment_warning_if_needed(@object)
-      redirect_to action: 'show', id: @object.id
-    else
-      @members = User.sorted.find(session[:meeting_participator_ids])
-      @contacts = Contact.order_by_name.find(session[:meeting_contact_ids])
-      render action: 'new'
-    end
-  end
-
-  def update
-    (render_403; return false) unless can_update_protocol?(@object)
-    @object.save_attachments(params[:attachments] || (params[:issue] && params[:issue][:uploads]))
-    if @object.update_attributes(params[model_sym])
-      flash[:notice] = l(:notice_successful_update)
-      render_attachment_warning_if_needed(@object)
-      redirect_to action: 'show', id: @object.id
-    else
-      @members = @object.users
-      @contacts = @object.contacts
-      render action: 'edit'
-    end
-  end
-
   def new
     (render_403; return false) unless can_create_protocol?(@object)
-    @members = @object.meeting_agenda.users
     session[:meeting_participator_ids] = @object.meeting_agenda.user_ids
-    @contacts = @object.meeting_agenda.contacts
     session[:meeting_contact_ids] = @object.meeting_agenda.contact_ids
+    session[:meeting_watcher_ids] = @object.meeting_agenda.watcher_ids
+    nested_objects_from_session
 
 #    @object.meeting_answers_attributes = @object.meeting_agenda.meeting_questions.map do |question|
 #      {meeting_question_id: question.id, reporter_id: question.user_id}
@@ -120,10 +91,39 @@ class MeetingProtocolsController < ApplicationController
     render_403
   end
 
+  def create
+    (render_403; return false) unless can_create_protocol?(@object)
+    @object.save_attachments(params[:attachments] || (params[:issue] && params[:issue][:uploads]))
+    @object.meeting_participators_attributes = session[:meeting_participator_ids].map{ |user_id| {user_id: user_id} } if session[:meeting_participator_ids].present?
+    @object.meeting_contacts_attributes = session[:meeting_contact_ids].map{ |contact_id| {contact_id: contact_id} } if session[:meeting_contact_ids].present?
+    @object.meeting_watchers_attributes = session[:meeting_watcher_ids].map{ |user_id| {user_id: user_id} } if session[:meeting_watcher_ids].present?
+    if @object.save
+      flash[:notice] = l(:notice_successful_create)
+      render_attachment_warning_if_needed(@object)
+      redirect_to action: 'show', id: @object.id
+    else
+      nested_objects_from_session
+      render action: 'new'
+    end
+  end
+
   def edit
     (render_403; return false) unless can_update_protocol?(@object)
-    @members = @object.users
-    @contacts = @object.contacts
+    nested_objects_from_database
+  end
+
+
+  def update
+    (render_403; return false) unless can_update_protocol?(@object)
+    @object.save_attachments(params[:attachments] || (params[:issue] && params[:issue][:uploads]))
+    if @object.update_attributes(params[model_sym])
+      flash[:notice] = l(:notice_successful_update)
+      render_attachment_warning_if_needed(@object)
+      redirect_to action: 'show', id: @object.id
+    else
+      nested_objects_from_database
+      render action: 'edit'
+    end
   end
 
   def destroy
@@ -133,6 +133,17 @@ class MeetingProtocolsController < ApplicationController
   end
 
 private
+  def nested_objects_from_session
+    @members = User.active.sorted.find(session[:meeting_participator_ids])
+    @contacts = Contact.order_by_name.find(session[:meeting_contact_ids])
+    @watchers = User.active.sorted.find(session[:meeting_watcher_ids])
+  end
+
+  def nested_objects_from_database
+    @members = @object.users
+    @contacts = @object.contacts
+    @watchers = @object.watchers
+  end
 
   def model_class
     MeetingProtocol

@@ -1,6 +1,8 @@
 class MeetingAgenda < ActiveRecord::Base
   unloadable
 
+  belongs_to :author, class_name: 'User', foreign_key: 'author_id'
+  belongs_to :priority, class_name: 'IssuePriority', foreign_key: 'priority_id'
   has_one :meeting_protocol
   has_many :meeting_questions, dependent: :delete_all, order: :id
   has_many :issues, through: :meeting_questions, order: :id, uniq: true
@@ -9,14 +11,16 @@ class MeetingAgenda < ActiveRecord::Base
   has_many :meeting_members, dependent: :delete_all
   has_many :users, through: :meeting_members, order: [:lastname, :firstname], uniq: true
   has_many :meeting_approvers, as: :meeting_container
+  has_many :approvers, source: :user, through: :meeting_approvers, order: [:lastname, :firstname], uniq: true
   has_many :meeting_contacts, as: :meeting_container
   has_many :contacts, through: :meeting_contacts, order: [:last_name, :first_name], uniq: true
-  belongs_to :author, class_name: 'User', foreign_key: 'author_id'
-  belongs_to :priority, class_name: 'IssuePriority', foreign_key: 'priority_id'
+  has_many :meeting_watchers, as: :meeting_container
+  has_many :watchers, through: :meeting_watchers, order: [:lastname, :firstname], uniq: true
 
   accepts_nested_attributes_for :meeting_questions, allow_destroy: true
   accepts_nested_attributes_for :meeting_members, allow_destroy: true
   accepts_nested_attributes_for :meeting_contacts, allow_destroy: true
+  accepts_nested_attributes_for :meeting_watchers, allow_destroy: true
 
   before_create :add_author_id
   after_save :add_new_users_from_questions
@@ -24,6 +28,7 @@ class MeetingAgenda < ActiveRecord::Base
   attr_accessible :meeting_members_attributes
   attr_accessible :meeting_questions_attributes
   attr_accessible :meeting_contacts_attributes
+  attr_accessible :meeting_watchers_attributes
   attr_accessible :subject, :place, :meet_on, :start_time, :end_time, :priority_id
 
   validates_uniqueness_of :subject, scope: :meet_on

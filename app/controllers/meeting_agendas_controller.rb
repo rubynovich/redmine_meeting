@@ -72,19 +72,6 @@ class MeetingAgendasController < ApplicationController
     render :text => places.to_json, :layout => false
   end
 
-  def new
-    @object.priority = IssuePriority.default
-    @users = [User.current]
-    session[:meeting_member_ids] = [User.current.id]
-    @contacts = []
-    session[:meeting_contact_ids] = []
-  end
-
-  def edit
-    @users = @object.users
-    @contacts = @object.contacts
-  end
-
   def index
     @limit = per_page_option
 
@@ -122,17 +109,29 @@ class MeetingAgendasController < ApplicationController
 
   end
 
+  def new
+    @object.priority = IssuePriority.default
+    session[:meeting_member_ids] = [User.current.id]
+    session[:meeting_contact_ids] = []
+    session[:meeting_watcher_ids] = []
+    nested_objects_from_session
+  end
+
   def create
     @object.meeting_members_attributes = session[:meeting_member_ids].map{ |user_id| {user_id: user_id} } if session[:meeting_member_ids].present?
     @object.meeting_contacts_attributes = session[:meeting_contact_ids].map{ |contact_id| {contact_id: contact_id} } if session[:meeting_contact_ids].present?
+    @object.meeting_watchers_attributes = session[:meeting_watcher_ids].map{ |user_id| {user_id: user_id} } if session[:meeting_watcher_ids].present?
     if @object.save
       flash[:notice] = l(:notice_successful_create)
       redirect_to action: 'show', id: @object.id
     else
-      @users = User.sorted.find(session[:meeting_member_ids])
-      @contacts = Contact.order_by_name.find(session[:meeting_contact_ids])
+      nested_objects_from_session
       render action: 'new'
     end
+  end
+
+  def edit
+    nested_objects_from_database
   end
 
   def update
@@ -140,7 +139,7 @@ class MeetingAgendasController < ApplicationController
       flash[:notice] = l(:notice_successful_update)
       redirect_to action: 'show', id: @object.id
     else
-      @users = @object.users
+      nested_objects_from_database
       render action: 'edit'
     end
   end
@@ -151,6 +150,18 @@ class MeetingAgendasController < ApplicationController
   end
 
 private
+  def nested_objects_from_session
+    @users = User.active.sorted.find(session[:meeting_member_ids])
+    @contacts = Contact.order_by_name.find(session[:meeting_contact_ids])
+    @watchers = User.active.sorted.find(session[:meeting_watcher_ids])
+  end
+
+  def nested_objects_from_database
+    @users = @object.users
+    @contacts = @object.contacts
+    @watchers = @object.watchers
+  end
+
   def model_class
     MeetingAgenda
   end

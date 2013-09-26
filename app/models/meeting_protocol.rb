@@ -13,16 +13,23 @@ class MeetingProtocol < ActiveRecord::Base
   has_many :users, through: :meeting_participators, order: [:lastname, :firstname], uniq: true
   has_many :meeting_members, through: :meeting_agenda, uniq: true
   has_many :meeting_approvers, as: :meeting_container
+  has_many :approvers, through: :meeting_approvers, source: :user
   has_many :meeting_contacts, as: :meeting_container
   has_many :contacts, through: :meeting_contacts, order: [:last_name, :first_name], uniq: true
+  has_many :meeting_watchers, as: :meeting_container
+  has_many :watchers, through: :meeting_watchers, order: [:lastname, :firstname], uniq: true
 
   accepts_nested_attributes_for :meeting_answers, allow_destroy: true
   accepts_nested_attributes_for :meeting_extra_answers, allow_destroy: true
   accepts_nested_attributes_for :meeting_participators, allow_destroy: true
+  accepts_nested_attributes_for :meeting_contacts, allow_destroy: true
+  accepts_nested_attributes_for :meeting_watchers, allow_destroy: true
 
   attr_accessible :meeting_answers_attributes
   attr_accessible :meeting_extra_answers_attributes
   attr_accessible :meeting_participators_attributes
+  attr_accessible :meeting_contacts_attributes
+  attr_accessible :meeting_watchers_attributes
   attr_accessible :meeting_agenda_id, :start_time, :end_time
 
   before_create :add_author_id
