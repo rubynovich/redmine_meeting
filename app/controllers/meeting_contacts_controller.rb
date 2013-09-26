@@ -14,7 +14,7 @@ class MeetingContactsController < ApplicationController
   end
 
   def create
-    new_contacts = (params[session_id].present? ? params[:meeting_container][:contact_ids] : [])
+    new_contacts = (params[:meeting_container].present? ? params[:meeting_container][:contact_ids] : [])
 
     @contacts = if @object.id.present?
       @object.meeting_contacts << new_contacts.map{ |contact_id| MeetingContact.new(contact_id: contact_id) }.compact
