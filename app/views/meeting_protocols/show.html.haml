@@ -95,7 +95,7 @@
           %td= mail_to(h contact.email)
           %td= link_to_contact(contact)
           %td
-            - member = agenda_contacts.include?(conctact)
+            - member = agenda_contacts.include?(contact)
             - participator = protocol_contacts.include?(contact)
             - if member && participator
               = t(:label_meeting_member_present)
