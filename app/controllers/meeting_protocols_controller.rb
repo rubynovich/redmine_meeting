@@ -78,7 +78,7 @@ class MeetingProtocolsController < ApplicationController
     (render_403; return false) unless can_create_protocol?(@object)
     session[:meeting_participator_ids] = @object.meeting_agenda.user_ids
     session[:meeting_contact_ids] = @object.meeting_agenda.contact_ids
-    session[:meeting_watcher_ids] = @object.meeting_agenda.watcher_ids
+#    session[:meeting_watcher_ids] = @object.meeting_agenda.watcher_ids
     nested_objects_from_session
 
 #    @object.meeting_answers_attributes = @object.meeting_agenda.meeting_questions.map do |question|
@@ -136,13 +136,13 @@ private
   def nested_objects_from_session
     @members = User.active.sorted.find(session[:meeting_participator_ids])
     @contacts = Contact.order_by_name.find(session[:meeting_contact_ids])
-    @watchers = User.active.sorted.find(session[:meeting_watcher_ids])
+#    @watchers = User.active.sorted.find(session[:meeting_watcher_ids])
   end
 
   def nested_objects_from_database
     @members = @object.users
     @contacts = @object.contacts
-    @watchers = @object.watchers
+#    @watchers = @object.watchers
   end
 
   def model_class
