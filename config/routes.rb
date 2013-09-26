@@ -43,3 +43,9 @@ resources :meeting_contacts do
     get 'autocomplete_for_contact'
   end
 end
+
+resources :meeting_watchers do
+  collection do
+    get 'autocomplete_for_user'
+  end
+end

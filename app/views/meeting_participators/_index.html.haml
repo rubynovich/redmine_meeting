@@ -1,0 +1,7 @@
+%ul
+  - @members.each do |user|
+    %li{class: "user-#{user.id}"}
+      = avatar(user, :size => "16")
+      = link_to_user(user, :class => 'user')
+      - url = {controller: 'meeting_participators', action: 'destroy', id: user.id, meeting_protocol_id: @object.try(:id)}
+      = link_to(image_tag('delete.png'), url, remote: true, method: 'delete', class: "delete")

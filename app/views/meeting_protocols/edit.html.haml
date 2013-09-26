@@ -12,12 +12,7 @@
   %h3=t(:label_meeting_protocol_plural)
   %p= link_to t(:label_meeting_protocol_show_all), action: 'index'
   %p= link_to t(:label_meeting_agenda_show_all), controller: 'meeting_agendas', action: 'index'
-  .contextual
-    = link_to l(:button_add), {controller: 'meeting_participators', action: 'new', meeting_protocol_id:  @object.id}, remote: true, method: 'get'
 
-  %h3
-    = l(:field_meeting_participators)
-  #meeting_participators
-    = render partial: 'meeting_participators'
-
+  = render partial: 'meeting_participators/sidebar'
   = render partial: 'meeting_contacts/sidebar'
+  = render partial: 'meeting_watchers/sidebar'  

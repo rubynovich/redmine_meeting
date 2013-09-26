@@ -10,12 +10,6 @@
 - content_for(:sidebar) do
   %h3=t(:label_meeting_agenda_plural)
   %p= link_to t(:label_meeting_agenda_show_all), action: 'index'
-  .contextual
-    = link_to l(:button_add), {controller: 'meeting_members', action: 'new', meeting_agenda_id:  @object.id}, :remote => true, :method => :get
 
-  %h3
-    = l(:field_meeting_members)
-  #meeting_members
-    = render partial: 'meeting_members'
-
+  = render partial: 'meeting_members/sidebar'
   = render partial: 'meeting_contacts/sidebar'

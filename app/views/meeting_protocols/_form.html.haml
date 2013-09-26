@@ -18,8 +18,6 @@
         = f.label :end_time, l(:label_meeting_protocol_end_time)
         = f.time_select :end_time, minute_step: 10, include_blank: true
 
-    -#%div{style: "clear:both"}
-
   %h3{style: "margin-top: 33px"}=l :label_meeting_answer_plural
   = f.fields_for :meeting_answers
   = f.link_to_add l(:button_add), :meeting_answers, class: 'icon icon-add'

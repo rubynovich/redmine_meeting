@@ -6,6 +6,8 @@
   #meeting_contacts a.delete:hover {opacity: 1;}
   #meeting_contacts img.gravatar {margin: 0 4px 2px 0;}
 
+%p
+
 .contextual
   = link_to l(:button_add), {controller: 'meeting_contacts', action: 'new', meeting_container_id: @object.id, meeting_container_type: @object.class}, remote: true, method: 'get'
 

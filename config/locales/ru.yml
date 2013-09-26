@@ -89,7 +89,8 @@ ru:
   label_meeting_cancel_issue_status: "Отмененная задача"
   label_meeting_extra_answer_plural: "Вопросы рассмотренные вне повестки"
   field_meeting_contacts: "Приглашенные участники"
-
+  field_meeting_watchers: "Наблюдатели"
+  label_new_meeting_watcher: "Добавление налюдателя"
 
   label_meeting_issue_type_statuses:
     new: "Создана"

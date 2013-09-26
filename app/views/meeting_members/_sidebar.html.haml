@@ -1,0 +1,17 @@
+:css
+  #meeting_members ul {margin: 0;  padding: 0;}
+  #meeting_members li {list-style-type:none;margin: 0px 2px 0px 0px; padding: 0px 0px 0px 0px;}
+  #meeting_members select {width: 95%; display: block;}
+  #meeting_members a.delete {opacity: 0.4; vertical-align: middle;}
+  #meeting_members a.delete:hover {opacity: 1;}
+  #meeting_members img.gravatar {margin: 0 4px 2px 0;}
+
+%p
+
+.contextual
+  = link_to l(:button_add), {controller: 'meeting_members', action: 'new', meeting_agenda_id:  @object.id}, remote: true, method: 'get'
+
+%h3= l(:field_meeting_members)
+
+#meeting_members
+  = render partial: 'meeting_members/index'
