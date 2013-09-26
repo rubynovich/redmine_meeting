@@ -36,6 +36,7 @@ class MeetingProtocolsController < ApplicationController
 
   def show
     (render_403; return false) unless can_show_protocol?(@object)
+    @watchers = @object.watchers
   end
 
   def index
