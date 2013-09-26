@@ -11,6 +11,8 @@ class MeetingProtocolsController < ApplicationController
   include MeetingCommentsHelper
   helper :meeting_approvers
   include MeetingApproversHelper
+  helper :meeting_watchers
+  include MeetingWatchersHelper
 
 
   before_filter :find_object, only: [:edit, :show, :destroy, :update, :send_notices, :resend_notices]
