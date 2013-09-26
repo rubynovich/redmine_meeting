@@ -24,6 +24,10 @@ class MeetingWatchersController < ApplicationController
       session[session_id] = (new_watchers + session[session_id]).uniq
       users_from_session
     end
+
+    respond_to do |format|
+      format.js
+    end
   end
 
   def destroy
@@ -34,6 +38,10 @@ class MeetingWatchersController < ApplicationController
     else
       session[session_id] -= [ params[:id] ]
       users_from_session
+    end
+
+    respond_to do |format|
+      format.js
     end
   end
 
