@@ -115,10 +115,10 @@
                   =h question.status
               %td
                 - if question.issue.present?
-                  =format_date(question.start_date)
+                  =format_date(question.issue.start_date)
               %td
                 - if question.issue.present?
-                  =format_date(question.due_date)
+                  =format_date(question.issue.due_date)
               %td{width: '80px'}
                 - if question.issue.present?
                   = progress_bar(question.issue.done_ratio, width: '80px')
