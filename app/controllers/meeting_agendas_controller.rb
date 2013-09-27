@@ -145,23 +145,11 @@ class MeetingAgendasController < ApplicationController
   end
 
   def destroy
-    issues = @object.invites
-    if @object.destroy
-      flash[:notice] = l(:notice_successful_delete)
-      issues.each do |invite|
-        cancel_issue(invite)
-      end
-    end
+    flash[:notice] = l(:notice_successful_delete) if @object.destroy
     redirect_to action: 'index'
   end
 
 private
-  def cancel_issue(issue)
-    issue.init_journal(User.current, l(:message_meeting_canceled))
-    issue.status_id = Setting[:plugin_redmine_meeting][:cancel_issue_status]
-    issue.save
-  end
-
   def nested_objects_from_session
     @users = User.active.sorted.find(session[:meeting_member_ids])
     @contacts = Contact.order_by_name.find(session[:meeting_contact_ids])

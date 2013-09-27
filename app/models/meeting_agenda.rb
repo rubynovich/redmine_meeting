@@ -24,6 +24,7 @@ class MeetingAgenda < ActiveRecord::Base
   accepts_nested_attributes_for :meeting_watchers, allow_destroy: true
 
   before_create :add_author_id
+  before_destroy :close_invites
   after_save :add_new_users_from_questions
 
   attr_accessible :meeting_members_attributes
@@ -76,6 +77,18 @@ class MeetingAgenda < ActiveRecord::Base
   end
 
 private
+  def close_invites
+    issues = self.invites
+    issues.each do |invite|
+      cancel_issue(invite)
+    end
+  end
+
+  def cancel_issue(issue)
+    issue.init_journal(User.current, ::I18n.t(:message_meeting_canceled))
+    issue.status_id = Setting[:plugin_redmine_meeting][:cancel_issue_status]
+    issue.save
+  end
 
   def add_author_id
     self.author_id = User.current.id
