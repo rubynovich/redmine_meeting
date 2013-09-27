@@ -97,6 +97,8 @@
             %th=l(:field_issue)
             %th=l(:label_meeting_question_user)
             %th=l(:field_status)
+            %th=l(:field_start_date)
+            %th=l(:field_due_date)
             %th=l(:field_done_ratio)
         %tbody
           - questions.each do |question|
@@ -111,6 +113,12 @@
               %td
                 - if question.status.present?
                   =h question.status
+              %td
+                - if question.issue.present?
+                  =format_date(question.start_date)
+              %td
+                - if question.issue.present?
+                  =format_date(question.due_date)
               %td{width: '80px'}
                 - if question.issue.present?
                   = progress_bar(question.issue.done_ratio, width: '80px')
