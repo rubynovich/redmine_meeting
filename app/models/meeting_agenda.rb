@@ -9,6 +9,7 @@ class MeetingAgenda < ActiveRecord::Base
   has_many :projects, through: :issues, order: :title, uniq: true
   has_many :statuses, through: :issues, uniq: true
   has_many :meeting_members, dependent: :delete_all
+  has_many :invites, through: :meeting_members, source: :issue
   has_many :users, through: :meeting_members, order: [:lastname, :firstname], uniq: true
   has_many :meeting_approvers, as: :meeting_container
   has_many :approvers, source: :user, through: :meeting_approvers, order: [:lastname, :firstname], uniq: true
