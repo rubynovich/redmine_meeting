@@ -24,7 +24,6 @@ class MeetingAgenda < ActiveRecord::Base
   accepts_nested_attributes_for :meeting_watchers, allow_destroy: true
 
   before_create :add_author_id
-  before_destroy :close_invites
   after_save :add_new_users_from_questions
 
   attr_accessible :meeting_members_attributes
