@@ -128,14 +128,10 @@ private
     unless reserve.valid?
       errors[:base] << ::I18n.t(:error_messages_meeting_room_not_reserved)
     end
-#    if self.meeting_questions.blank? || self.meeting_questions.all?{ |q| q.user.blank? }
-#      errors.add(:meeting_members, :must_exist)
-#    end
   end
 
   def new_meeting_room_reserve
-    self.meeting_room_reserve = MeetingRoomReserve.new(meeting_room_reserve_attributes)
-    unless self.meeting_room_reserve.save
+    unless self.build_meeting_room_reserve(meeting_room_reserve_attributes)
       errors[:base] << ::I18n.t(:error_messages_meeting_room_not_reserved)
     end
   end
