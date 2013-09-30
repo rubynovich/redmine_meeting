@@ -133,12 +133,14 @@ ru:
     title: "Вопрос"
   field_meeting_answers:
     description: "Описание решения"
+    reporter: "Докладчик"
     user: "Исполнитель"
     start_date: "Начата"
     due_date: "Дата выполнения"
     meeting_question: "Рассмотренный вопрос"
   field_meeting_extra_answers:
     description: "Описание решения"
+    reporter: "Докладчик"
     user: "Исполнитель"
     start_date: "Начата"
     due_date: "Дата выполнения"
