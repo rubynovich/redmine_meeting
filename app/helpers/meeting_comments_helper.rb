@@ -7,6 +7,10 @@ module MeetingCommentsHelper
     User.current == item.author
   end
 
+  def meeting_manager?
+    User.current.meeting_manager?
+  end
+
   def can_show_comments?(container)
     admin? || meeting_manager? || container.users.include?(User.current)
   end
