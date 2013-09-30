@@ -3,7 +3,7 @@ class MeetingAgenda < ActiveRecord::Base
 
   belongs_to :author, class_name: 'User', foreign_key: 'author_id'
   belongs_to :priority, class_name: 'IssuePriority', foreign_key: 'priority_id'
-  belongs_to :meeting_room_reserve
+  belongs_to :meeting_room_reserve, dependent: :destroy
   has_one :meeting_protocol
   has_many :meeting_questions, dependent: :delete_all, order: :id
   has_many :issues, through: :meeting_questions, order: :id, uniq: true
@@ -128,7 +128,13 @@ private
   end
 
   def meeting_room_reserve_validation
-    reserve = meeting_room_reserve_new
+    reserve = if self.meeting_room_reserve.present?
+      meeting_room_reserve_attributes.inject(self.meeting_room_reserve){ |result, array|
+        result.send("#{array[0]}=", array[1])
+      }
+    else
+      meeting_room_reserve_new
+    end
     unless reserve.valid?
       errors[:base] << ::I18n.t(:error_messages_meeting_room_not_reserved)
     end
@@ -138,16 +144,15 @@ private
     mrr = meeting_room_reserve_new
     if mrr.save
       self.update_attribute(:meeting_room_reserve_id, mrr.id)
-    else
-      errors[:base] << ::I18n.t(:error_messages_meeting_room_not_reserved)
     end
   end
 
   def update_meeting_room_reserve
     if self.meeting_room_reserve.present?
-      self.meeting_room_reserve.destroy
+      self.meeting_room_reserve.update_attributes(meeting_room_reserve_attributes)
+    else
+      new_meeting_room_reserve
     end
-    new_meeting_room_reserve
   end
 
   def add_new_users_from_questions
