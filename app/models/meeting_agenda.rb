@@ -143,11 +143,18 @@ private
     end
   end
 
+  def meeting_room_reserve_change?
+    !meeting_room_reserve_attributes.all?{ |key, value|
+       self.meeting_room_reserve.send(key) == value
+    }
+  end
+
   def update_meeting_room_reserve
     if self.meeting_room_reserve.present?
-      unless self.meeting_room_reserve.update_attributes(meeting_room_reserve_attributes)
-        errors[:base] << self.meeting_room_reserve.errors
-        errors[:base] << ::I18n.t(:error_messages_meeting_room_not_reserved)
+      if meeting_room_reserve_change?
+        unless self.meeting_room_reserve.update_attributes(meeting_room_reserve_attributes)
+          errors[:base] << ::I18n.t(:error_messages_meeting_room_not_reserved)
+        end
       end
     else
       new_meeting_room_reserve
