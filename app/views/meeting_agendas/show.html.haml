@@ -57,7 +57,7 @@
     - @object.meeting_members.each do |member|
       %tr.issue
         %td= h member.user.company rescue ""
-        %td{style: "white-space: pre-line; width: 33%"}= h member.user.job_title rescue ""
+        %td{style: "white-space: pre-line; width: 25%"}= h member.user.job_title rescue ""
         %td= link_to_user(member.user)
         %td= link_to(member.issue.try(:status), controller: 'issues', action: 'show', id: member.issue_id) rescue h l(:label_meeting_member_was_not_invite)
 
