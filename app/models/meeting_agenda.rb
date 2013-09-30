@@ -119,19 +119,23 @@ private
     end_time: self.end_time}
   end
 
+  def meeting_room_reserve_new
+    MeetingRoomReserve.new(meeting_room_reserve_attributes)
+  end
+
   def find_meeting_room
     MeetingRoom.where("LOWER(name) = LOWER(?)", self.place).first
   end
 
   def meeting_room_reserve_validation
-    reserve = MeetingRoomReserve.new(meeting_room_reserve_attributes)
+    reserve = meeting_room_reserve_new
     unless reserve.valid?
       errors[:base] << ::I18n.t(:error_messages_meeting_room_not_reserved)
     end
   end
 
   def new_meeting_room_reserve
-    mrr = MeetingRoomReserve.new(meeting_room_reserve_attributes)
+    mrr = meeting_room_reserve_new
     if mrr.save
       self.update_attribute(:meeting_room_reserve_id, mrr.id)
     else
@@ -141,7 +145,9 @@ private
 
   def update_meeting_room_reserve
     if self.meeting_room_reserve.present?
-      unless self.meeting_room_reserve.update_attributes(meeting_room_reserve_attributes)
+      if meeting_room_reserve_new.valid?
+        self.meeting_room_reserve.update_attributes(meeting_room_reserve_attributes)
+      else
         errors[:base] << ::I18n.t(:error_messages_meeting_room_not_reserved)
       end
     else
