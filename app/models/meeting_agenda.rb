@@ -145,9 +145,8 @@ private
 
   def update_meeting_room_reserve
     if self.meeting_room_reserve.present?
-      if meeting_room_reserve_new.valid?
-        self.meeting_room_reserve.update_attributes(meeting_room_reserve_attributes)
-      else
+      unless self.meeting_room_reserve.update_attributes(meeting_room_reserve_attributes)
+        errors[:base] << self.meeting_room_reserve.errors
         errors[:base] << ::I18n.t(:error_messages_meeting_room_not_reserved)
       end
     else
