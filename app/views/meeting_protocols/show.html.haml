@@ -47,62 +47,60 @@
       %td= link_to_user @object.author
 
 %h3= l(:field_meeting_participators)+":"
-.autoscroll
+%table.list.issues
+  %tr
+    %th=l(:field_company)
+    %th=l(:field_job_title)
+    %th=l(:field_member)
+    %th=l(:label_meeting_invite_status)
+    %th=l(:label_meeting_notice_status)
+  - agenda_users = @object.meeting_agenda.users
+  - protocol_users = @object.users
+  - (agenda_users|protocol_users).compact.sort_by(&:name).each do |user|
+    %tr.issue
+      %td{style: "white-space: pre-line; width: 33%"}= h user.company rescue ""
+      %td{style: "white-space: pre-line; width: 33%"}= h user.job_title rescue ""
+      %td= link_to_user(user)
+      %td
+        - member = agenda_users.include?(user)
+        - participator = protocol_users.include?(user)
+        - if member && participator
+          = t(:label_meeting_member_present)
+        - elsif member
+          = t(:label_meeting_member_blank)
+        - elsif participator
+          = t(:label_meeting_member_extra)
+      %td
+        = link_to_meeting_notice(user)
+
+- agenda_contacts = @object.meeting_agenda.contacts
+- protocol_contacts = @object.contacts
+- if (agenda_contacts|protocol_contacts).any?
+  %h3= l(:field_meeting_contacts)+":"
   %table.list.issues
     %tr
-      %th=l(:field_company)
-      %th=l(:field_job_title)
-      %th=l(:field_member)
+      %th{style: "white-space: pre-line; width: 25%"}=l(:field_company)
+      %th{style: "white-space: pre-line; width: 25%"}=l(:field_job_title)
+      %th=l(:field_phone)
+      %th=l(:field_email)
+      %th=l(:field_contact)
       %th=l(:label_meeting_invite_status)
-      %th=l(:label_meeting_notice_status)
-    - agenda_users = @object.meeting_agenda.users
-    - protocol_users = @object.users
-    - (agenda_users|protocol_users).compact.sort_by(&:name).each do |user|
+    - (agenda_contacts|protocol_contacts).compact.sort_by(&:name).each do |contact|
       %tr.issue
-        %td= h user.company rescue ""
-        %td= h user.job_title rescue ""
-        %td= link_to_user(user)
+        %td= h contact.company
+        %td= h contact.job_title
+        %td= h contact.phone
+        %td= mail_to(h contact.email)
+        %td= link_to_contact(contact)
         %td
-          - member = agenda_users.include?(user)
-          - participator = protocol_users.include?(user)
+          - member = agenda_contacts.include?(contact)
+          - participator = protocol_contacts.include?(contact)
           - if member && participator
             = t(:label_meeting_member_present)
           - elsif member
             = t(:label_meeting_member_blank)
           - elsif participator
             = t(:label_meeting_member_extra)
-        %td
-          = link_to_meeting_notice(user)
-
-- agenda_contacts = @object.meeting_agenda.contacts
-- protocol_contacts = @object.contacts
-- if (agenda_contacts|protocol_contacts).any?
-  %h3= l(:field_meeting_contacts)+":"
-  .autoscroll
-    %table.list.issues
-      %tr
-        %th=l(:field_company)
-        %th=l(:field_job_title)
-        %th=l(:field_phone)
-        %th=l(:field_email)
-        %th=l(:field_contact)
-        %th=l(:label_meeting_invite_status)
-      - (agenda_contacts|protocol_contacts).compact.sort_by(&:name).each do |contact|
-        %tr.issue
-          %td= h contact.company
-          %td= h contact.job_title
-          %td= h contact.phone
-          %td= mail_to(h contact.email)
-          %td= link_to_contact(contact)
-          %td
-            - member = agenda_contacts.include?(contact)
-            - participator = protocol_contacts.include?(contact)
-            - if member && participator
-              = t(:label_meeting_member_present)
-            - elsif member
-              = t(:label_meeting_member_blank)
-            - elsif participator
-              = t(:label_meeting_member_extra)
 
 %br
 %h3=l(:label_meeting_answer_plural)+":"
