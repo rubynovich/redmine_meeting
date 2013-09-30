@@ -75,7 +75,7 @@
         = link_to_meeting_notice(user)
       %td
         - member = @object.meeting_participators.select{ |m| m.user == user }.first
-        - if member.present?
+        - if member.present? && member.issue.present?
           = link_to(member.issue.try(:status), controller: 'issues', action: 'show', id: member.issue_id)
 
 
