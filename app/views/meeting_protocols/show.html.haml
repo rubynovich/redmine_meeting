@@ -54,6 +54,7 @@
     %th=l(:field_member)
     %th=l(:label_meeting_invite_status)
     %th=l(:label_meeting_notice_status)
+    %th=l(:field_status)
   - agenda_users = @object.meeting_agenda.users
   - protocol_users = @object.users
   - (agenda_users|protocol_users).compact.sort_by(&:name).each do |user|
@@ -72,6 +73,11 @@
           = t(:label_meeting_member_extra)
       %td
         = link_to_meeting_notice(user)
+      %td
+        - member = @object.meeting_participators.select{ |m| m.user == user }.first
+        - if member.present?
+          = link_to(member.issue.try(:status), controller: 'issues', action: 'show', id: member.issue_id)
+
 
 - agenda_contacts = @object.meeting_agenda.contacts
 - protocol_contacts = @object.contacts
