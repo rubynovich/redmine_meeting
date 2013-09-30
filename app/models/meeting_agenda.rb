@@ -131,7 +131,7 @@ private
   end
 
   def new_meeting_room_reserve
-    unless self.build_meeting_room_reserve(meeting_room_reserve_attributes)
+    unless self.create_meeting_room_reserve(meeting_room_reserve_attributes)
       errors[:base] << ::I18n.t(:error_messages_meeting_room_not_reserved)
     end
   end
