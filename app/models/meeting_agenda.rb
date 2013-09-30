@@ -27,7 +27,7 @@ class MeetingAgenda < ActiveRecord::Base
   before_create :add_author_id
   after_save :add_new_users_from_questions
   after_create :new_meeting_room_reserve, if: -> { MeetingRoom.where("LOWER(name) = LOWER(?)", self.place).present? }
-  after_update :update_meeting_room_reserve, if: -> { self.meeting_room_reserve.present? }
+  after_update :update_meeting_room_reserve, if: -> { MeetingRoom.where("LOWER(name) = LOWER(?)", self.place).present? }
 
   attr_accessible :meeting_members_attributes
   attr_accessible :meeting_questions_attributes
@@ -137,8 +137,12 @@ private
   end
 
   def update_meeting_room_reserve
-    unless self.meeting_room_reserve.update_attributes(meeting_room_reserve_attributes)
-      errors[:base] << ::I18n.t(:error_messages_meeting_room_not_reserved)
+    if self.meeting_room_reserve.present?
+      unless self.meeting_room_reserve.update_attributes(meeting_room_reserve_attributes)
+        errors[:base] << ::I18n.t(:error_messages_meeting_room_not_reserved)
+      end
+    else
+      new_meeting_room_reserve
     end
   end
 
