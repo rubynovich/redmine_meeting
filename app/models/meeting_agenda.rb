@@ -131,6 +131,7 @@ private
     reserve = if self.meeting_room_reserve.present?
       meeting_room_reserve_attributes.inject(self.meeting_room_reserve){ |result, array|
         result.send("#{array[0]}=", array[1])
+        result
       }
     else
       meeting_room_reserve_new
