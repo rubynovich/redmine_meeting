@@ -145,3 +145,4 @@ ru:
     meeting_question_name: "Рассмотренный вопрос"
   error_messages_meeting_answers_must_exist: "Рассмотренные вопросы должны присутствовать"
   error_messages_meeting_questions_must_exist: "Вопросы на рассмотрение должны присутствовать"
+  error_messages_meeting_room_not_reserved: "Невозможно зарезервировать переговорную на указанное время"

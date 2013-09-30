@@ -3,6 +3,7 @@ class MeetingAgenda < ActiveRecord::Base
 
   belongs_to :author, class_name: 'User', foreign_key: 'author_id'
   belongs_to :priority, class_name: 'IssuePriority', foreign_key: 'priority_id'
+  belongs_to :meeting_room_reserve
   has_one :meeting_protocol
   has_many :meeting_questions, dependent: :delete_all, order: :id
   has_many :issues, through: :meeting_questions, order: :id, uniq: true
@@ -25,6 +26,8 @@ class MeetingAgenda < ActiveRecord::Base
 
   before_create :add_author_id
   after_save :add_new_users_from_questions
+  after_create :reserve_meeting_room, if: -> { MeetingRoom.where("LOWER(name) = LOWER(?)", self.place).present? }
+  after_update :reserve_meeting_room_update, if: -> { self.meeting_room_reserve.present? }
 
   attr_accessible :meeting_members_attributes
   attr_accessible :meeting_questions_attributes
@@ -46,8 +49,9 @@ class MeetingAgenda < ActiveRecord::Base
     self.meet_on && (self.meet_on == Date.today) &&
     self.end_time && (self.end_time.seconds_since_midnight < Time.now.seconds_since_midnight)
   }
-  validate :presence_of_meeting_questions, if: -> {self.meeting_questions.blank?}
-  validate :presence_of_meeting_members, if: -> {self.meeting_members.blank?}
+  validate :presence_of_meeting_questions, if: -> { self.meeting_questions.blank? }
+  validate :presence_of_meeting_members, if: -> { self.meeting_members.blank? }
+  validate :meeting_room_reserve, if: -> { MeetingRoom.where("LOWER(name) = LOWER(?)", self.place).present? }
 
   scope :free, -> {
     where("id NOT IN (SELECT meeting_agenda_id FROM meeting_protocols)")
@@ -103,6 +107,46 @@ private
   def presence_of_meeting_members
     if self.meeting_questions.blank? || self.meeting_questions.all?{ |q| q.user.blank? }
       errors.add(:meeting_members, :must_exist)
+    end
+  end
+
+  def meeting_room_reserve_attributes
+    {user_id: User.current,
+    subject: self.subject,
+    meeting_room_id: find_meeting_room.id,
+    reserve_on: self.meet_on,
+    start_time: self.start_time,
+    end_time: self.end_time}
+  end
+
+  def find_meeting_room
+    MeetingRoom.where("LOWER(name) = LOWER(?)", self.place).first
+  end
+
+  def new_reserve
+    MeetingRoomReserve.new(meeting_room_reserve_attributes)
+  end
+
+  def meeting_room_reserve
+    reserve = new_reserve
+    unless reserve.valid?
+      errors[:base] << ::I18n.t(:error_messages_meeting_room_not_reserved)
+    end
+#    if self.meeting_questions.blank? || self.meeting_questions.all?{ |q| q.user.blank? }
+#      errors.add(:meeting_members, :must_exist)
+#    end
+  end
+
+  def reserve_meeting_room
+    self.meeting_room_reserve = new_reserve
+    unless self.meeting_room_reserve.save
+      errors[:base] << ::I18n.t(:error_messages_meeting_room_not_reserved)
+    end
+  end
+
+  def reserve_meeting_room_update
+    unless self.meeting_room_reserve.update_attributes(meeting_room_reserve_attributes)
+      errors[:base] << ::I18n.t(:error_messages_meeting_room_not_reserved)
     end
   end
 
