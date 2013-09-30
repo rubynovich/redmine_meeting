@@ -33,7 +33,7 @@ class MeetingAgenda < ActiveRecord::Base
   attr_accessible :meeting_questions_attributes
   attr_accessible :meeting_contacts_attributes
   attr_accessible :meeting_watchers_attributes
-  attr_accessible :subject, :place, :meet_on, :start_time, :end_time, :priority_id
+  attr_accessible :subject, :place, :meet_on, :start_time, :end_time, :priority_id, :meeting_room_reserve_id
 
   validates_uniqueness_of :subject, scope: :meet_on
   validates_presence_of :subject, :place, :meet_on, :start_time, :end_time, :priority_id
@@ -131,7 +131,10 @@ private
   end
 
   def new_meeting_room_reserve
-    unless self.create_meeting_room_reserve(meeting_room_reserve_attributes)
+    mrr = MeetingRoomReserve.new(meeting_room_reserve_attributes)
+    if mrr.save
+      self.update_attribute(:meeting_room_reserve_id, mrr.id)
+    else
       errors[:base] << ::I18n.t(:error_messages_meeting_room_not_reserved)
     end
   end
