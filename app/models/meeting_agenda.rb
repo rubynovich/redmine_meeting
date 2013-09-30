@@ -26,8 +26,8 @@ class MeetingAgenda < ActiveRecord::Base
 
   before_create :add_author_id
   after_save :add_new_users_from_questions
-  after_create :reserve_meeting_room, if: -> { MeetingRoom.where("LOWER(name) = LOWER(?)", self.place).present? }
-  after_update :reserve_meeting_room_update, if: -> { self.meeting_room_reserve.present? }
+  after_create :new_meeting_room_reserve, if: -> { MeetingRoom.where("LOWER(name) = LOWER(?)", self.place).present? }
+  after_update :update_meeting_room_reserve, if: -> { self.meeting_room_reserve.present? }
 
   attr_accessible :meeting_members_attributes
   attr_accessible :meeting_questions_attributes
@@ -51,7 +51,7 @@ class MeetingAgenda < ActiveRecord::Base
   }
   validate :presence_of_meeting_questions, if: -> { self.meeting_questions.blank? }
   validate :presence_of_meeting_members, if: -> { self.meeting_members.blank? }
-  validate :meeting_room_reserve, if: -> { MeetingRoom.where("LOWER(name) = LOWER(?)", self.place).present? }
+  validate :meeting_room_reserve_validation, if: -> { MeetingRoom.where("LOWER(name) = LOWER(?)", self.place).present? }
 
   scope :free, -> {
     where("id NOT IN (SELECT meeting_agenda_id FROM meeting_protocols)")
@@ -123,12 +123,8 @@ private
     MeetingRoom.where("LOWER(name) = LOWER(?)", self.place).first
   end
 
-  def new_reserve
-    MeetingRoomReserve.new(meeting_room_reserve_attributes)
-  end
-
-  def meeting_room_reserve
-    reserve = new_reserve
+  def meeting_room_reserve_validation
+    reserve = MeetingRoomReserve.new(meeting_room_reserve_attributes)
     unless reserve.valid?
       errors[:base] << ::I18n.t(:error_messages_meeting_room_not_reserved)
     end
@@ -137,14 +133,14 @@ private
 #    end
   end
 
-  def reserve_meeting_room
-    self.meeting_room_reserve = new_reserve
+  def new_meeting_room_reserve
+    self.meeting_room_reserve = MeetingRoomReserve.new(meeting_room_reserve_attributes)
     unless self.meeting_room_reserve.save
       errors[:base] << ::I18n.t(:error_messages_meeting_room_not_reserved)
     end
   end
 
-  def reserve_meeting_room_update
+  def update_meeting_room_reserve
     unless self.meeting_room_reserve.update_attributes(meeting_room_reserve_attributes)
       errors[:base] << ::I18n.t(:error_messages_meeting_room_not_reserved)
     end
