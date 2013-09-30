@@ -21,7 +21,7 @@ class MeetingContactsController < ApplicationController
       @object.save
       @object.contacts
     else
-      session[session_id] = (new_contacts + session[session]).uniq
+      session[session_id] = (new_contacts + session[session_id]).uniq
       contacts_from_session
     end
 
