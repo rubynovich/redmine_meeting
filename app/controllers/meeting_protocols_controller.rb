@@ -54,7 +54,8 @@ class MeetingProtocolsController < ApplicationController
       like_field(params[:subject], 'meeting_agendas.subject').
       uniq
 
-    @scope = @scope.joins(:meeting_participators).joins(:meeting_answers).where("meeting_participators.user_id = :user_id OR meeting_answers.reporter_id = :user_id", user_id: User.current.id) unless admin?
+    @scope = @scope.joins(:meeting_participators).joins(:meeting_answers).joins(:meeting_watchers).
+      where("meeting_participators.user_id = :user_id OR meeting_answers.reporter_id = :user_id OR meeting_watchers.user_id = :user_id", user_id: User.current.id) unless admin?
 
     @count = @scope.count
 
