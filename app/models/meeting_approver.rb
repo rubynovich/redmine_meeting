@@ -9,12 +9,12 @@ class MeetingApprover < ActiveRecord::Base
   belongs_to :author, foreign_key: 'author_id', class_name: 'User'
   belongs_to :meeting_container, polymorphic: true
 
-  before_validation :add_approved_on, if: -> { self.approved? && !self.class.find(self.id).approved? }
+  before_validation :add_approved_on, if: -> { self.approved? && self.id && !self.class.find(self.id).approved? }
   before_create :add_author_id
 
   before_update :message_approver_approve, if: -> { self.approved? && !self.class.find(self.id).approved? }
   after_create :message_approver_create
-  before_save :message_approver_destroy, if: -> { !self.deleted? && self.class.find(self.id).deleted? }
+  before_save :message_approver_destroy, if: -> { !self.deleted? && self.id && self.class.find(self.id).deleted? }
 
 
   scope :open, ->(status = true) {
