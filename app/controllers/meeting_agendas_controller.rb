@@ -61,14 +61,6 @@ class MeetingAgendasController < ApplicationController
         map{|l| { 'label' => l.place, 'value' => l.place} }
     end
 
-    begin
-      places = MeetingRoom.open.
-        where("LOWER(name) LIKE LOWER(?)", "%#{q}%").
-        map{ |r| {'label' => r.name, 'value' => r.name} } +
-        places
-    rescue
-    end
-
     render :text => places.to_json, :layout => false
   end
 

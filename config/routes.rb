@@ -49,3 +49,9 @@ resources :meeting_watchers do
     get 'autocomplete_for_user'
   end
 end
+
+resources :meeting_room_selectors do
+  collection do
+    get 'autocomplete_for_meeting_room'
+  end
+end
