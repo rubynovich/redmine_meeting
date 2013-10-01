@@ -55,7 +55,7 @@ class MeetingProtocolsController < ApplicationController
       uniq
 
     @scope = @scope.joins(:meeting_participators).joins(:meeting_answers).includes(:meeting_watchers).includes(:meeting_approvers).
-      where("meeting_protocols.author_id = :user_id OR meeting_participators.user_id = :user_id OR meeting_answers.reporter_id = :user_id", user_id: User.current.id) unless admin?
+      where("meeting_protocols.author_id = :user_id OR meeting_participators.user_id = :user_id OR meeting_answers.reporter_id = :user_id OR meeting_watchers.user_id = :user_id OR meeting_approvers.user_id = :user_id", user_id: User.current.id) unless admin?
 
     @count = @scope.count
 
