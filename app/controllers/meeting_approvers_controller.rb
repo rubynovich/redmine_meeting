@@ -22,6 +22,10 @@ class MeetingApproversController < ApplicationController
     end
 
     @users = meeting_approver_users
+
+    respond_to do |format|
+      format.js
+    end
   end
 
   def update
@@ -37,6 +41,10 @@ class MeetingApproversController < ApplicationController
     end
 
     @users = meeting_approver_users
+
+    respond_to do |format|
+      format.js
+    end
   end
 
   def autocomplete_for_user
