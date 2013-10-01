@@ -105,7 +105,7 @@ class MeetingAgendasController < ApplicationController
       limit(@limit).
       offset(@offset).
 #      order(sort_clause).
-      order('created_on desc').
+      order('meeting_agendas.created_on desc').
       all
 
   end

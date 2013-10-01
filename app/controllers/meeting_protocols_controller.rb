@@ -74,7 +74,7 @@ class MeetingProtocolsController < ApplicationController
       limit(@limit).
       offset(@offset).
 #      order(sort_clause).
-      order('created_on desc').
+      order('meeting_protocols.created_on desc').
       all
   end
 
