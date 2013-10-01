@@ -85,8 +85,8 @@ class MeetingAgendasController < ApplicationController
       eql_project_id(params[:project_id]).
       uniq
 
-    @scope = @scope.joins(:meeting_members).joins(:meeting_approvers).
-      where("meeting_members.user_id = :user_id OR meeting_agendas.author_id = :user_id OR meeting_approvers.user_id = :user_id", user_id: User.current.id) unless admin?
+    @scope = @scope.joins(:meeting_members).
+      where("meeting_members.user_id = :user_id OR meeting_agendas.author_id = :user_id", user_id: User.current.id) unless admin?
 
     @count = @scope.count
 
