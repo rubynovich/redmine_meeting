@@ -18,4 +18,8 @@ class MeetingExtraAnswer < ActiveRecord::Base
   def meeting_question
     self.meeting_question_name
   end
+
+  def to_s
+    self.description
+  end
 end

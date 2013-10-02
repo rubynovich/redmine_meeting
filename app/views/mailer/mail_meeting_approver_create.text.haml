@@ -1,5 +1,9 @@
-= l(:mail_body_greeting, lastname: @user.lastname, firstname: @user.firstname) + t(:mail_body_meeting_approver_create_greating, author: @author.name)
+= "#{l(:field_subject)}: #{@container}"
+= "#{l(:field_meet_on)}: #{format_date(@container.meet_on)}"
+= "#{l(:label_meeting_agenda_start_time)}: #{format_time(@container.start_time)}"
+= "#{l(:label_meeting_agenda_end_time)}: #{format_time(@container.end_time)}"
 
+= l(:mail_body_greeting, lastname: @user.lastname, firstname: @user.firstname) + t(:mail_body_meeting_approver_create_greating, author: @author.name)
 - if @container.is_a? MeetingAgenda
   = t(:mail_body_meeting_approver_create_agenda) + " " + @container.subject + ": " + url_for(controller: 'meeting_agendas', action: 'show', id: @container.id, only_path: false)
 - elsif @container.is_a? MeetingProtocol

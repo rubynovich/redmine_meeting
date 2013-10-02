@@ -23,4 +23,8 @@ class MeetingAnswer < ActiveRecord::Base
       self.meeting_question.user
     end
   end
+
+  def to_s
+    self.description
+  end
 end

@@ -1,11 +1,25 @@
-= l(:mail_body_greeting, lastname: @author.lastname, firstname: @author.firstname)
-= @user.name
-- if @container.is_a? MeetingAgenda
-  = t(:mail_body_meeting_comment_agenda)
-  = link_to(@container.subject, controller: 'meeting_agendas', action: 'show', id: @container.id, only_path: false)
-- elsif @container.is_a? MeetingProtocol
-  = t(:mail_body_meeting_comment_protocol)
-  = link_to(@container.meeting_agenda.subject, controller: 'meeting_protocols', action: 'show', id: @container.id, only_path: false)
+%p
+  = l(:field_subject) + ':'
+  = @container
+%p
+  = l(:field_meet_on) + ':'
+  = format_date(@container.meet_on)
+%p
+  = l(:label_meeting_agenda_start_time) + ':'
+  = format_time(@container.start_time)
+%p
+  = l(:label_meeting_agenda_end_time) + ':'
+  = format_time(@container.end_time)
+%p
+%p
+  = l(:mail_body_greeting, lastname: @author.lastname, firstname: @author.firstname)
+  = @user.name
+  - if @container.is_a? MeetingAgenda
+    = t(:mail_body_meeting_comment_agenda)
+    = link_to(@container.subject, controller: 'meeting_agendas', action: 'show', id: @container.id, only_path: false)
+  - elsif @container.is_a? MeetingProtocol
+    = t(:mail_body_meeting_comment_protocol)
+    = link_to(@container.meeting_agenda.subject, controller: 'meeting_protocols', action: 'show', id: @container.id, only_path: false)
 
 %p= @comment_for
 

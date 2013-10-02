@@ -16,7 +16,7 @@ class MeetingParticipator < ActiveRecord::Base
   before_save :add_meeting_member
 
   def to_s
-    self.member.try(:name) || self.user.try(:name)
+    self.member.try(:name) || self.user.try(:name) || ''
   end
 
 private

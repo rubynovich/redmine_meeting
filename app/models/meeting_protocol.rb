@@ -70,6 +70,10 @@ class MeetingProtocol < ActiveRecord::Base
     self.meeting_answers + self.meeting_extra_answers
   end
 
+  def to_s
+    self.meeting_agenda.to_s
+  end
+
 private
 
   def presence_of_meeting_answers
