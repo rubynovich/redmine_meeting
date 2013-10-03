@@ -1,7 +1,7 @@
 = "#{l(:field_subject)}: #{@container}"
 = "#{l(:field_meet_on)}: #{format_date(@container.meet_on)}"
-= "#{l(:label_meeting_agenda_start_time)}: #{format_time(@container.start_time)}"
-= "#{l(:label_meeting_agenda_end_time)}: #{format_time(@container.end_time)}"
+= "#{l(:label_meeting_agenda_start_time)}: #{format_time(@container.start_time, false)}"
+= "#{l(:label_meeting_agenda_end_time)}: #{format_time(@container.end_time, false)}"
 
 = l(:mail_body_greeting, lastname: @author.lastname, firstname: @author.firstname)
 - if @container.is_a? MeetingAgenda

@@ -18,6 +18,7 @@ class MeetingAgenda < ActiveRecord::Base
   has_many :contacts, through: :meeting_contacts, order: [:last_name, :first_name], uniq: true
   has_many :meeting_watchers, as: :meeting_container, dependent: :delete_all
   has_many :watchers, through: :meeting_watchers, order: [:lastname, :firstname], uniq: true
+  has_many :meeting_comments, as: :meeting_container, order: ["created_on DESC"], dependent: :delete_all, uniq: true
 
   accepts_nested_attributes_for :meeting_questions, allow_destroy: true
   accepts_nested_attributes_for :meeting_members, allow_destroy: true

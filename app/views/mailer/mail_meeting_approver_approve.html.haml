@@ -6,10 +6,10 @@
   = format_date(@container.meet_on)
 %p
   = l(:label_meeting_agenda_start_time) + ':'
-  = format_time(@container.start_time)
+  = format_time(@container.start_time, false)
 %p
   = l(:label_meeting_agenda_end_time) + ':'
-  = format_time(@container.end_time)
+  = format_time(@container.end_time, false)
 %p
 %p
   = l(:mail_body_greeting, lastname: @author.lastname, firstname: @author.firstname)
