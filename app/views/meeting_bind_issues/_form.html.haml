@@ -1,7 +1,6 @@
 .box.tabular
   %p
-    = f.label :issue_id
-    = f.text_field :issue_id, size: 10, class: "autocomplete_for_issue"
+    = f.text_field :question_issue_id, size: 30, class: "autocomplete_for_issue"
 
 :javascript
   $('.autocomplete_for_issue:not(.autocomplete)').each( function(index){

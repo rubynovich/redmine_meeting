@@ -123,7 +123,7 @@
           %th= t(:label_meeting_question)+":"
           %td= h answer.meeting_question
           %th= t(:label_meeting_question_issue)+":"
-          %td= render partial: 'meeting_bind_issues/show', locals: {question: answer.meeting_question, answer: answer}
+          %td= render partial: 'meeting_bind_issues/show', locals: {answer: answer}
         %tr
           %th= t(:label_meeting_question_user)+":"
           %td= link_to_reporter(answer)

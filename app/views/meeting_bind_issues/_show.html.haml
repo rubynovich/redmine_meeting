@@ -1,2 +1,2 @@
-%div{id: "meeting_bind_issue_for_#{answer.id}"}
-  = link_to_question_issue(question)
+%div{id: "meeting_bind_issue_for_#{answer.class.to_s.underscore}_#{answer.id}"}
+  = link_to_question_issue(answer)

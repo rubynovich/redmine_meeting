@@ -6,6 +6,7 @@ class MeetingAnswer < ActiveRecord::Base
   belongs_to :user
   belongs_to :reporter, class_name: "User", foreign_key: "reporter_id"
   belongs_to :issue
+  belongs_to :question_issue, class_name: "Issue", foreign_key: "question_issue_id"
   has_one :status, through: :issue
   has_one :project, through: :issue
   has_one :meeting_agenda, through: :meeting_protocol
@@ -22,6 +23,10 @@ class MeetingAnswer < ActiveRecord::Base
     elsif self.meeting_question.present? && self.meeting_question.user.present?
       self.meeting_question.user
     end
+  end
+
+  def question_issue
+    super.present? ? super : meeting_question.try(:issue)
   end
 
   def to_s
