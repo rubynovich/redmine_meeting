@@ -122,7 +122,7 @@
                   = progress_bar(question.issue.done_ratio, width: '80px')
             - if can_show_comments?(@object)
               %tr{id: "comments_block_for_#{question.id}", style: 'display: none;'}
-                %td{colspan: 5}
+                %td{colspan: 7}
                   %h4= l(:label_meeting_question_comment_plural)+":"
                   = render partial: 'meeting_comments/history', locals: {meeting_container: question}
 
