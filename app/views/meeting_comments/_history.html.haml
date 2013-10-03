@@ -1,6 +1,6 @@
 %div{id: "meeting_comment_history_for_#{meeting_container.class.to_s.underscore}_#{meeting_container.id}", class: "meeting_comments_history"}
   - meeting_container.meeting_comments.each do |comment|
-    %div{style: 'margin-left: 40px; margin-bottom: 20px; margin-top: 20px;'}
+    %div{style: 'margin-left: 20px; margin-bottom: 20px; margin-top: 20px;'}
       =textilizable(comment, :note)
       %p
         = link_to_user comment.author
