@@ -53,9 +53,10 @@ module MeetingProtocolsHelper
 
   def link_to_question_issue(answer)
     if answer.question_issue.present?
-      link_to_issue answer.question_issue, project: false, tracker: false, subject: false
+      link_to_issue(answer.question_issue, project: false, tracker: false, subject: false) +
+      link_to("", {controller: 'meeting_bind_issues', action: 'new', meeting_answer_type: answer.class, meeting_answer_id: answer.id}, remote: true, class: 'icon icon-edit')
     else
-      link_to t(:button_add), {controller: 'meeting_bind_issues', action: 'new', meeting_answer_type: answer.class, meeting_answer_id: answer.id}, remote: true, class: 'icon icon-add'
+      link_to(t(:button_add), {controller: 'meeting_bind_issues', action: 'new', meeting_answer_type: answer.class, meeting_answer_id: answer.id}, remote: true, class: 'icon icon-add')
       #FIXME t(:label_meeting_question_issue_missing)
     end
   end
