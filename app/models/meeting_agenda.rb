@@ -53,6 +53,7 @@ class MeetingAgenda < ActiveRecord::Base
   validate :presence_of_meeting_questions, if: -> { self.meeting_questions.blank? }
   validate :presence_of_meeting_members, if: -> { self.meeting_members.blank? }
   validate :meeting_room_reserve_validation, if: -> { MeetingRoom.where("LOWER(name) = LOWER(?)", self.place).present? }
+  validate :meeting_question_title_uniq, if: -> { mq = self.meeting_questions.map(&:title); mq.size != mq.uniq.size }
 
   scope :free, -> {
     where("id NOT IN (SELECT meeting_agenda_id FROM meeting_protocols)")
@@ -140,6 +141,10 @@ private
     unless reserve.valid?
       errors[:base] << ::I18n.t(:error_messages_meeting_room_not_reserved)
     end
+  end
+
+  def meeting_question_title_uniq
+    errors[:base] << ::I18n.t(:error_messages_meeting_question_title_not_uniq)
   end
 
   def new_meeting_room_reserve

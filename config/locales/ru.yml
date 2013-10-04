@@ -96,6 +96,7 @@ ru:
   message_meeting_canceled: "Совещание отменено!"
   field_question_issue: "Задача"
 
+
   label_meeting_issue_type_statuses:
     new: "Создана"
     update: "Обновлена"
@@ -151,3 +152,4 @@ ru:
   error_messages_meeting_answers_must_exist: "Рассмотренные вопросы должны присутствовать"
   error_messages_meeting_questions_must_exist: "Вопросы на рассмотрение должны присутствовать"
   error_messages_meeting_room_not_reserved: "Невозможно зарезервировать переговорную на указанное время"
+  error_messages_meeting_question_title_not_uniq: "Вопрос должен быть уникальным"

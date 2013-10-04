@@ -14,7 +14,7 @@ class MeetingQuestion < ActiveRecord::Base
   has_many :meeting_comments, as: :meeting_container, order: ["created_on DESC"], dependent: :delete_all, uniq: true
 
   validates_presence_of :title
-  validates_uniqueness_of :title, scope: :meeting_agenda_id
+#  validates_uniqueness_of :title, scope: :meeting_agenda_id
 
   def to_s
     self.title
