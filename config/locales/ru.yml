@@ -95,7 +95,7 @@ ru:
   label_new_meeting_watcher: "Добавление налюдателя"
   message_meeting_canceled: "Совещание отменено!"
   field_question_issue: "Задача"
-
+  message_participate_in_the_meeting: "Участие в собрании"
 
   label_meeting_issue_type_statuses:
     new: "Создана"

@@ -35,6 +35,7 @@ class MeetingProtocol < ActiveRecord::Base
 
   before_create :add_author_id
   after_save :add_new_users_from_answers
+  after_save :add_time_entry_to_invites
 
   validates_uniqueness_of :meeting_agenda_id
   validates_presence_of :meeting_agenda_id, :start_time, :end_time
@@ -76,6 +77,22 @@ class MeetingProtocol < ActiveRecord::Base
   end
 
 private
+  def add_time_entry_to_invites
+    self.meeting_members.select(&:meeting_participator).select(&:issue).each do |member|
+      if member.time_entry
+        member.update_attribute(:hours, (((self.end_time.seconds_since_midnight - self.start_time.seconds_since_midnight) / 36) / 100.0))
+      else
+        te = TimeEntry.new(
+          issue_id: member.issue_id,
+          hours: (((self.end_time.seconds_since_midnight - self.start_time.seconds_since_midnight) / 36) / 100.0),
+          comments: ::I18n.t(:message_participate_in_the_meeting),
+          spent_on: self.meeting_agenda.meet_on
+        )
+        te.user = member.user
+        te.save
+      end
+    end
+  end
 
   def presence_of_meeting_answers
     errors[:base] << ::I18n.t(:error_messages_meeting_answers_must_exist)

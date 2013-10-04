@@ -1,10 +1,13 @@
 class MeetingMember < ActiveRecord::Base
   unloadable
 
+  include Rails.application.routes.url_helpers
+
   belongs_to :meeting_agenda
   belongs_to :user
 #  belongs_to :person, class_name: 'Person', foreign_key: 'user_id'
   belongs_to :issue
+  belongs_to :time_entry
   has_one :status, through: :issue
   has_one :meeting_participator
   has_many :meeting_questions, through: :meeting_agenda, uniq: true
@@ -17,26 +20,31 @@ class MeetingMember < ActiveRecord::Base
     self.user.try(:name) || ''
   end
 
-  def send_invite(url = nil)
-    @url = url
-    self.update_attribute(:issue_id, create_issue.try(:id))
+  def send_invite
+    created_issue_id = create_issue.try(:id)
+    self.update_attribute(:issue_id, created_issue_id)
+    EstimatedTime.create!(
+      issue_id: created_issue_id,
+      user_id: self.user_id,
+      hours: (((self.meeting_agenda.end_time.seconds_since_midnight - self.meeting_agenda.start_time.seconds_since_midnight) / 36) / 100.0),
+      comments: ::I18n.t(:message_participate_in_the_meeting),
+      plan_on: self.meeting_agenda.meet_on
+    )
   rescue
   end
 
-  def resend_invite(url = nil)
-    @url = url
+  def resend_invite
     cancel_status_id = IssueStatus.find(Setting[:plugin_redmine_meeting][:cancel_issue_status]).id
     if self.issue.present? && !self.issue.closed?
       self.issue.update_attribute(:status_id, cancel_status_id)
+      EstimatedTime.where(plan_on: self.meeting_agenda.meet_on, issue_id: self.issue_id, user_id: self.user_id).delete_all
       self.update_attribute(:issue_id, nil)
-      self.send_invite(url)
+      self.send_invite
     end
   rescue
   end
 
 private
-  #FIXME Перенести сие в контроллер Повестки
-
   def key_words
     {
       subject: self.meeting_agenda.subject,
@@ -45,7 +53,7 @@ private
       end_time: self.meeting_agenda.end_time.strftime("%H:%M"),
       author: self.meeting_agenda.author.name,
       place: self.meeting_agenda.place,
-      url: @url
+      url: url_for(controller: 'meeting_agendas', action: 'show', id: self.meeting_agenda_id, only_path: true)
     }
   end
 

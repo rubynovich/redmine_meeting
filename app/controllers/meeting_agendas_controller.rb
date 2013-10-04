@@ -19,7 +19,7 @@ class MeetingAgendasController < ApplicationController
   def send_invites
     (render_403; return false) unless can_send_invites?(@object)
     @object.meeting_members.reject(&:issue).each do |member|
-      member.send_invite(url_for(controller: 'meeting_agendas', action: 'show', id: @object.id))
+      member.send_invite
     end
 
     redirect_to controller: 'meeting_agendas', action: 'show', id: @object.id
@@ -28,7 +28,7 @@ class MeetingAgendasController < ApplicationController
   def resend_invites
     (render_403; return false) unless can_send_invites?(@object)
     @object.meeting_members.each do |member|
-      member.resend_invite(url_for(controller: 'meeting_agendas', action: 'show', id: @object.id))
+      member.resend_invite
     end
 
     redirect_to controller: 'meeting_agendas', action: 'show', id: @object.id

@@ -8,6 +8,10 @@ Redmine::Plugin.register :redmine_meeting do
   url 'https://bitbucket.org/gorkapstroy/redmine_meeting'
   author_url 'http://roman.shipiev.me'
 
+  requires_redmine version_or_higher: '2.3.2'
+#  requires_redmine_plugin :redmine_planning, version_or_higher: '0.1.0'
+#  requires_redmine_plugin :redmine_meeting_rooms, version_or_higher: '0.1.0'
+
   settings partial: 'meeting_members/settings', default: {
     issue_priority: IssuePriority.default.id,
     principal_id: User.where(admin: true).first.try(:id),
