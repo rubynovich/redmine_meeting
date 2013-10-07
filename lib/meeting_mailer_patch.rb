@@ -51,7 +51,7 @@ module MeetingPlugin
           when 'MeetingAnswer'
             comment.meeting_container.description
           when 'MeetingAgenda', 'MeetingProtocol'
-            comment.meeting_container.place
+            nil
         end
         comment = comment.note
         mail_meeting_comment_create(author, user, container, comment, comment_for)

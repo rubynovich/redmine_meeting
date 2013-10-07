@@ -21,7 +21,7 @@
     = t(:mail_body_meeting_comment_protocol)
     = link_to(@container.subject, controller: 'meeting_protocols', action: 'show', id: @container.id, only_path: false)
 
-- if ['MeetingQuestion', 'MeetingAnswer'].include? @comment.meeting_container_type
+- if @comment_for.present?
   %p= @comment_for
   %hr
 
