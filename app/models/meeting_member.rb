@@ -23,13 +23,7 @@ class MeetingMember < ActiveRecord::Base
   def send_invite
     created_issue_id = create_issue.try(:id)
     self.update_attribute(:issue_id, created_issue_id)
-    EstimatedTime.create!(
-      issue_id: created_issue_id,
-      user_id: self.user_id,
-      hours: (((self.meeting_agenda.end_time.seconds_since_midnight - self.meeting_agenda.start_time.seconds_since_midnight) / 36) / 100.0),
-      comments: ::I18n.t(:message_participate_in_the_meeting),
-      plan_on: self.meeting_agenda.meet_on
-    )
+    estimated_time_create(created_issue_id)
 #  rescue
   end
 
@@ -45,6 +39,20 @@ class MeetingMember < ActiveRecord::Base
   end
 
 private
+  def estimated_time_create(created_issue_id)
+    EstimatedTime.new(
+      issue_id: created_issue_id,
+      user_id: self.user_id,
+      hours: (((self.meeting_agenda.end_time.seconds_since_midnight - self.meeting_agenda.start_time.seconds_since_midnight) / 36) / 100.0),
+      comments: ::I18n.t(:message_participate_in_the_meeting),
+      plan_on: self.meeting_agenda.meet_on
+      tyear: self.meeting_agenda.meet_on.year
+      tmonth: self.meeting_agenda.meet_on.month
+      tweek: self.meeting_agenda.meet_on.cweek
+      project_id: Issue.find(created_issue_id).project.id
+    ).save(validate: false)
+  end
+
   def key_words
     {
       subject: self.meeting_agenda.subject,
