@@ -11,9 +11,9 @@ module MeetingPlugin
       base.class_eval do
         has_one :meeting_member
         before_save :add_estimated_times_from_meeting, if: ->{
-          self.meeting_member.present? && self.id.present? &&
+          self.meeting_member.present? &&
           (self.status_id == Setting[:plugin_redmine_meeting][:onwork_issue_status].try(:to_i)) &&
-          (Issue.find(self.id).status_id != Setting[:plugin_redmine_meeting][:onwork_issue_status].try(:to_i))
+          (self.id.present? && (Issue.find(self.id).status_id != Setting[:plugin_redmine_meeting][:onwork_issue_status].try(:to_i)) || self.id.blank?)
         }
         before_save :del_estimated_times_from_meeting, if: ->{
           self.meeting_member.present? && self.id.present? &&
