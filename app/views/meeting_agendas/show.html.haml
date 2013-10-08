@@ -3,6 +3,8 @@
     = link_to l(:button_add), {action: 'new'}, class: 'icon icon-add'
   - if can_update_agenda?(@object)
     = link_to l(:button_update), {action: 'edit', id: @object.id}, class: 'icon icon-edit'
+  - if can_create_agenda?
+    = link_to_copy_agenda(@object)
   - if can_destroy_agenda?(@object)
     = link_to l(:button_delete), {action: 'destroy', id: @object.id}, confirm: l(:text_are_you_sure), method: 'delete', class: 'icon icon-del'
   - if can_send_invites?(@object)

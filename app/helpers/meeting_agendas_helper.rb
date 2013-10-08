@@ -35,6 +35,10 @@ module MeetingAgendasHelper
     item.meeting_approvers.map(&:user).include?(User.current)
   end
 
+  def link_to_copy_agenda(item)
+    link_to(t(:button_copy), {controller: 'meeting_agendas', action: 'copy', id: item.id}, class: 'icon icon-copy')
+  end
+
   def link_to_protocol(item)
     if item.meeting_protocol.present?
       if can_show_protocol?(item.meeting_protocol)

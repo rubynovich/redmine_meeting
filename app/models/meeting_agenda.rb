@@ -34,7 +34,7 @@ class MeetingAgenda < ActiveRecord::Base
   attr_accessible :meeting_questions_attributes
   attr_accessible :meeting_contacts_attributes
   attr_accessible :meeting_watchers_attributes
-  attr_accessible :subject, :place, :meet_on, :start_time, :end_time, :priority_id, :meeting_room_reserve_id
+  attr_accessible :subject, :place, :meet_on, :start_time, :end_time, :priority_id
 
   validates_uniqueness_of :subject, scope: :meet_on
   validates_presence_of :subject, :place, :meet_on, :start_time, :end_time, :priority_id

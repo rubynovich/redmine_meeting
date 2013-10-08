@@ -30,7 +30,7 @@ class MeetingMember < ActiveRecord::Base
       comments: ::I18n.t(:message_participate_in_the_meeting),
       plan_on: self.meeting_agenda.meet_on
     )
-  rescue
+#  rescue
   end
 
   def resend_invite
@@ -41,7 +41,7 @@ class MeetingMember < ActiveRecord::Base
       self.update_attribute(:issue_id, nil)
       self.send_invite
     end
-  rescue
+#  rescue
   end
 
 private

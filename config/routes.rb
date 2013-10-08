@@ -9,6 +9,7 @@ resources :meeting_agendas do
   member do
     get 'send_invites'
     get 'resend_invites'
+    get 'copy'
   end
 end
 resources :meeting_members do

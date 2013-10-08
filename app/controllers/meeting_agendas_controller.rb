@@ -110,6 +110,20 @@ class MeetingAgendasController < ApplicationController
     nested_objects_from_session
   end
 
+  def copy
+    i = -1
+    @old_object = model_class.find(params[:id])
+    @object = model_class.new(@old_object.attributes)
+    @object.meeting_questions_attributes = @old_object.meeting_questions.map(&:attributes).inject({}){ |result, item|
+      result.update((i+=1) => item.delete_if{|key, value| %w{updated_on created_on meeting_agenda_id id}.include?(key) } )
+    }
+    session[:meeting_member_ids] = (@old_object.user_ids + [User.current.id]).uniq
+    session[:meeting_contact_ids] = @old_object.contact_ids
+    session[:meeting_watcher_ids] = @old_object.watcher_ids
+    nested_objects_from_session
+    render action: 'new'
+  end
+
   def create
     @object.meeting_members_attributes = session[:meeting_member_ids].map{ |user_id| {user_id: user_id} } if session[:meeting_member_ids].present?
     @object.meeting_contacts_attributes = session[:meeting_contact_ids].map{ |contact_id| {contact_id: contact_id} } if session[:meeting_contact_ids].present?
