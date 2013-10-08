@@ -46,11 +46,13 @@ Rails.configuration.to_prepare do
   require_dependency 'mailer'
   require 'time_period_scope'
   require 'meeting_user_patch'
+  require 'meeting_issue_patch'
   require 'meeting_mailer_patch'
 
   [
    [MeetingAgenda, TimePeriodScope],
    [MeetingProtocol, TimePeriodScope],
+   [Issue, MeetingPlugin::IssuePatch],
    [User, MeetingPlugin::UserPatch],
    [Mailer, MeetingPlugin::MailerPatch]
   ].each do |cl, patch|
