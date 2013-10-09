@@ -5,6 +5,9 @@ class MeetingIssuesController < ApplicationController
   before_filter :new_issue, only: [:new, :create]
   before_filter :require_meeting_manager
 
+  helper :watchers
+  include WatchersHelper
+
   def new
     @issue.assigned_to = @object.user
     @issue.start_date = @object.start_date
