@@ -18,8 +18,9 @@
     %legend{onclick: "toggleFieldset(this);"}
       = l(:label_issue_watchers)
     %div{style: "display: none;"}
-      %span#watchers_inputs
-        = watchers_checkboxes(@issue, User.active.sorted)
+      %p#watchers_form
+        %span#watchers_inputs
+          = watchers_checkboxes(@issue, User.active.sorted)
   -#%p#watchers_form
     %label= l(:label_issue_watchers)
     %span#watchers_inputs
