@@ -14,11 +14,15 @@
     = f.label :parent_issue_id
     = f.text_field :parent_issue_id, size: 10, class: "autocomplete_for_issue"
 
-  %p#watchers_form
+  %fieldset.collapsible.collapsed
+    %legend{onclick: "toggleFieldset(this);"}
+      = l(:label_issue_watchers)
+    %div{style: "display: none;"}
+      = watchers_checkboxes(@issue, User.active.sorted)
+  -#%p#watchers_form
     %label= l(:label_issue_watchers)
     %span#watchers_inputs
       = watchers_checkboxes(@issue, User.active.sorted)
-
 
 :javascript
   $('.autocomplete_for_issue:not(.autocomplete)').each( function(index){
