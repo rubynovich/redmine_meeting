@@ -19,6 +19,7 @@ class MeetingIssuesController < ApplicationController
   def create
     @issue.author_id = params[:issue][:author_id]
     @issue.parent_issue_id = params[:issue][:parent_issue_id]
+    @issue.watcher_user_ids = params[:issue][:watcher_user_ids]
     if @issue.save
       @issue.update_attribute(:description,
         @issue.description + "\n\n" +
