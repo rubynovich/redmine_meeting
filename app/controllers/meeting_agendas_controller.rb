@@ -120,6 +120,25 @@ class MeetingAgendasController < ApplicationController
     render action: 'new'
   end
 
+  def from_protocol
+    i = -1
+    @old_object = MeetingProtocol.find(params[:meeting_protocol_id])
+    @object = MeetingAgenda.new(@old_object.meeting_agenda.attributes.merge(@old_object.attributes))
+    @object.meeting_questions_attributes = @old_object.meeting_answers.inject({}){ |result, item|
+      result.update((i+=1) => {title: item.description, issue_id: item.issue_id, user_id: item.reporter.try(:id)})
+    }
+    session[:meeting_member_ids] = (@old_object.meeting_agenda.user_ids + [User.current.id]).uniq
+    session[:meeting_contact_ids] = @old_object.meeting_agenda.contact_ids
+    session[:meeting_watcher_ids] = @old_object.meeting_agenda.watcher_ids
+
+    @users = User.active.sorted.find(session[:meeting_member_ids])
+    @contacts = Contact.order_by_name.find(session[:meeting_contact_ids])
+    @watchers = User.active.sorted.find(session[:meeting_watcher_ids])
+
+    render action: 'new'
+  end
+
+
   def create
     @object.meeting_members_attributes = session[:meeting_member_ids].map{ |user_id| {user_id: user_id} } if session[:meeting_member_ids].present?
     @object.meeting_contacts_attributes = session[:meeting_contact_ids].map{ |contact_id| {contact_id: contact_id} } if session[:meeting_contact_ids].present?

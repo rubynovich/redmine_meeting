@@ -5,6 +5,7 @@ resources :meeting_agendas do
   collection do
     get 'autocomplete_for_issue'
     get 'autocomplete_for_place'
+    get 'from_protocol'
   end
   member do
     get 'send_invites'

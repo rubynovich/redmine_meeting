@@ -146,6 +146,10 @@ module MeetingProtocolsHelper
     admin? || meeting_manager? && author?(protocol)
   end
 
+  def can_create_agenda?
+    admin? || meeting_manager?
+  end
+
 #  def can_show_comments?(answer)
 #    admin? || meeting_manager? || answer.users.include?(User.current)
 #  end
