@@ -6,6 +6,10 @@
 
 = labelled_form_for(@issue, url: {controller: 'meeting_issues', action: 'create', meeting_answer_type: @object.class, meeting_answer_id: @object.id}, method: :post, remote: true) do |f|
   = render partial: 'meeting_issues/form', locals: {f: f}
+  %p#watchers_form
+    %label= l(:label_issue_watchers)
+    %span#watchers_inputs
+      = watchers_checkboxes(@issue, User.active.sorted)
   %p.buttons
     = f.submit l(:button_add), :name => nil, :onclick => "hideModal(this);"
     = f.submit l(:button_cancel), :name => nil, :onclick => "hideModal(this);", :type => 'button'
