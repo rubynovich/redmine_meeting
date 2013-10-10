@@ -1,0 +1,8 @@
+#meeting_agendas_sidebar
+  %h3=l(:label_grouping)
+  - if session[:meeting_agenda_ungrouped].present?
+    = link_to l(:label_meeting_questions_group), controller: 'meeting_agendas', action: 'group', id: @object.id, remote: true
+  - else
+    = link_to l(:label_meeting_questions_ungroup), controller: 'meeting_agendas', action: 'ungroup', id: @object.id, remote: true
+  = render partial: 'meeting_approvers/sidebar'
+  = render partial: 'meeting_comments/sidebar'    

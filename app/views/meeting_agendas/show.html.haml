@@ -83,51 +83,7 @@
   %br
 
   %h3=l(:label_meeting_question_plural)+":"
-  - @object.meeting_questions.group_by(&:project).sort_by{ |project, questions| project.to_s }.each do |project, questions|
-    %h4{align: 'center'}
-      - if project.present?
-        = link_to_project project
-      - else
-        = t(:label_without_project)
-    .autoscroll
-      %table.list.issues
-        %thead
-          %tr
-            %th=l(:field_title)
-            %th=l(:field_issue)
-            %th=l(:label_meeting_question_user)
-            %th=l(:field_status)
-            %th=l(:field_start_date)
-            %th=l(:field_due_date)
-            %th=l(:field_done_ratio)
-        %tbody
-          - questions.each do |question|
-            %tr.issue{onclick: "$('#comments_block_for_#{question.id}').toggle();", style: (question.meeting_comments.present? ? "background: #fff0f5" : "")}
-              %td.subject=h question.title
-              %td.subject
-                - if question.issue.present?
-                  = link_to_issue(question.issue, tracker: false)
-              %td
-                - if question.user.present?
-                  = link_to_user question.user
-              %td
-                - if question.status.present?
-                  =h question.status
-              %td
-                - if question.issue.present?
-                  =format_date(question.issue.start_date)
-              %td
-                - if question.issue.present?
-                  =format_date(question.issue.due_date)
-              %td{width: '80px'}
-                - if question.issue.present?
-                  = progress_bar(question.issue.done_ratio, width: '80px')
-            - if can_show_comments?(@object)
-              %tr{id: "comments_block_for_#{question.id}", style: 'display: none;'}
-                %td{colspan: 7}
-                  %h4= l(:label_meeting_question_comment_plural)+":"
-                  = render partial: 'meeting_comments/history', locals: {meeting_container: question}
+  = render partial: 'meeting_questions'
 
 - content_for :sidebar do
-  = render partial: 'meeting_approvers/sidebar'
-  = render partial: 'meeting_comments/sidebar'
+  = render partial: 'sidebar'

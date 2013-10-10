@@ -1,7 +1,7 @@
 class MeetingAgendasController < ApplicationController
   unloadable
 
-  before_filter :find_object, only: [:edit, :show, :destroy, :update, :send_invites, :resend_invites]
+  before_filter :find_object, only: [:edit, :show, :destroy, :update, :send_invites, :resend_invites, :group, :ungroup]
   before_filter :new_object, only: [:new, :create]
 
   helper :meeting_agendas
@@ -14,6 +14,16 @@ class MeetingAgendasController < ApplicationController
 
   def show
     (render_403; return false) unless can_show_agenda?(@object)
+  end
+
+  def group
+    session[:meeting_agenda_ungrouped] = nil
+
+    render action: 'ungroup'
+  end
+
+  def ungroup
+    session[:meeting_agenda_ungrouped] = "true"
   end
 
   def send_invites
@@ -95,7 +105,6 @@ class MeetingAgendasController < ApplicationController
 #      order(sort_clause).
       order('meeting_agendas.created_on desc').
       all
-
   end
 
   def new

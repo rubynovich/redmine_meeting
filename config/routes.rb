@@ -6,6 +6,8 @@ resources :meeting_agendas do
     get 'autocomplete_for_issue'
     get 'autocomplete_for_place'
     get 'from_protocol'
+    get 'ungroup'
+    get 'group'
   end
   member do
     get 'send_invites'
@@ -57,3 +59,5 @@ resources :meeting_room_selectors do
     get 'autocomplete_for_meeting_room'
   end
 end
+
+resources :meeting_questions

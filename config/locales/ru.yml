@@ -98,6 +98,9 @@ ru:
   field_question_issue: "Задача"
   message_participate_in_the_meeting: "Участие в собрании"
   button_create_agenda: "Сформировать повестку на основании протокола"
+  label_meeting_questions_group: "Группировать вопросы по проектам"
+  label_meeting_questions_ungroup: "Рагруппировать вопросы"
+  label_grouping: "Группировка"
 
   label_meeting_issue_type_statuses:
     new: "Создана"

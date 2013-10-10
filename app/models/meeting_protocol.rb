@@ -76,6 +76,14 @@ class MeetingProtocol < ActiveRecord::Base
     self.meeting_agenda.to_s
   end
 
+  def meet_on
+    self.meeting_agenda.meet_on
+  end
+
+  def subject
+    self.meeting_agenda.subject
+  end
+
 private
   def add_time_entry_to_invites
     self.meeting_members.select(&:meeting_participator).select(&:issue).each do |member|

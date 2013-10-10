@@ -5,7 +5,7 @@ class MeetingAgenda < ActiveRecord::Base
   belongs_to :priority, class_name: 'IssuePriority', foreign_key: 'priority_id'
   belongs_to :meeting_room_reserve, dependent: :destroy
   has_one :meeting_protocol
-  has_many :meeting_questions, dependent: :delete_all, order: :id
+  has_many :meeting_questions, dependent: :delete_all, order: :position
   has_many :issues, through: :meeting_questions, order: :id, uniq: true
   has_many :projects, through: :issues, order: :title, uniq: true
   has_many :statuses, through: :issues, uniq: true

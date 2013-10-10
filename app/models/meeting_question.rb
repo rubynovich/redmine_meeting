@@ -1,5 +1,7 @@
 class MeetingQuestion < ActiveRecord::Base
   unloadable
+  acts_as_list scope: "meeting_agenda"
+
   belongs_to :issue
   belongs_to :user
   belongs_to :meeting_agenda
@@ -15,6 +17,10 @@ class MeetingQuestion < ActiveRecord::Base
 
   validates_presence_of :title
 #  validates_uniqueness_of :title, scope: :meeting_agenda_id
+
+  def <=>(object)
+    position <=> object.position
+  end
 
   def to_s
     self.title
