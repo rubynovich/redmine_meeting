@@ -43,6 +43,9 @@ class MeetingProtocol < ActiveRecord::Base
   validate :presence_of_meeting_participators, if: -> {self.meeting_participators.blank?}
   validate :presence_of_start_time, if: -> {self.start_time.blank? || self.start_time.seconds_since_midnight.zero?}
   validate :presence_of_end_time, if: -> {self.end_time.blank? || self.end_time.seconds_since_midnight.zero?}
+  validate :end_time_less_than_start_time, if: -> {
+    self.start_time && self.end_time && (self.end_time.seconds_since_midnight < self.start_time.seconds_since_midnight)
+  }
 
   scope :like_field, ->(q, field) {
     if q.present? && field.present?
@@ -115,11 +118,15 @@ private
   end
 
   def presence_of_start_time
-    errors.add(:start_time, :must_exist)
+    errors.add(:start_time, :empty)
   end
 
   def presence_of_end_time
-    errors.add(:end_time, :must_exist)
+    errors.add(:end_time, :empty)
+  end
+
+  def end_time_less_than_start_time
+    errors.add(:end_time, :less_than_start_time)
   end
 
   def add_author_id
