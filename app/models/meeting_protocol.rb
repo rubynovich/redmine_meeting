@@ -38,9 +38,11 @@ class MeetingProtocol < ActiveRecord::Base
   after_save :add_time_entry_to_invites
 
   validates_uniqueness_of :meeting_agenda_id
-  validates_presence_of :meeting_agenda_id, :start_time, :end_time
+  validates_presence_of :meeting_agenda_id
   validate :presence_of_meeting_answers, if: -> {self.meeting_answers.blank?}
   validate :presence_of_meeting_participators, if: -> {self.meeting_participators.blank?}
+  validate :presence_of_start_time, if: -> {self.start_time.blank? || self.start_time.seconds_since_midnight.zero?}
+  validate :presence_of_end_time, if: -> {self.end_time.blank? || self.end_time.seconds_since_midnight.zero?}
 
   scope :like_field, ->(q, field) {
     if q.present? && field.present?
@@ -110,6 +112,14 @@ private
     if self.meeting_answers.blank? || self.meeting_answers.all?{ |a| a.user.blank? }
       errors.add(:meeting_participators, :must_exist)
     end
+  end
+
+  def presence_of_start_time
+    errors.add(:start_time, :must_exist)
+  end
+
+  def presence_of_end_time
+    errors.add(:end_time, :must_exist)
   end
 
   def add_author_id
