@@ -40,7 +40,7 @@ module MeetingPlugin
         container = case comment.meeting_container_type
           when 'MeetingQuestion'
             comment.meeting_container.meeting_agenda
-          when 'MeetingAnswer'
+          when 'MeetingAnswer', 'MeetingExtraAnswer'
             comment.meeting_container.meeting_protocol
           when 'MeetingAgenda', 'MeetingProtocol'
             comment.meeting_container
@@ -48,7 +48,7 @@ module MeetingPlugin
         comment_for = case comment.meeting_container_type
           when 'MeetingQuestion'
             comment.meeting_container.title
-          when 'MeetingAnswer'
+          when 'MeetingAnswer', 'MeetingExtraAnswer'
             comment.meeting_container.description
           when 'MeetingAgenda', 'MeetingProtocol'
             nil
