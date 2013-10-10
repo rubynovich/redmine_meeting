@@ -1,6 +1,5 @@
 class MeetingQuestion < ActiveRecord::Base
   unloadable
-  acts_as_list scope: "meeting_agenda_id"
 
   belongs_to :issue
   belongs_to :user
@@ -14,6 +13,8 @@ class MeetingQuestion < ActiveRecord::Base
   has_many :meeting_members, through: :meeting_agenda, uniq: true
   has_many :users, through: :meeting_agenda, uniq: true
   has_many :meeting_comments, as: :meeting_container, order: ["created_on DESC"], dependent: :delete_all, uniq: true
+
+  acts_as_list scope: :meeting_agenda
 
   validates_presence_of :title
 #  validates_uniqueness_of :title, scope: :meeting_agenda_id
