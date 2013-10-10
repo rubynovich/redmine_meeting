@@ -2,6 +2,7 @@ class MeetingAgenda < ActiveRecord::Base
   unloadable
 
   acts_as_attachable
+  attr_accessor :project
 
   belongs_to :author, class_name: 'User', foreign_key: 'author_id'
   belongs_to :priority, class_name: 'IssuePriority', foreign_key: 'priority_id'
