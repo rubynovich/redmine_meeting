@@ -27,8 +27,7 @@
   = f.link_to_add l(:button_add), :meeting_extra_answers, class: 'icon icon-add'
 
   %fieldset
-    %legend
-      = l(:label_attachment_plural)
+    %legend= l(:label_attachment_plural)
     = link_to_attachments @object if @object.attachments.any?
     %p= render partial: 'attachments/form', locals: {container: @object}
 

@@ -1,6 +1,8 @@
 class MeetingAgenda < ActiveRecord::Base
   unloadable
 
+  acts_as_attachable
+
   belongs_to :author, class_name: 'User', foreign_key: 'author_id'
   belongs_to :priority, class_name: 'IssuePriority', foreign_key: 'priority_id'
   belongs_to :meeting_room_reserve, dependent: :destroy
@@ -76,6 +78,14 @@ class MeetingAgenda < ActiveRecord::Base
       joins(meeting_questions: :issue).where("issues.project_id = ?", q)
     end
   }
+
+  def attachments_visible?(user=User.current)
+    true
+  end
+
+  def attachments_deletable?(user=User.current)
+    false
+  end
 
   def to_s
     self.subject

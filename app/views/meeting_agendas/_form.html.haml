@@ -34,6 +34,12 @@
   = f.fields_for :meeting_questions
   = f.link_to_add l(:button_add), :meeting_questions, class: 'icon icon-add'
 
+  %fieldset
+    %legend= l(:label_attachment_plural)
+    = link_to_attachments @object if @object.attachments.any?
+    %p= render partial: 'attachments/form', locals: {container: @object}
+
+
   :javascript
     $(function() {
       $('.autocomplete_for_issue:not(.autocomplete)').each( function(index){

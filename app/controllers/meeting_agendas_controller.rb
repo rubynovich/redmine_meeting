@@ -4,6 +4,8 @@ class MeetingAgendasController < ApplicationController
   before_filter :find_object, only: [:edit, :show, :destroy, :update, :send_invites, :resend_invites, :group, :ungroup]
   before_filter :new_object, only: [:new, :create]
 
+  helper :attachments
+  include AttachmentsHelper
   helper :meeting_agendas
   include MeetingAgendasHelper
   helper :meeting_comments
@@ -152,8 +154,10 @@ class MeetingAgendasController < ApplicationController
     @object.meeting_members_attributes = session[:meeting_member_ids].map{ |user_id| {user_id: user_id} } if session[:meeting_member_ids].present?
     @object.meeting_contacts_attributes = session[:meeting_contact_ids].map{ |contact_id| {contact_id: contact_id} } if session[:meeting_contact_ids].present?
     @object.meeting_watchers_attributes = session[:meeting_watcher_ids].map{ |user_id| {user_id: user_id} } if session[:meeting_watcher_ids].present?
+    @object.save_attachments(params[:attachments])
     if @object.save
       flash[:notice] = l(:notice_successful_create)
+      render_attachment_warning_if_needed(@object)
       redirect_to action: 'show', id: @object.id
     else
       nested_objects_from_session
@@ -166,8 +170,10 @@ class MeetingAgendasController < ApplicationController
   end
 
   def update
+    @object.save_attachments(params[:attachments])
     if @object.update_attributes(params[model_sym])
       flash[:notice] = l(:notice_successful_update)
+      render_attachment_warning_if_needed(@object)
       redirect_to action: 'show', id: @object.id
     else
       nested_objects_from_database

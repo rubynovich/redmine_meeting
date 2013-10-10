@@ -85,5 +85,7 @@
   %h3=l(:label_meeting_question_plural)+":"
   = render partial: 'meeting_questions'
 
+= link_to_attachments @object, thumbnails: true
+
 - content_for :sidebar do
   = render partial: 'sidebar'
