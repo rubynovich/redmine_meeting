@@ -1,6 +1,6 @@
 #meeting_questions
   - if session[:meeting_agenda_ungrouped].present?
-    = render partial: 'questions_list', locals: {questions: @object.meeting_questions}
+    = render partial: 'meeting_agendas/questions_list', locals: {questions: @object.meeting_questions}
   - else
     - @object.meeting_questions.group_by(&:project).sort_by{ |project, questions| project.to_s }.each do |project, questions|
       %h4{align: 'center'}
@@ -8,4 +8,4 @@
           = link_to_project project
         - else
           = t(:label_without_project)
-      = render partial: 'questions_list', locals: {questions: questions}
+      = render partial: 'meeting_agendas/questions_list', locals: {questions: questions}

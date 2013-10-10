@@ -14,7 +14,7 @@
       - questions.each do |question|
         %tr.issue{style: (question.meeting_comments.present? ? "background: #fff0f5" : "")}
           %td.subject{onclick: "$('#comments_block_for_#{question.id}').toggle();"}=h question.title
-          %td{width: '80px'}= reorder_links('meeting_question', {controller: 'meeting_questions', action: 'update', id: question}, :put)
+          %td{width: '80px'}= reorder_links('meeting_question', {controller: 'meeting_questions', action: 'update', id: question, remote: true}, :put)
           %td.subject{onclick: "$('#comments_block_for_#{question.id}').toggle();"}
             - if question.issue.present?
               = link_to_issue(question.issue, tracker: false)
