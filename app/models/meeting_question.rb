@@ -1,6 +1,6 @@
 class MeetingQuestion < ActiveRecord::Base
   unloadable
-  acts_as_list scope: "meeting_agenda"
+  acts_as_list scope: "meeting_agenda_id"
 
   belongs_to :issue
   belongs_to :user
