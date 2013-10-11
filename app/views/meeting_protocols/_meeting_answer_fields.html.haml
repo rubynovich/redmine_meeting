@@ -3,7 +3,7 @@
     = f.link_to_remove l(:button_delete), class: "icon icon-del"
   %p
     = f.label :meeting_question_id, t(:label_meeting_question)
-    = f.collection_select :meeting_question_id, @object.meeting_agenda.meeting_questions, :id, :to_s, prompt: t(:prompt_please_select)
+    = f.select :meeting_question_id, options_for_select(@object.meeting_agenda.meeting_questions.map{ |q| ["#{q}" + (q.issue.present? ? " #{q.issue.tracker} ##{q.issue_id}: #{q.issue.subject}" : ""), q.id] }), prompt: t(:prompt_please_select)
   %p
     = f.label :reporter_id, t(:label_meeting_answer_reporter)
     = f.collection_select :reporter_id, User.active.order(:lastname, :firstname), :id, :to_s, include_blank: t(:prompt_please_select)
@@ -25,4 +25,4 @@
     %p
       = f.label :due_date
       = f.text_field :due_date, size: 10, class: 'datepickme'
-  %div{:style=>"clear:both"}      
+  %div{:style=>"clear:both"}
