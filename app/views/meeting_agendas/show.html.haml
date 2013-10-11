@@ -40,7 +40,7 @@
           =l(:field_place)+":"
       %td{colspan: 3}
         - if @object.is_external? && @object.place.present?
-          =link_to @object.place, "http://maps.google.com/maps?f=q&q=#{h @object.place.gsub("\r\n"," ").gsub("\n"," ")}+(#{h @object.external_company})&ie=UTF8&om=1"
+          =link_to @object.place, "http://maps.google.com/maps?f=q&ie=UTF8&om=1&q=#{h @object.place.gsub("\r\n"," ").gsub("\n"," ")}+(#{h @object.external_company.to_s.gsub(/["']+/,"")})"
         - else
           =h @object.place
     %tr
