@@ -16,7 +16,10 @@
 %h2
   = link_to l(:label_meeting_agenda_plural), action: 'index'
   &#187;
-  = l(:label_meeting_agenda)
+  - if @object.is_external?
+    = l(:label_external_meeting_agenda)
+  - else
+    = l(:label_meeting_agenda)
   ="##{h @object.id}"
 
 
@@ -25,9 +28,21 @@
     %tr
       %th=l(:field_subject)+":"
       %td{colspan: 3}=h @object.subject
+    - if @object.is_external?
+      %tr
+        %th=l(:field_external_company)+":"
+        %td{colspan: 3}=link_to_contact @object.external_company
     %tr
-      %th=l(:field_place)+":"
-      %td{colspan: 3}=h @object.place
+      %th
+        - if @object.is_external?
+          =l(:field_address)+":"
+        - else
+          =l(:field_place)+":"
+      %td{colspan: 3}
+        - if @object.is_external? && @object.place.present?
+          =link_to @object.place, "http://maps.google.com/maps?f=q&q=#{h @object.place.gsub("\r\n"," ").gsub("\n"," ")}+(#{h @object.external_company})&ie=UTF8&om=1"
+        - else
+          =h @object.place
     %tr
       %th= l(:field_meet_on)+":"
       %td= format_date(@object.meet_on)

@@ -4,7 +4,7 @@ module MeetingIssuesHelper
   end
 
   def can_update_issue?(answer)
-    (admin? || meeting_manager? && author?(answer.meeting_protocol)) && answer.meeting_question.present? && answer.meeting_question.is_a?(MeetingQuestion) && answer.meeting_question.try(:issue).present?
+    (admin? || meeting_manager? && author?(answer.meeting_protocol)) && answer.question_issue.present?
   end
 
   def can_destroy_issue?(answer)

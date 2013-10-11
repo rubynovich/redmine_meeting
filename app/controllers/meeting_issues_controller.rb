@@ -48,7 +48,7 @@ class MeetingIssuesController < ApplicationController
 
   def update
     @object = MeetingAnswer.find(params[:id])
-    issue = @object.meeting_question.issue
+    issue = @object.question_issue
     update_issue(issue).save
     @object.update_attribute(:issue_id, issue.id)
     @object.update_attribute(:issue_type, :update)

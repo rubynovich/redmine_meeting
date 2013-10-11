@@ -6,6 +6,7 @@ class MeetingProtocol < ActiveRecord::Base
 
   belongs_to :author, class_name: 'User', foreign_key: 'author_id'
   belongs_to :meeting_agenda
+  has_one  :external_company, through: :meeting_agenda
   has_many :meeting_answers, dependent: :delete_all, order: [:meeting_question_id]
   has_many :meeting_extra_answers, dependent: :delete_all
   has_many :issues, through: :meeting_answers, uniq: true
@@ -87,6 +88,14 @@ class MeetingProtocol < ActiveRecord::Base
 
   def subject
     self.meeting_agenda.subject
+  end
+
+  def place
+    self.meeting_agenda.place
+  end
+
+  def is_external?
+    self.meeting_agenda.is_external?
   end
 
 private

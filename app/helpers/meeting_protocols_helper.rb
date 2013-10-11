@@ -54,31 +54,22 @@ module MeetingProtocolsHelper
   def link_to_question_issue(answer)
     if answer.question_issue.present?
       link_to_issue(answer.question_issue, project: false, tracker: false, subject: false) +
-      link_to("", {controller: 'meeting_bind_issues', action: 'new', meeting_answer_type: answer.class, meeting_answer_id: answer.id}, remote: true, class: 'icon icon-edit')
+        if can_bind_issue?(answer)
+          link_to("", {controller: 'meeting_bind_issues', action: 'new', meeting_answer_type: answer.class, meeting_answer_id: answer.id}, remote: true, class: 'icon icon-edit')
+        else
+          ""
+        end
     else
-      link_to(t(:button_add), {controller: 'meeting_bind_issues', action: 'new', meeting_answer_type: answer.class, meeting_answer_id: answer.id}, remote: true, class: 'icon icon-add')
-      #FIXME t(:label_meeting_question_issue_missing)
+      if can_bind_issue?(answer)
+        link_to(t(:button_add), {controller: 'meeting_bind_issues', action: 'new', meeting_answer_type: answer.class, meeting_answer_id: answer.id}, remote: true, class: 'icon icon-add')
+      else
+        ""
+      end
     end
   end
 
 
-#  def link_to_question_issue(question)
-#    if question.is_a?(String)
-#    elsif question.try(:issue).present?
-#      link_to_issue question.issue, project: false, tracker: false, subject: false
-#    elsif question.try(:id).present?
-#      link_to t(:button_add), {controller: 'meeting_bind_issues', action: 'new', meeting_question_id: question.id}, remote: true, class: 'icon icon-add'
-#      #FIXME t(:label_meeting_question_issue_missing)
-#    end
-#  end
-
   def link_to_reporter(answer)
-# NOTE move to answer model
-#    if answer.reporter.present?
-#      link_to_user answer.reporter
-#    elsif answer.meeting_question.present? && answer.meeting_question.user.present?
-#      link_to_user answer.meeting_question.user
-#    end
     link_to_user answer.reporter
   end
 

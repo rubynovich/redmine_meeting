@@ -1,28 +1,35 @@
 - content_for(:header_tags) do
-  = javascript_include_tag :jquery_nested_form, :plugin => 'redmine_meeting'
+  = javascript_include_tag :jquery_nested_form, plugin: 'redmine_meeting'
 
 = error_messages_for @object
 = back_url_hidden_field_tag
 
 .box.tabular
+  %p
+    = f.label :is_external, l(:label_is_external_meeting)
+    = f.check_box :is_external, value: 1, caption: l(:label_is_external_meeting), onclick: 'toggleExternal(this);'
   %fieldset
     %p
       = f.label :subject
-      = f.text_field :subject, size: 100, style: "width: 80%"
-    %p
+      = f.text_field :subject, size: 100, style: 'width: 80%'
+    %p{id: 'external_company'}
+      = f.label :external_company
+      = f.collection_select :external_company_id, Contact.companies.order_by_name, :id, :name, prompt: t(:prompt_please_select)
+      = link_to l(:label_contact_new), {controller: 'contacts', action: 'new', project_id: Setting[:plugin_redmine_meeting][:project_id]}, method: 'get', class: 'icon icon-add'
+    %p{id: 'place'}
       = f.label :place
-      = f.text_field :place, size: 100, style: "width: 60%"
+      = f.text_field :place, size: 100, style: 'width: 60%'
       :javascript
         observeAutocompleteField('meeting_agenda_place', '#{escape_javascript autocomplete_for_place_meeting_agendas_path}')
-      = link_to l(:label_meeting_room_reserve_new), {controller: 'meeting_room_selectors', action: 'new'}, remote: true, method: 'get', class: 'icon icon-add'
+      = link_to l(:label_meeting_room_reserve_new), {controller: 'meeting_room_selectors', action: 'new'}, remote: true, method: 'get', class: 'icon icon-add', id: 'link_to_meeting_room'
     .splitcontentleft
       %p
         = f.label :meet_on
-        = f.text_field :meet_on, size: 10, class: "calendar_for"
+        = f.text_field :meet_on, size: 10, class: 'calendar_for'
         = calendar_for('meeting_agenda_meet_on')
       %p
         = f.label :priority_id, l(:field_priority)
-        = f.collection_select :priority_id, IssuePriority.all, :id, :name, :prompt => t(:prompt_please_select)
+        = f.collection_select :priority_id, IssuePriority.all, :id, :name, prompt: t(:prompt_please_select)
     .splitcontentright
       %p
         = f.label :start_time, l(:label_meeting_agenda_start_time)
@@ -39,8 +46,18 @@
     = link_to_attachments @object if @object.attachments.any?
     %p= render partial: 'attachments/form', locals: {container: @object}
 
-
   :javascript
+    function toggleExternal(element) {
+      if (element.checked) {
+        $('#external_company').show();
+        $('#place label').get(0).innerHTML ='#{l(:field_address)}';
+        $('#link_to_meeting_room').hide();
+      } else {
+        $('#external_company').hide();
+        $('#place label').get(0).innerHTML ='#{l(:field_place)}';
+        $('#link_to_meeting_room').show();
+      }
+    }
     $(function() {
       $('.autocomplete_for_issue:not(.autocomplete)').each( function(index){
         observeAutocompleteField( $(this).attr('id'), '#{escape_javascript autocomplete_for_issue_meeting_agendas_path}')
@@ -50,4 +67,5 @@
           observeAutocompleteField( $(this).attr('id'), '#{escape_javascript autocomplete_for_issue_meeting_agendas_path}')
         } );
       });
+      toggleExternal($('#meeting_agenda_is_external'));
     });

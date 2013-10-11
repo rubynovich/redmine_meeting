@@ -101,6 +101,11 @@ ru:
   label_meeting_questions_group: "Группировать вопросы по проектам"
   label_meeting_questions_ungroup: "Рагруппировать вопросы"
   label_grouping: "Группировка"
+  label_is_external_meeting: "Выездное совещание"
+  field_external_company: "Компания"
+  label_external_meeting_agenda: "Повестка выездного совещания"
+  label_external_meeting_protocol: "Протокол выездного совещания"
+  label_external_meeting_protocol_new: "Новый протокол выездного совещания"
 
   label_meeting_issue_type_statuses:
     new: "Создана"

@@ -36,7 +36,7 @@ class MeetingContactsController < ApplicationController
       MeetingContact.where(meeting_container_type: @object.class, meeting_container_id: @object.id, contact_id: contact.id).try(:destroy_all)
       @object.contacts
     else
-      session[session_id] -= [ params[:id] ]
+      session[session_id] -= [ params[:id].to_i ]
       contacts_from_session
     end
 
