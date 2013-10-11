@@ -17,7 +17,7 @@
         - else
           - @object.meeting_questions.group_by(&:project).sort_by{ |project, questions| project.to_s }.each do |project, questions|
             %tr
-              %td{colspan: 7, align: 'center'}
+              %td{colspan: 8, align: 'center'}
                 - if project.present?
                   = link_to_project project
                 - else
