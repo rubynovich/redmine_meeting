@@ -45,7 +45,7 @@
         $(this).datepicker(datepickerOptions);
       } );
       $('.necessary:not(.starred)').each( function(){
-        $(this).addClass('starred').after('<span class="required"> *</span>');
+        $(this).addClass('starred').append('<span class="required"> *</span>');
       });
 
       $(document).on('nested:fieldAdded', function() {
@@ -61,7 +61,7 @@
           $(this).datepicker(datepickerOptions);
         } );
         $('.necessary:not(.starred)').each( function(){
-          $(this).addClass('starred').after('<span class="required"> *</span>');
+          $(this).addClass('starred').append('<span class="required"> *</span>');
         });
       });
     });

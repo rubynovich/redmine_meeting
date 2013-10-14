@@ -65,14 +65,14 @@
         observeAutocompleteField( $(this).attr('id'), '#{escape_javascript autocomplete_for_issue_meeting_agendas_path}')
       } );
       $('.necessary:not(.starred)').each( function(){
-        $(this).addClass('starred').after('<span class="required"> *</span>');
+        $(this).addClass('starred').append('<span class="required"> *</span>');
       });
       $(document).on('nested:fieldAdded', function() {
         $('.autocomplete_for_issue:not(.autocomplete)').each( function(index){
           observeAutocompleteField( $(this).attr('id'), '#{escape_javascript autocomplete_for_issue_meeting_agendas_path}')
         } );
         $('.necessary:not(.starred)').each( function(){
-          $(this).addClass('starred').after('<span class="required"> *</span>');
+          $(this).addClass('starred').append('<span class="required"> *</span>');
         });
       });
       toggleExternal($('#meeting_agenda_is_external'));
