@@ -29,7 +29,7 @@ class MeetingQuestion < ActiveRecord::Base
 
   def title_with_issue
     "#{self}" + if self.issue.present?
-      " (#{q.issue.tracker} ##{q.issue_id}: #{q.issue.subject})"
+      " (#{self.issue.tracker} ##{self.issue_id}: #{self.issue.subject})"
     else
       ""
     end
