@@ -29,7 +29,7 @@
             %td{align: 'center'}= format_time(item.start_time, false)
             %td{align: 'center'}= format_time(item.end_time, false)
             %td{align: 'left'}= link_to h(item.subject), action: 'show', id: item.id
-            %td{align: 'center'}= l(:variants_for_type_meeting)[item.is_external.to_s]
+            %td{align: 'center'}=# l(:variants_for_type_meeting)[item.is_external.to_s]
             %td{align: 'center'}= link_to_user item.author
             %td{align: 'center'}= format_time(item.created_on)
             %td{align: 'center'}= link_to_protocol(item)
