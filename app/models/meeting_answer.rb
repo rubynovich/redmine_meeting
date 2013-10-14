@@ -17,13 +17,13 @@ class MeetingAnswer < ActiveRecord::Base
 
   validates_presence_of :user_id, :description, :start_date, :due_date, :meeting_question_id
 
-  def reporter
-    if super.present?
-      super
-    elsif self.meeting_question.present? && self.meeting_question.user.present?
-      self.meeting_question.user
-    end
-  end
+#  def reporter
+#    if super.present?
+#      super
+#    elsif self.meeting_question.present? && self.meeting_question.user.present?
+#      self.meeting_question.user
+#    end
+#  end
 
   def question_issue
     super.present? ? super : meeting_question.try(:issue)

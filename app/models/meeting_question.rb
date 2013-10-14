@@ -16,7 +16,7 @@ class MeetingQuestion < ActiveRecord::Base
 
   acts_as_list scope: :meeting_agenda
 
-  validates_presence_of :title
+  validates_presence_of :title, :user_id
 #  validates_uniqueness_of :title, scope: :meeting_agenda_id
 
   def <=>(object)
