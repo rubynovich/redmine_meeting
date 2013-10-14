@@ -3,7 +3,7 @@
     = f.link_to_remove l(:button_delete), class: "icon icon-del"
   %p
     = f.label :meeting_question_id, t(:label_meeting_question), class: 'necessary'
-    = f.select :meeting_question_id, options_for_select(@object.meeting_agenda.meeting_questions.map{ |q| ["#{q}" + (q.issue.present? ? " (#{q.issue.tracker} ##{q.issue_id}: #{q.issue.subject})" : ""), q.id] }), prompt: t(:prompt_please_select)
+    = f.select :meeting_question_id, options_for_select(@object.meeting_agenda.meeting_questions.map{ |q| ["#{q}" + (q.issue.present? ? " (#{q.issue.tracker} ##{q.issue_id}: #{q.issue.subject})" : ""), q.id] }, @object.meeting_question_id), include_blank: t(:prompt_please_select)
   %p
     = f.label :reporter_id, t(:label_meeting_answer_reporter)
     = f.collection_select :reporter_id, User.active.order(:lastname, :firstname), :id, :to_s, include_blank: t(:prompt_please_select)
@@ -14,7 +14,7 @@
   .splitcontentleft
     %p
       = f.label :user_id, t(:label_meeting_answer_user), class: 'necessary'
-      = f.collection_select :user_id, User.active.order(:lastname, :firstname), :id, :to_s, prompt: t(:prompt_please_select)
+      = f.collection_select :user_id, User.active.order(:lastname, :firstname), :id, :to_s, include_blank: t(:prompt_please_select)
     -#%p
       = f.label :issue_id
       = f.text_field :issue_id, size: 100, style: "width: 80%", class: "autocomplete_for_issue"
