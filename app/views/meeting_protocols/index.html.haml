@@ -29,7 +29,7 @@
             %td{align: 'center'}= format_time(item.start_time, false) rescue ''
             %td{align: 'center'}= format_time(item.end_time, false) rescue ''
             %td{align: 'left'}= link_to h(item.subject), action: 'show', id: item.id rescue ''
-            %td{align: 'center'}= l(:variants_for_type_meeting)[item.is_external.to_s] rescue ""
+            %td{align: 'center'}= l(:variants_for_type_meeting)[item.is_external] rescue ""
             %td{align: 'center'}= link_to_user item.author
             %td{align: 'center'}= protocol_status(item)
             %td{align: 'center'}= link_to_agenda(item)
