@@ -16,7 +16,7 @@
           %th= l(:label_meeting_agenda_start_time)
           %th= l(:label_meeting_agenda_end_time)
           %th= l(:field_subject)
-          %th= l(:field_is_external)
+          %th= l(:label_type_meeting)
           %th= l(:field_author)
           %th= l(:field_created_on)
           %th= l(:label_meeting_protocol)
@@ -29,7 +29,7 @@
             %td{align: 'center'}= format_time(item.start_time, false)
             %td{align: 'center'}= format_time(item.end_time, false)
             %td{align: 'left'}= link_to h(item.subject), action: 'show', id: item.id
-            %td{align: 'center'}= checked_image item.is_external?
+            %td{align: 'center'}= l(:variants_for_type_meeting)[item.is_external.to_s]
             %td{align: 'center'}= link_to_user item.author
             %td{align: 'center'}= format_time(item.created_on)
             %td{align: 'center'}= link_to_protocol(item)
