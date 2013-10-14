@@ -83,9 +83,10 @@ class MeetingAgendasController < ApplicationController
       eql_field(params[:meet_on], 'meeting_agendas.meet_on').
       like_field(params[:subject], 'meeting_agendas.subject').
       eql_project_id(params[:project_id]).
+      bool_field(params[:is_external], 'meeting_agendas.is_external').
       uniq
 
-    @scope = @scope.joins(:meeting_members).includes(:meeting_approvers).
+    @scope = @scope.includes(:meeting_members).includes(:meeting_approvers).
       where("meeting_members.user_id = :user_id OR meeting_agendas.author_id = :user_id OR meeting_approvers.user_id = :user_id", user_id: User.current.id) unless admin?
 
     @count = @scope.count

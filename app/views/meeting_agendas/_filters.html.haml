@@ -3,13 +3,13 @@
 
 %fieldset
   %legend= l(:label_filter_plural)
-  %form{:method => :get}
+  %form{method: 'get'}
     - %w{meet_on created_on}.each do |type_date|
       -#%br
 
       .inline-block
         %label=l(:"field_#{type_date}") + ":"
-        %input{:id => type_date, :name => type_date, :size => 10, :onchange => "this.form.submit(); return false;", :value => params[type_date]}
+        %input{id: type_date, name: type_date, size: 10, onchange: 'this.form.submit(); return false;', value: params[type_date]}
         = calendar_for(type_date)
 
       -# MeetingAgenda.time_periods.each do |key|
@@ -37,23 +37,29 @@
     %br
 
     .inline-block
-      %label{:for=>'author_id'}= l(:field_author) + ":"
-      %select{:id => 'author_id', :name => 'author_id', :class => "small", :onchange => "this.form.submit(); return false;"}
+      %label{for: 'author_id'}= l(:field_author) + ":"
+      %select{id: 'author_id', name: 'author_id', class: 'small', onchange: 'this.form.submit(); return false;'}
         %option
         = options_from_collection_for_select(author_id_for_select, :id, :name, params[:author_id] && params[:author_id].to_i)
 
     .inline-block
-      %label{:for=>'project_id'}= l(:label_project) + ":"
-      %select{:id => 'project_id', :name => 'project_id', :class => "small", :onchange => "this.form.submit(); return false;"}
+      %label{for: 'project_id'}= l(:label_project) + ":"
+      %select{id: 'project_id', name: 'project_id', class: 'small', onchange: 'this.form.submit(); return false;'}
         %option
         = project_tree_options_for_select(project_id_for_select, selected: Project.where(id: params[:project_id]))
 
-  %form{:method => :get}
-    - [:project_id, :author_id, :time_period_meet_on, :time_period_created_on].each do |item|
+    .inline-block
+      %label{for: 'is_external'}= l(:label_type_meeting) + ":"
+      %select{id: 'is_external', name: 'is_external', class: 'small', onchange: 'this.form.submit(); return false;'}
+        %option
+        = options_for_select(l(:variants_for_type_meeting).invert, params[:is_external])
+
+  %form{method: 'get'}
+    - [:project_id, :author_id, :time_period_meet_on, :time_period_created_on, :is_external].each do |item|
       = hidden_field_tag item, params[item]
 
     .inline-block
-      %label{:for=>'subject'}= l(:field_subject) + ":"
-      = text_field_tag 'subject', params[:subject], :size => 30
-      = submit_tag l(:button_apply), :class => "small", :name => nil
-      = link_to l(:button_clear), {:action => :index}, :class => 'icon icon-reload'
+      %label{for: 'subject'}= l(:field_subject) + ":"
+      = text_field_tag 'subject', params[:subject], size: 30
+      = submit_tag l(:button_apply), class: 'small', name: nil
+      = link_to l(:button_clear), {action: 'index'}, class: 'icon icon-reload'

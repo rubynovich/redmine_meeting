@@ -45,7 +45,7 @@ class MeetingProtocolsController < ApplicationController
   def index
     @limit = per_page_option
 
-    @scope = model_class.joins(:meeting_agenda).
+    @scope = model_class.includes(:meeting_agenda).
       time_period(params[:time_period_created_on], 'meeting_protocols.created_on').
       time_period(params[:time_period_meet_on], 'meeting_agendas.meet_on').
       eql_field(params[:author_id], 'meeting_protocols.author_id').
@@ -53,9 +53,10 @@ class MeetingProtocolsController < ApplicationController
       eql_field(params[:meet_on], 'meeting_agendas.meet_on').
       eql_project_id(params[:project_id]).
       like_field(params[:subject], 'meeting_agendas.subject').
+      bool_field(params[:is_external], 'meeting_agendas.is_external').
       uniq
 
-    @scope = @scope.joins(:meeting_participators).joins(:meeting_answers).includes(:meeting_watchers).includes(:meeting_approvers).
+    @scope = @scope.includes(:meeting_participators).includes(:meeting_answers).includes(:meeting_watchers).includes(:meeting_approvers).
       where("meeting_protocols.author_id = :user_id OR meeting_participators.user_id = :user_id OR meeting_answers.reporter_id = :user_id OR meeting_watchers.user_id = :user_id OR meeting_approvers.user_id = :user_id", user_id: User.current.id) unless admin?
 
     @count = @scope.count

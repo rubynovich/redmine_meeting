@@ -66,6 +66,17 @@ class MeetingProtocol < ActiveRecord::Base
     end
   }
 
+  scope :bool_field, ->(q, field) {
+    if q.present? && field.present?
+      case q
+        when 'true'
+          where("#{field} = ?", true)
+        when 'false'
+          where("#{field} = ?", false)
+      end
+    end
+  }
+
   def attachments_visible?(user=User.current)
     true
   end

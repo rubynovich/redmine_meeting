@@ -74,11 +74,23 @@ class MeetingAgenda < ActiveRecord::Base
     end
   }
 
+  scope :bool_field, ->(q, field) {
+    if q.present? && field.present?
+      case q
+        when 'true'
+          where("#{field} = ?", true)
+        when 'false'
+          where("#{field} = ?", false)
+      end
+    end
+  }
+
   scope :eql_project_id, ->(q) {
     if q.present?
       joins(meeting_questions: :issue).where("issues.project_id = ?", q)
     end
   }
+
 
   def attachments_visible?(user=User.current)
     true

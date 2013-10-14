@@ -27,17 +27,13 @@ Redmine::Plugin.register :redmine_meeting do
     {controller: 'meeting_agendas', action: 'index'},
     caption: :label_meeting_agenda_plural,
     param: 'project_id',
-    if: Proc.new{
-      User.current.meeting_member?
-    }
+    if: Proc.new { User.current.meeting_member? }
 
   menu :application_menu, :meeting_protocols,
     {controller: 'meeting_protocols', action: 'index'},
     caption: :label_meeting_protocol_plural,
     param: 'project_id',
-    if: Proc.new{
-      User.current.meeting_participator?
-    }
+    if: Proc.new { User.current.meeting_participator? }
 end
 
 Rails.configuration.to_prepare do

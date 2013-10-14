@@ -106,6 +106,11 @@ ru:
   label_external_meeting_agenda: "Повестка выездного совещания"
   label_external_meeting_protocol: "Протокол выездного совещания"
   label_external_meeting_protocol_new: "Новый протокол выездного совещания"
+  field_is_external: "Выездное"
+  label_type_meeting: "Тип совещания"
+  variants_for_type_meeting:
+    true: "Выездное"
+    false: "Внутреннее"
 
   label_meeting_issue_type_statuses:
     new: "Создана"

@@ -48,8 +48,14 @@
         %option
         = project_tree_options_for_select(project_id_for_select, selected: Project.where(id: params[:project_id]))
 
+    .inline-block
+      %label{for: 'is_external'}= l(:label_type_meeting) + ":"
+      %select{id: 'is_external', name: 'is_external', class: 'small', onchange: 'this.form.submit(); return false;'}
+        %option
+        = options_for_select(l(:variants_for_type_meeting).invert, params[:is_external])
+
   %form{:method => :get}
-    - [:project_id, :author_id, :time_period_meet_on, :time_period_created_on].each do |item|
+    - [:project_id, :author_id, :time_period_meet_on, :time_period_created_on, :is_external].each do |item|
       = hidden_field_tag item, params[item]
 
     .inline-block
