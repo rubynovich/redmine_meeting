@@ -11,11 +11,11 @@
   %fieldset
     .splitcontentleft
       %p
-        = f.label :start_time, l(:label_meeting_protocol_start_time)
+        = f.label :start_time, l(:label_meeting_protocol_start_time), class: 'necessary'
         = f.time_select :start_time, minute_step: 5, include_blank: true
     .splitcontentright
       %p
-        = f.label :end_time, l(:label_meeting_protocol_end_time)
+        = f.label :end_time, l(:label_meeting_protocol_end_time), class: 'necessary'
         = f.time_select :end_time, minute_step: 5, include_blank: true
 
   %h3{style: "margin-top: 33px"}=l :label_meeting_answer_plural
@@ -44,6 +44,9 @@
       $('.datepickme').each( function(index){
         $(this).datepicker(datepickerOptions);
       } );
+      $('.necessary:not(.starred)').each( function(){
+        $(this).addClass('starred').after('<span class="required"> *</span>');
+      });
 
       $(document).on('nested:fieldAdded', function() {
         $('.wiki-edit:not(.jstEditor > .wiki-edit)').each( function(index){
@@ -57,5 +60,8 @@
         $('.datepickme').each( function(index){
           $(this).datepicker(datepickerOptions);
         } );
+        $('.necessary:not(.starred)').each( function(){
+          $(this).addClass('starred').after('<span class="required"> *</span>');
+        });
       });
     });

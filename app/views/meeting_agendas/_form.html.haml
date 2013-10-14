@@ -7,10 +7,10 @@
 .box.tabular
   %p
     = f.label :is_external, l(:label_is_external_meeting)
-    = f.check_box :is_external, value: 1, caption: l(:label_is_external_meeting), onclick: 'toggleExternal(this);'
+    = f.check_box :is_external, value: 1, onclick: 'toggleExternal(this);'
   %fieldset
     %p
-      = f.label :subject
+      = f.label :subject, class: 'necessary'
       = f.text_field :subject, size: 100, style: 'width: 80%'
     %p{id: 'external_company'}
       = f.label :external_company
@@ -24,20 +24,20 @@
       = link_to l(:label_meeting_room_reserve_new), {controller: 'meeting_room_selectors', action: 'new'}, remote: true, method: 'get', class: 'icon icon-add', id: 'link_to_meeting_room'
     .splitcontentleft
       %p
-        = f.label :meet_on
+        = f.label :meet_on, class: 'necessary'
         = f.text_field :meet_on, size: 10, class: 'calendar_for'
         = calendar_for('meeting_agenda_meet_on')
       %p
-        = f.label :priority_id, l(:field_priority)
+        = f.label :priority_id, l(:field_priority), class: 'necessary'
         = f.collection_select :priority_id, IssuePriority.all, :id, :name, prompt: t(:prompt_please_select)
     .splitcontentright
       %p
-        = f.label :start_time, l(:label_meeting_agenda_start_time)
+        = f.label :start_time, l(:label_meeting_agenda_start_time), class: 'necessary'
         = f.time_select :start_time, minute_step: 5, include_blank: true
       %p
-        = f.label :end_time, l(:label_meeting_agenda_end_time)
+        = f.label :end_time, l(:label_meeting_agenda_end_time), class: 'necessary'
         = f.time_select :end_time, minute_step: 5, include_blank: true
-  %h3{style: "margin-top: 33px"}=l :label_meeting_question_plural
+  %h3{style: "margin-top: 33px"}=l(:label_meeting_question_plural)
   = f.fields_for :meeting_questions
   = f.link_to_add l(:button_add), :meeting_questions, class: 'icon icon-add'
 
@@ -50,11 +50,13 @@
     function toggleExternal(element) {
       if (element.checked) {
         $('#external_company').show();
-        $('#place label').get(0).innerHTML ='#{l(:field_address)}';
+        $('label[for=meeting_agenda_external_company]').get(0).innerHTML='#{l(:field_external_company)}<span class="required"> *</span>';
+        $('label[for=meeting_agenda_place]').get(0).innerHTML ='#{l(:field_address)}<span class="required"> *</span>';
         $('#link_to_meeting_room').hide();
       } else {
         $('#external_company').hide();
-        $('#place label').get(0).innerHTML ='#{l(:field_place)}';
+        $('label[for=meeting_agenda_external_company]').get(0).innerHTML='#{l(:field_external_company)}';
+        $('label[for=meeting_agenda_place]').get(0).innerHTML='#{l(:field_place)}<span class="required"> *</span>';
         $('#link_to_meeting_room').show();
       }
     }
@@ -62,10 +64,16 @@
       $('.autocomplete_for_issue:not(.autocomplete)').each( function(index){
         observeAutocompleteField( $(this).attr('id'), '#{escape_javascript autocomplete_for_issue_meeting_agendas_path}')
       } );
+      $('.necessary:not(.starred)').each( function(){
+        $(this).addClass('starred').after('<span class="required"> *</span>');
+      });
       $(document).on('nested:fieldAdded', function() {
         $('.autocomplete_for_issue:not(.autocomplete)').each( function(index){
           observeAutocompleteField( $(this).attr('id'), '#{escape_javascript autocomplete_for_issue_meeting_agendas_path}')
         } );
+        $('.necessary:not(.starred)').each( function(){
+          $(this).addClass('starred').after('<span class="required"> *</span>');
+        });
       });
       toggleExternal($('#meeting_agenda_is_external'));
     });

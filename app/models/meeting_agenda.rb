@@ -41,8 +41,8 @@ class MeetingAgenda < ActiveRecord::Base
   attr_accessible :subject, :place, :meet_on, :start_time, :end_time, :priority_id, :external_company_id, :is_external
 
   validates_uniqueness_of :subject, scope: :meet_on
-  validates_presence_of :subject, :meet_on, :start_time, :end_time, :priority_id
-  validates_presence_of :external_company_id, :place, if: -> { self.is_external? }
+  validates_presence_of :subject, :meet_on, :start_time, :end_time, :priority_id, :place
+  validates_presence_of :external_company_id, if: -> { self.is_external? }
   validate :end_time_less_than_start_time, if: -> { self.start_time && self.end_time && (self.end_time <= self.start_time) }
   validate :meet_on_less_than_today, if: -> { self.meet_on && (self.meet_on < Date.today) }
   validate :start_time_less_than_now, if: -> {
