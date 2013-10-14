@@ -27,6 +27,14 @@ class MeetingQuestion < ActiveRecord::Base
     self.title
   end
 
+  def title_with_issue
+    "#{self}" + if self.issue.present?
+      " (#{q.issue.tracker} ##{q.issue_id}: #{q.issue.subject})"
+    else
+      ""
+    end
+  end
+
   def project
     if super.present?
       super
