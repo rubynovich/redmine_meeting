@@ -109,6 +109,10 @@ class MeetingProtocol < ActiveRecord::Base
     self.meeting_agenda.is_external?
   end
 
+  def is_external
+    self.meeting_agenda.is_external
+  end
+
 private
   def add_time_entry_to_invites
     self.meeting_members.select(&:meeting_participator).select(&:issue).each do |member|
