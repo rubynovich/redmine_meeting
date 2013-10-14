@@ -38,7 +38,7 @@ class MeetingMembersController < ApplicationController
       MeetingMember.where(model_sym_id => @object.id, user_id: user.id).try(:destroy_all) unless reporters.include?(user)
       @object.users
     else
-      session[:meeting_member_ids] -= [ params[:id] ]
+      session[:meeting_member_ids] -= [ params[:id].to_i ]
       User.sorted.find(session[:meeting_member_ids])
     end
 
