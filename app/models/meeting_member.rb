@@ -3,6 +3,10 @@ class MeetingMember < ActiveRecord::Base
 
   include Rails.application.routes.url_helpers
 
+  def self.default_url_options
+    { :host => Setting.host_name, :protocol => Setting.protocol }
+  end
+
   belongs_to :meeting_agenda
   belongs_to :user
 #  belongs_to :person, class_name: 'Person', foreign_key: 'user_id'
@@ -57,7 +61,7 @@ private
       end_time: self.meeting_agenda.end_time.strftime("%H:%M"),
       author: self.meeting_agenda.author.name,
       place: self.meeting_agenda.place,
-      url: url_for(controller: 'meeting_agendas', action: 'show', id: self.meeting_agenda_id, only_path: true)
+      url: url_for(controller: 'meeting_agendas', action: 'show', id: self.meeting_agenda_id, only_path: false)
     }
   end
 
