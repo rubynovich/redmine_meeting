@@ -150,6 +150,7 @@ ru:
           "должно быть позже, чем Время начала"
   field_meeting_questions:
     title: "Вопрос"
+    user: "Докладчик"
   field_meeting_answers:
     description: "Описание решения"
     reporter: "Докладчик"

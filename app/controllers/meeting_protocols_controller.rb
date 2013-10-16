@@ -21,7 +21,7 @@ class MeetingProtocolsController < ApplicationController
 
   def send_notices
     (render_403; return false) unless can_send_notices?(@object)
-    @object.meeting_participators.each do |member|
+    @object.meeting_participators.reject(&:issue).each do |member|
       send_notice(member)
     end
 
