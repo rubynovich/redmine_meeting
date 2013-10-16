@@ -218,8 +218,8 @@ private
       project: Project.find(settings[:notice_project_id]),
       description: issue_description,
       author: User.current,
-      start_date: @object.meeting_agenda.meet_on,
-      due_date: @object.meeting_agenda.meet_on + settings[:notice_duration].to_i.days,
+      start_date: Date.today,
+      due_date: Date.today + settings[:notice_duration].to_i.days,
       priority: @object.meeting_agenda.priority || IssuePriority.default,
       assigned_to: member.user)
   end

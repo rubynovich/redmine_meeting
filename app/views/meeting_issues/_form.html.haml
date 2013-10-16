@@ -5,7 +5,7 @@
   = f.hidden_field :tracker_id
   = f.hidden_field :description
   %p
-    = f.select :project_id, project_tree_options_for_select(@issue.tracker.projects, selected: (@object.meeting_question.issue.project rescue nil)), prompt: t(:prompt_please_select), required: true
+    = f.select :project_id, project_tree_options_for_select(Project.active.visible, selected: (@object.meeting_question.issue.project rescue nil)), prompt: t(:prompt_please_select), required: true
   %p
     = f.text_field :subject, size: 80, maxlength: 255, required: true, style: "width: 95%"
   %p
