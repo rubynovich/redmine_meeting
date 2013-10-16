@@ -211,7 +211,7 @@ private
 
   def create_issue(member)
     settings = Setting[:plugin_redmine_meeting]
-    Issue.create!(
+    Issue.create(
       status: IssueStatus.default,
       tracker: Tracker.find(settings[:notice_issue_tracker]),
       subject: issue_subject,
