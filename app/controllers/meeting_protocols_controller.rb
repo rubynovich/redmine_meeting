@@ -25,6 +25,8 @@ class MeetingProtocolsController < ApplicationController
       send_notice(member)
     end
 
+    execute_pending_issues
+
     redirect_to controller: 'meeting_protocols', action: 'show', id: @object.id
   end
 
@@ -33,6 +35,8 @@ class MeetingProtocolsController < ApplicationController
     @object.meeting_participators.each do |member|
       resend_notice(member)
     end
+
+    execute_pending_issues
 
     redirect_to controller: 'meeting_protocols', action: 'show', id: @object.id
   end
@@ -222,5 +226,9 @@ private
       due_date: Date.today + settings[:notice_duration].to_i.days,
       priority: @object.meeting_agenda.priority || IssuePriority.default,
       assigned_to: member.user)
+  end
+
+  def execute_pending_issues
+    (@object.meeting_answers + @object.meeting_extra_answers).select(&:pending_issue).map(&:pending_issue).map(&:execute)
   end
 end

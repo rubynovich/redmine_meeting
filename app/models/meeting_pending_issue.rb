@@ -28,7 +28,7 @@ class MeetingPendingIssue < ActiveRecord::Base
   end
 
   def execute
-    unless self.execute?
+    unless self.executed?
       case self.issue_type
       when 'update'
         update_issue
@@ -61,8 +61,8 @@ class MeetingPendingIssue < ActiveRecord::Base
   end
 
   def update_issue
-    @issue = self.issue
-    @issue.init_journal(self.author, self.issue_note)
+    @issue = self.meeting_container.issue
+    @issue.init_journal(User.current, self.issue_note)
     @issue.status = IssueStatus.default
     @issue.save
   end
