@@ -115,6 +115,9 @@ ru:
   label_meeting_issue_type_statuses:
     new: "Создана"
     update: "Обновлена"
+  label_meeting_issue_type_pending_statuses:
+    new: "Будет создана"
+    update: "Будет обновлена"
 
   label_period: Период
   label_period_any: любой
@@ -148,6 +151,8 @@ ru:
           "уже прошло"
         less_than_start_time:
           "должно быть позже, чем Время начала"
+        is_not_a_valid_date:
+          "не является датой"
   field_meeting_questions:
     title: "Вопрос"
     user: "Докладчик"

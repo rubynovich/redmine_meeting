@@ -1,18 +1,36 @@
 %div{id: "meeting_issue_for_#{answer.id}"}
   - if answer.issue.present?
-    %p
-      %table.list.issues
-        %tr.issue
-          %td.subject=link_to_issue(answer.issue, :project => false)
-          %td=link_to_user(answer.issue.assigned_to)
-          %td=format_date(answer.issue.start_date)
-          %td=format_date(answer.issue.due_date)
-          %td=h answer.status
-          %td=progress_bar(answer.issue.done_ratio, :width => '80px')
-          %td=t(answer.issue_type || 'new', scope: :label_meeting_issue_type_statuses)
-          %td
-            - if can_destroy_issue?(answer)
-              =link_to l(:button_dettach), {controller: 'meeting_issues', action: 'destroy', meeting_answer_type: answer.class, id: answer.id}, confirm: l(:text_are_you_sure), method: :delete, remote: true, class: 'icon icon-del'
+    - if answer.pending_issue && answer.pending_issue.executed?
+      %p
+        %table.list.issues
+          %tr.issue
+            %td.subject=link_to_issue(answer.issue, project: false)
+            %td=link_to_user(answer.issue.author)
+            %td=link_to_user(answer.issue.assigned_to)
+            %td=format_date(answer.issue.start_date)
+            %td=format_date(answer.issue.due_date)
+            %td=h(answer.status)
+            %td=progress_bar(answer.issue.done_ratio, width: '80px')
+            %td=t(answer.issue_type || 'new', scope: :label_meeting_issue_type_statuses)
+    - else
+      %p
+        %table.list.issues
+          %tr.issue
+            %td.subject
+              - if answer.issue_id.present?
+                =link_to_issue(answer.issue, project: false)
+              - else
+                = "#{answer.issue.tracker} #N: #{answer.issue.subject}"
+            %td=link_to_user(answer.issue.author)
+            %td=link_to_user(answer.issue.assigned_to)
+            %td=format_date(answer.issue.start_date)
+            %td=format_date(answer.issue.due_date)
+            %td=h(answer.issue.status)
+            %td=progress_bar(answer.issue.done_ratio, width: '80px')
+            %td=t(answer.issue_type || 'new', scope: :label_meeting_issue_type_pending_statuses)
+            %td
+              - if can_destroy_issue?(answer)
+                =link_to l(:button_dettach), {controller: 'meeting_issues', action: 'destroy', meeting_answer_type: answer.class, id: answer.id}, confirm: l(:text_are_you_sure), method: :delete, remote: true, class: 'icon icon-del'
   - else
     %p
     - if can_update_issue?(answer)

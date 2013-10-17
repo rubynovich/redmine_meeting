@@ -4,6 +4,10 @@
   = f.hidden_field :due_date
   = f.hidden_field :tracker_id
   = f.hidden_field :description
+  = f.hidden_field :meeting_container_id
+  = f.hidden_field :meeting_container_type
+  = f.hidden_field :status_id
+  = f.hidden_field :priority_id
   %p
     = f.select :project_id, project_tree_options_for_select(Project.active.visible, selected: (@object.meeting_question.issue.project rescue nil)), prompt: t(:prompt_please_select), required: true
   %p

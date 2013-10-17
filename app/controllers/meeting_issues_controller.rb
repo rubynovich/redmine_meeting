@@ -14,18 +14,18 @@ class MeetingIssuesController < ApplicationController
     @issue.due_date = @object.due_date
     @issue.tracker_id = Setting[:plugin_redmine_meeting][:issue_tracker]
     @issue.description = @object.description
+    @issue.priority = @object.meeting_agenda.priority
+    @issue.status = IssueStatus.default
   end
 
   def create
-    @issue.author_id = params[:issue][:author_id]
-    @issue.parent_issue_id = params[:issue][:parent_issue_id]
-    @issue.watcher_user_ids = params[:issue][:watcher_user_ids]
+    @issue.watcher_user_ids = params[:meeting_pending_issue][:watcher_user_ids]
     if @issue.save
       @issue.update_attribute(:description,
         @issue.description + "\n\n" +
         t(:message_description_protocol_information, url: url_for(controller: 'meeting_protocols', action: 'show', id: @object.meeting_protocol_id))
       )
-      @object.update_attribute(:issue_id, @issue.id)
+      @object.update_attribute(:issue_id, nil)
       @object.update_attribute(:issue_type, :new)
     else
       render action: :new
@@ -39,24 +39,28 @@ class MeetingIssuesController < ApplicationController
       when 'MeetingExtraAnswer'
         MeetingExtraAnswer.find(params[:id])
       end
-    if @object.issue_type == "new"
-      @object.issue.update_attributes(status_id: Setting[:plugin_redmine_meeting][:cancel_issue_status])
-    end
+    @object.pending_issue.destroy
     @object.update_attribute(:issue_id, nil)
     @object.update_attribute(:issue_type, nil)
   end
 
   def update
-    @object = MeetingAnswer.find(params[:id])
+    @object = case params[:meeting_answer_type]
+      when 'MeetingAnswer'
+        MeetingAnswer.find(params[:id])
+      when 'MeetingExtraAnswer'
+        MeetingExtraAnswer.find(params[:id])
+      end
     issue = @object.question_issue
-    update_issue(issue).save
+    update_issue(issue)
     @object.update_attribute(:issue_id, issue.id)
     @object.update_attribute(:issue_type, :update)
   end
 
 private
   def new_issue
-    @issue = Issue.new(params[:issue])
+    @issue = MeetingPendingIssue.new(params[:meeting_pending_issue])
+    @issue.meeting_container = @object
   end
 
   def find_object
@@ -96,9 +100,14 @@ private
   end
 
   def update_issue(issue)
-    issue.init_journal(User.current, issue_note)
-    issue.status = IssueStatus.default
-    issue
+    MeetingPendingIssue.create(
+      issue_note: issue_note,
+      author_id: User.current,
+      issue_id: issue.id,
+      issue_type: :update,
+      meeting_container_id: @object.id,
+      meeting_container_type: @object.class.to_s
+    )
   end
 
   def require_meeting_manager
