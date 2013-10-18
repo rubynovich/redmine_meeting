@@ -19,10 +19,6 @@ class MeetingQuestion < ActiveRecord::Base
   validates_presence_of :title, :user_id
 #  validates_uniqueness_of :title, scope: :meeting_agenda_id
 
-  def position
-    0
-  end
-
   def <=>(object)
     position <=> object.position
   end
