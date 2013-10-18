@@ -9,7 +9,7 @@ class MeetingAgenda < ActiveRecord::Base
   belongs_to :meeting_room_reserve, dependent: :destroy
   belongs_to :external_company, class_name: 'Contact', foreign_key: 'external_company_id'
   has_one :meeting_protocol
-  has_many :meeting_questions, dependent: :delete_all#, order: :position
+  has_many :meeting_questions, dependent: :delete_all, order: :position
   has_many :issues, through: :meeting_questions, order: :id, uniq: true
   has_many :projects, through: :issues, order: :title, uniq: true
   has_many :statuses, through: :issues, uniq: true
