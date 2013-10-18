@@ -61,7 +61,7 @@ class MeetingPendingIssue < ActiveRecord::Base
     @issue.parent_issue_id  = self.parent_issue_id
     @issue.watcher_user_ids = self.watcher_user_ids
     if @issue.save
-      self.update_attribute(:issue_id, @issue.id)
+      self.meeting_container.update_attribute(:issue_id, @issue.id)
     end
   end
 
