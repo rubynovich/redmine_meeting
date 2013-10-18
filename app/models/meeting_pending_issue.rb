@@ -37,7 +37,7 @@ class MeetingPendingIssue < ActiveRecord::Base
       case self.issue.issue_type
       when 'update'
         update_issue
-      when 'create'
+      when 'new'
         create_issue
       end
       self.update_attribute(:executed_on, Time.now)
