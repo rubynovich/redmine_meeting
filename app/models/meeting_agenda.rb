@@ -105,7 +105,7 @@ class MeetingAgenda < ActiveRecord::Base
   end
 
   def place
-    if self.is_external? && super.blank? && self.external_company.present?
+    if self.try(:is_external?) && super.blank? && self.try(:external_company).present?
       self.external_company.address
     else
       super
