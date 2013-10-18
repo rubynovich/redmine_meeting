@@ -34,7 +34,7 @@ class MeetingPendingIssue < ActiveRecord::Base
 
   def execute
     unless self.executed?
-      case self.issue.issue_type
+      case self.meeting_container.issue_type
       when 'update'
         update_issue
       when 'new'
