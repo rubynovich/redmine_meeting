@@ -9,7 +9,7 @@ class MeetingIssuesController < ApplicationController
   include WatchersHelper
 
   def new
-    @issue.attrubutes = {
+    @issue.attributes = {
       assigned_to: @object.user,
       start_date: @object.start_date,
       due_date: @object.due_date,
