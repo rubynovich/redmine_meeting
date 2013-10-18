@@ -5,8 +5,10 @@ class CreateMeetingAnswers < ActiveRecord::Migration
       t.references :meeting_question
       t.text :description
       t.integer :reporter_id
+      t.integer :question_issue_id
       t.references :user
       t.references :issue
+      t.string :issue_type
       t.date :start_date
       t.date :due_date
       t.datetime :created_on

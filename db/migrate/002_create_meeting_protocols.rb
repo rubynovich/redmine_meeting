@@ -1,6 +1,8 @@
 class CreateMeetingProtocols < ActiveRecord::Migration
   def change
     create_table :meeting_protocols do |t|
+      t.time :start_time
+      t.time :end_time
       t.references :meeting_agenda
       t.integer :author_id
       t.datetime :created_on

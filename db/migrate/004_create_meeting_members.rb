@@ -4,6 +4,7 @@ class CreateMeetingMembers < ActiveRecord::Migration
       t.references :meeting_agenda
       t.references :user
       t.references :issue
+      t.integer :time_entry_id
       t.datetime :created_on
       t.datetime :updated_on
     end

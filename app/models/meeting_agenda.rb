@@ -42,7 +42,7 @@ class MeetingAgenda < ActiveRecord::Base
 
   validates_uniqueness_of :subject, scope: :meet_on
   validates_presence_of :subject, :meet_on, :start_time, :end_time, :priority_id, :place
-  validates_presence_of :external_company_id, if: -> { self.respond_to?(:is_external?) && self.is_external? }
+  validates_presence_of :external_company_id, if: -> { self.is_external? }
   validate :end_time_less_than_start_time, if: -> { self.start_time && self.end_time && (self.end_time <= self.start_time) }
   validate :meet_on_less_than_today, if: -> { self.meet_on && (self.meet_on < Date.today) }
   validate :start_time_less_than_now, if: -> {
@@ -105,7 +105,7 @@ class MeetingAgenda < ActiveRecord::Base
   end
 
   def place
-    if self.respond_to?(:is_external?) && self.is_external? && super.blank? && self.external_company.present?
+    if super.blank? && self.is_external? && self.external_company.present?
       self.external_company.address
     else
       super
