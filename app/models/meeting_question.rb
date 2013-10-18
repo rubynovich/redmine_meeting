@@ -20,7 +20,7 @@ class MeetingQuestion < ActiveRecord::Base
 #  validates_uniqueness_of :title, scope: :meeting_agenda_id
 
   def position
-    super || 0
+    0
   end
 
   def <=>(object)
