@@ -3,6 +3,8 @@ class MeetingBindIssuesController < ApplicationController
 
   helper :meeting_protocols
   include MeetingProtocolsHelper
+  helper :meeting_issues
+  include MeetingIssuesHelper
 
   before_filter :find_answer, only: [:new, :create]
 
