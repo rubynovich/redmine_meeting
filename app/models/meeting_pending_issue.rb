@@ -11,9 +11,9 @@ class MeetingPendingIssue < ActiveRecord::Base
   has_one :issue, through: :meeting_container
 
   validates_uniqueness_of :meeting_container_id, scope: :meeting_container_type
-#  validates_presence_of :subject, :assigned_to_id, :start_date, :due_date, :tracker_id,
-#    :description, :priority_id, :status_id, if: -> { self.meeting_container && self.meeting_container.issue_type self.meeting_container.issue_type["new"] }
-#  validates_presence_of :issue_note, if: -> { self.meeting_container && self.meeting_container.issue_type["update"] }
+  validates_presence_of :subject, :assigned_to_id, :start_date, :due_date, :tracker_id,
+    :description, :priority_id, :status_id, if: -> { self.status_id.present? }
+  validates_presence_of :issue_note, if: -> { self.status_id.blank? }
   validates_presence_of :author_id, :meeting_container_id, :meeting_container_type
 
   def watched_by?(user)
