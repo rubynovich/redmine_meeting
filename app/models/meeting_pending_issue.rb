@@ -5,11 +5,16 @@ class MeetingPendingIssue < ActiveRecord::Base
   belongs_to :author, class_name: 'User', foreign_key: 'author_id'
   belongs_to :assigned_to, class_name: 'User', foreign_key: 'assigned_to_id'
   belongs_to :project
-#  belongs_to :parent_issue, class_name: 'Issue', foreign_key: 'parent_issue_id'
   belongs_to :tracker, class_name: 'Tracker', foreign_key: 'tracker_id'
   belongs_to :priority, class_name: 'IssuePriority', foreign_key: 'priority_id'
   belongs_to :status, class_name: 'IssueStatus', foreign_key: 'status_id'
   has_one :issue, through: :meeting_container
+
+  validates_uniqueness_of :meeting_container_id, scope: :meeting_container_type
+  validates_presence_of :subject, :assigned_to_id, :start_date, :due_date, :tracker_id,
+    :description, :priority_id, :status_id, if: -> { self.meeting_container && self.meeting_container.issue_type["new"] }
+  validates_presence_of :issue_note, if: -> { self.meeting_container && self.meeting_container.issue_type["update"] }
+  validates_presence_of :author_id, :meeting_container_id, :meeting_container_type
 
   def watched_by?(user)
     true

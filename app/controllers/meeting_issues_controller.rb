@@ -9,13 +9,16 @@ class MeetingIssuesController < ApplicationController
   include WatchersHelper
 
   def new
-    @issue.assigned_to = @object.user
-    @issue.start_date = @object.start_date
-    @issue.due_date = @object.due_date
-    @issue.tracker_id = Setting[:plugin_redmine_meeting][:issue_tracker]
-    @issue.description = @object.description
-    @issue.priority = @object.meeting_agenda.priority
-    @issue.status = IssueStatus.default
+    @issue.attrubutes = {
+      assigned_to: @object.user,
+      start_date: @object.start_date,
+      due_date: @object.due_date,
+      tracker_id: Setting[:plugin_redmine_meeting][:issue_tracker],
+      description: @object.description,
+      priority: @object.meeting_agenda.priority,
+      status: IssueStatus.default,
+      author: User.current
+    }
   end
 
   def create
@@ -102,9 +105,9 @@ private
   def update_issue(issue)
     MeetingPendingIssue.create(
       issue_note: issue_note,
-      author_id: User.current,
-      issue_id: issue.id,
-      issue_type: :update,
+      author_id: User.current.id,
+#      issue_id: issue.id,
+#      issue_type: :update,
       meeting_container_id: @object.id,
       meeting_container_type: @object.class.to_s
     )
