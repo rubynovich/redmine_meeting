@@ -3,7 +3,9 @@
   .meeting_comments_history a.delete {opacity: 0.4; vertical-align: middle;}
   .meeting_comments_history a.delete:hover {opacity: 1;}
   .show-when-print{ display: none;}
-  @media print { .show-when-print { display: block;} }
+  @media print {
+    .show-when-print { display: block;}
+  }
 
 .contextual
   - if can_update_protocol?(@object)

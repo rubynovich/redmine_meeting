@@ -55,9 +55,10 @@ class MeetingIssuesController < ApplicationController
         MeetingExtraAnswer.find(params[:id])
       end
     issue = @object.question_issue
-    update_issue(issue)
-    @object.update_attribute(:issue_id, issue.id)
-    @object.update_attribute(:issue_type, :update)
+    if update_issue(issue).valid?
+      @object.update_attribute(:issue_type, :update)
+      @object.update_attribute(:issue_id, issue.id)
+    end
   end
 
 private
