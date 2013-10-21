@@ -166,7 +166,7 @@
       .hide-when-print
         = render partial: 'meeting_issues/show', locals: {answer: answer}
 
-      .hide-when-show
+      .hide-when-print
         - if can_show_comments?(@object)
           %h4= l(:label_meeting_answer_comment_plural)+":"
           = render partial: 'meeting_comments/history', locals: {meeting_container: answer}
