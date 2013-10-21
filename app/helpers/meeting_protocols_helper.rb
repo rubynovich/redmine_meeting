@@ -55,13 +55,13 @@ module MeetingProtocolsHelper
     if answer.question_issue.present?
       link_to_issue(answer.question_issue, project: false, tracker: false, subject: false) +
         if can_bind_issue?(answer)
-          link_to("", {controller: 'meeting_bind_issues', action: 'new', meeting_answer_type: answer.class, meeting_answer_id: answer.id}, remote: true, class: 'icon icon-edit')
+          link_to("", {controller: 'meeting_bind_issues', action: 'new', meeting_answer_type: answer.class, meeting_answer_id: answer.id}, remote: true, class: 'icon icon-edit hide-when-print')
         else
           ""
         end
     else
       if can_bind_issue?(answer)
-        link_to(t(:button_add), {controller: 'meeting_bind_issues', action: 'new', meeting_answer_type: answer.class, meeting_answer_id: answer.id}, remote: true, class: 'icon icon-add')
+        link_to(t(:button_add), {controller: 'meeting_bind_issues', action: 'new', meeting_answer_type: answer.class, meeting_answer_id: answer.id}, remote: true, class: 'icon icon-add hide-when-print')
       else
         ""
       end

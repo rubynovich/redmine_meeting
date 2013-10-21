@@ -2,7 +2,8 @@
 :css
   .meeting_comments_history a.delete {opacity: 0.4; vertical-align: middle;}
   .meeting_comments_history a.delete:hover {opacity: 1;}
-
+  .show-when-print{ display: none;}
+  @media print { .show-when-print { display: block;} }
 
 .contextual
   - if can_update_protocol?(@object)
@@ -71,7 +72,7 @@
     %th=l(:field_member)
     %th=l(:label_meeting_invite_status)
     %th=l(:label_meeting_notice_status)
-    %th=l(:field_status)
+    %th.hide-when-print=l(:field_status)
   - agenda_users = @object.meeting_agenda.users
   - protocol_users = @object.users
   - (agenda_users|protocol_users).compact.sort_by(&:name).each do |user|
@@ -90,7 +91,7 @@
           = t(:label_meeting_member_extra)
       %td
         = link_to_meeting_notice(user)
-      %td
+      %td.hide-when-print
         - member = @object.meeting_participators.select{ |m| m.user == user }.first
         - if member.present? && member.issue.present?
           = link_to(member.issue.try(:status), controller: 'issues', action: 'show', id: member.issue_id)
@@ -156,14 +157,21 @@
         %br
         %div{style: 'margin-left: 40px;'}
           =textilizable(answer, :description)
+      .show-when-print
+        %p
+          %strong=t(:label_meeting_answer_issue)+":"
+          %br
+          %div{style: 'margin-left: 40px;'}
+            =textilizable(answer, :description)
+      .hide-when-print
+        = render partial: 'meeting_issues/show', locals: {answer: answer}
 
-      = render partial: 'meeting_issues/show', locals: {answer: answer}
-
-      - if can_show_comments?(@object)
-        %h4= l(:label_meeting_answer_comment_plural)+":"
-        = render partial: 'meeting_comments/history', locals: {meeting_container: answer}
-
-= link_to_attachments @object, thumbnails: true
+      .hide-when-show
+        - if can_show_comments?(@object)
+          %h4= l(:label_meeting_answer_comment_plural)+":"
+          = render partial: 'meeting_comments/history', locals: {meeting_container: answer}
+.hide-when-print
+  = link_to_attachments @object, thumbnails: true
 
 - content_for :sidebar do
   = render partial: 'meeting_approvers/sidebar'

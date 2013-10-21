@@ -11,9 +11,9 @@ class MeetingPendingIssue < ActiveRecord::Base
   has_one :issue, through: :meeting_container
 
   validates_uniqueness_of :meeting_container_id, scope: :meeting_container_type
-  validates_presence_of :subject, :assigned_to_id, :start_date, :due_date, :tracker_id,
-    :description, :priority_id, :status_id, if: -> { self.status_id.present? }
-  validates_presence_of :issue_note, if: -> { self.status_id.blank? }
+  validates_presence_of :subject, :project_id, :assigned_to_id, :start_date, :due_date, :tracker_id,
+    :description, :priority_id, :status_id, if: ->(o) { o.status_id.present? }
+  validates_presence_of :issue_note, if: ->(o) { o.status_id.blank? }
   validates_presence_of :author_id, :meeting_container_id, :meeting_container_type
 
   def watched_by?(user)
@@ -34,14 +34,13 @@ class MeetingPendingIssue < ActiveRecord::Base
 
   def execute
     unless self.executed?
-      case self.meeting_container.issue_type
-      when 'update'
-        update_issue
-      when 'new'
-        create_issue
+      if (case self.meeting_container.issue_type
+        when 'update' then update_issue
+        when 'new' then create_issue
+        end)
+        self.update_attribute(:executed_on, Time.now)
+        self.update_attribute(:executed, true)
       end
-      self.update_attribute(:executed_on, Time.now)
-      self.update_attribute(:executed, true)
     end
   end
 
