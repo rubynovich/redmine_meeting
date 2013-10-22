@@ -126,7 +126,7 @@ module MeetingProtocolsHelper
   end
 
   def can_show_protocol?(protocol)
-    admin? || meeting_manager? || member?(protocol) || approver?(protocol) || watchers?(protocol)
+    admin? || meeting_manager? || member?(protocol) || approver?(protocol) || watcher?(protocol)
   end
 
   def can_update_protocol?(protocol)
