@@ -104,43 +104,41 @@
       %th= l(:label_meeting_protocol)+":"
       %td= link_to_protocol(@object)
 
-  %hr
+%h3= l(:field_meeting_members)+":"
+%table.list.issues
+  %tr
+    %th=l(:field_company)
+    %th=l(:field_job_title)
+    %th=l(:field_member)
+    %th.hide-when-print=l(:field_status)
+  - @object.meeting_members.each do |member|
+    %tr.issue
+      %td= h member.user.company rescue ""
+      %td{style: "white-space: pre-line; width: 33%"}= h member.user.job_title rescue ""
+      %td= link_to_user(member.user)
+      %td.hide-when-print= link_to(member.issue.try(:status), controller: 'issues', action: 'show', id: member.issue_id) rescue h l(:label_meeting_member_was_not_invite)
 
-  %h3= l(:field_meeting_members)+":"
+- if @object.contacts.any?
+  %h3= l(:field_meeting_contacts)+":"
   %table.list.issues
     %tr
       %th=l(:field_company)
       %th=l(:field_job_title)
-      %th=l(:field_member)
-      %th.hide-when-print=l(:field_status)
-    - @object.meeting_members.each do |member|
+      %th=l(:field_phone)
+      %th=l(:field_email)
+      %th=l(:field_contact)
+    - @object.contacts.each do |contact|
       %tr.issue
-        %td= h member.user.company rescue ""
-        %td{style: "white-space: pre-line; width: 33%"}= h member.user.job_title rescue ""
-        %td= link_to_user(member.user)
-        %td.hide-when-print= link_to(member.issue.try(:status), controller: 'issues', action: 'show', id: member.issue_id) rescue h l(:label_meeting_member_was_not_invite)
+        %td{style: "white-space: pre-line; width: 20%"}= h contact.company
+        %td{style: "white-space: pre-line; width: 20%"}= h contact.job_title
+        %td{style: "white-space: pre-line; width: 20%"}= h contact.phone
+        %td{style: "white-space: pre-line; width: 20%"}= mail_to(h contact.email)
+        %td{style: "white-space: pre-line; width: 25%"}= link_to_contact(contact)
 
-  - if @object.contacts.any?
-    %h3= l(:field_meeting_contacts)+":"
-    %table.list.issues
-      %tr
-        %th=l(:field_company)
-        %th=l(:field_job_title)
-        %th=l(:field_phone)
-        %th=l(:field_email)
-        %th=l(:field_contact)
-      - @object.contacts.each do |contact|
-        %tr.issue
-          %td{style: "white-space: pre-line; width: 20%"}= h contact.company
-          %td{style: "white-space: pre-line; width: 20%"}= h contact.job_title
-          %td{style: "white-space: pre-line; width: 20%"}= h contact.phone
-          %td{style: "white-space: pre-line; width: 20%"}= mail_to(h contact.email)
-          %td{style: "white-space: pre-line; width: 25%"}= link_to_contact(contact)
+%br
 
-  %br
-
-  %h3=l(:label_meeting_question_plural)+":"
-  = render partial: 'meeting_questions'
+%h3=l(:label_meeting_question_plural)+":"
+= render partial: 'meeting_questions'
 
 .hide-when-print
   = link_to_attachments @object, thumbnails: true
