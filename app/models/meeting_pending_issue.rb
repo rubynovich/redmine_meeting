@@ -11,10 +11,10 @@ class MeetingPendingIssue < ActiveRecord::Base
   has_one :issue, through: :meeting_container
 
   validates_uniqueness_of :meeting_container_id, scope: :meeting_container_type
-  validates_presence_of :subject, :project_id, if: ->(o) { o.tracker_id.present? }
-  validates_presence_of :issue_note, if: ->(o) { o.tracker_id.blank? }
+#  validates_presence_of :subject, :project_id, if: ->(o) { o.issue_note.blank? }
+#  validates_presence_of :issue_note, if: ->(o) { o.tracker_id.blank? }
   validates_presence_of :author_id, :meeting_container_id, :meeting_container_type
-  validate :can_update_issue, if: -> { self.tracker_id.blank? }
+#  validate :can_update_issue, if: -> { self.tracker_id.blank? }
   validate :can_create_issue, if: -> { self.tracker_id.present? }
 
 
@@ -34,15 +34,15 @@ class MeetingPendingIssue < ActiveRecord::Base
     end
   end
 
-  def can_update_issue
-    if issue = self.meeting_container.issue
-      issue.init_journal(User.current, self.issue_note)
-      issue.status = IssueStatus.default
-      unless issue.valid?
-        errors = issue.errors
-      end
-    end
-  end
+#  def can_update_issue
+#    if issue = self.meeting_container.issue
+#      issue.init_journal(User.current, self.issue_note)
+#      issue.status = IssueStatus.default
+#      unless issue.valid?
+#        errors = issue.errors
+#      end
+#    end
+#  end
 
   def can_create_issue
     issue = Issue.new(issue_attributes)
