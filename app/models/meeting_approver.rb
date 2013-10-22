@@ -21,6 +21,10 @@ class MeetingApprover < ActiveRecord::Base
     where("#{self.table_name}.deleted = ?", !status)
   }
 
+  def to_s
+    user.to_s
+  end
+
 private
   def message_approver_approve
     Mailer.meeting_approver_approve(self).deliver

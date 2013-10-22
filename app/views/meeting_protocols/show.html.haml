@@ -35,9 +35,16 @@
             %br
       %tr
         %td{style: "text-align: center"}
-          %h3
-            ___________________/_________
-            %br
+          - approvers = @object.meeting_approvers.reject(&:deleted)
+          - if approvers.any?
+            - approvers.each do |approver|
+              %h3
+                #{approver}/_________
+                %br
+          - else
+            %h3
+              ___________________/_________
+              %br
         %td{style: "text-align: center"}
           %h3
             ___________________/_________
