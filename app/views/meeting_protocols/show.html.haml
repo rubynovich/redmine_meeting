@@ -23,6 +23,17 @@
 - if Setting[:plugin_redmine_meeting][:protocol_head_url].present?
   .show-when-print
     = image_tag Setting[:plugin_redmine_meeting][:protocol_head_url]
+    %table{style: "width: 100%; border: 0px;"}
+      %tr
+        %td{style: "text-align: center"}
+          ="&#186;#{t(:label_meeting_protocol_head_agreed)}&#187;"
+        %td{style: "text-align: center"}
+          ="&#186;#{t(:label_meeting_protocol_head_approved)}&#187;"
+      %tr
+        %td{style: "text-align: center"}
+          %hr{width: "90%"}
+        %td{style: "text-align: center"}
+          %hr{width: "90%"}
 
 %h2.hide-when-print
   = link_to l(:label_meeting_protocol_plural), action: 'index'
@@ -169,12 +180,14 @@
         %br
         %div{style: 'margin-left: 40px;'}
           =textilizable(answer, :description)
-      .show-when-print
-        %p
-          %strong=t(:label_meeting_answer_issue)+":"
-          %br
-          %div{style: 'margin-left: 40px;'}
-            =textilizable(answer, :description)
+      - if answer.issue_id.present?
+        .show-when-print
+          %p
+            %strong=t(:label_meeting_answer_issue)+":"
+            %br
+            %div{style: 'margin-left: 40px;'}
+              = link_to answer.issue, project: false
+              = "(#{t(answer.issue_type || 'new', scope: :label_meeting_issue_type_statuses)})"
       .hide-when-print
         = render partial: 'meeting_issues/show', locals: {answer: answer}
 
