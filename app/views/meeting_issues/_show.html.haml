@@ -1,6 +1,6 @@
 %div{id: "meeting_issue_for_#{answer.class.to_s.underscore}_#{answer.id}"}
   - if answer.issue.present?
-    - if answer.pending_issue && answer.pending_issue.executed?
+    - if (answer.pending_issue && answer.pending_issue.executed?) || !answer.pending_issue
       %p
         %table.list.issues
           %tr.issue
