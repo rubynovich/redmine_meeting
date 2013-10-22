@@ -1,3 +1,9 @@
+:css
+  .show-when-print{ display: none;}
+  @media print {
+    .show-when-print { display: block;}
+  }
+
 .contextual
   - if can_create_agenda?
     = link_to l(:button_add), {action: 'new'}, class: 'icon icon-add'
@@ -13,7 +19,37 @@
     - else
       = link_to l(:label_send_invites), {action: 'send_invites', id: @object.id}, class: 'icon icon-issue'
 
-%h2
+- if Setting[:plugin_redmine_meeting][:protocol_head_url].present?
+  .show-when-print
+    = image_tag Setting[:plugin_redmine_meeting][:protocol_head_url]
+    %table{style: "width: 100%; border: 0px;"}
+      %tr
+        %td{style: "text-align: center"}
+          %h3
+            ="«#{t(:label_meeting_protocol_head_agreed)}»"
+            %br
+        %td{style: "text-align: center"}
+          %h3
+            ="«#{t(:label_meeting_protocol_head_approved)}»"
+            %br
+      %tr
+        %td{style: "text-align: center"}
+          - approvers = @object.meeting_approvers.reject(&:deleted)
+          - if approvers.any?
+            - approvers.each do |approver|
+              %h3
+                #{Person.where(approver.user_id)}/_________
+                %br
+          - else
+            %h3
+              ___________________/_________
+              %br
+        %td{style: "text-align: center"}
+          %h3
+            ___________________/_________
+            %br
+
+%h2.hide-when-print
   = link_to l(:label_meeting_agenda_plural), action: 'index'
   &#187;
   - if @object.is_external?
@@ -22,6 +58,12 @@
     = l(:label_meeting_agenda)
   ="##{h @object.id}"
 
+%h2.show-when-print{style: "text-align: center"}
+  - if @object.is_external?
+    = l(:label_external_meeting_agenda)
+  - else
+    = l(:label_meeting_agenda)
+  ="№#{h @object.id}"
 
 .autoscroll.issue.details
   %table.attributes
@@ -70,13 +112,13 @@
       %th=l(:field_company)
       %th=l(:field_job_title)
       %th=l(:field_member)
-      %th=l(:field_status)
+      %th.hide-when-show=l(:field_status)
     - @object.meeting_members.each do |member|
       %tr.issue
         %td= h member.user.company rescue ""
         %td{style: "white-space: pre-line; width: 33%"}= h member.user.job_title rescue ""
         %td= link_to_user(member.user)
-        %td= link_to(member.issue.try(:status), controller: 'issues', action: 'show', id: member.issue_id) rescue h l(:label_meeting_member_was_not_invite)
+        %td.hide-when-show= link_to(member.issue.try(:status), controller: 'issues', action: 'show', id: member.issue_id) rescue h l(:label_meeting_member_was_not_invite)
 
   - if @object.contacts.any?
     %h3= l(:field_meeting_contacts)+":"
@@ -100,7 +142,8 @@
   %h3=l(:label_meeting_question_plural)+":"
   = render partial: 'meeting_questions'
 
-= link_to_attachments @object, thumbnails: true
+.hide-when-show
+  = link_to_attachments @object, thumbnails: true
 
 - content_for :sidebar do
   = render partial: 'sidebar'

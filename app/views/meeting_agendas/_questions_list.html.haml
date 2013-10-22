@@ -1,7 +1,7 @@
 - questions.each do |question|
   %tr.issue{style: (question.meeting_comments.present? ? "background: #fff0f5" : "")}
     %td.subject{onclick: "$('#comments_block_for_#{question.id}').toggle();"}=h question.title
-    %td{width: '80px'}= reorder_links('meeting_question', {controller: 'meeting_questions', action: 'update', id: question, remote: true}, :put)
+    %td.hide-when-show{width: '80px'}= reorder_links('meeting_question', {controller: 'meeting_questions', action: 'update', id: question, remote: true}, :put)
     %td.subject{onclick: "$('#comments_block_for_#{question.id}').toggle();"}
       - if question.issue.present?
         = link_to_issue(question.issue, tracker: false)
@@ -21,7 +21,7 @@
       - if question.issue.present?
         = progress_bar(question.issue.done_ratio, width: '80px')
   - if can_show_comments?(@object)
-    %tr{id: "comments_block_for_#{question.id}", style: 'display: none;'}
+    %tr.hide-when-show{id: "comments_block_for_#{question.id}", style: 'display: none;'}
       %td{colspan: 7}
         %h4= l(:label_meeting_question_comment_plural)+":"
         = render partial: 'meeting_comments/history', locals: {meeting_container: question}
