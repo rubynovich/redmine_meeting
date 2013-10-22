@@ -20,7 +20,11 @@
     - else
       = link_to l(:label_send_notices), {action: 'send_notices', id: @object.id}, class: 'icon icon-issue'
 
-%h2
+- if Setting[:plugin_redmine_meeting][:protocol_head_url].present?
+  .show-when-print
+    = image_tag Setting[:plugin_redmine_meeting][:protocol_head_url]
+
+%h2.hide-when-print
   = link_to l(:label_meeting_protocol_plural), action: 'index'
   &#187;
   - if @object.is_external?
@@ -29,6 +33,12 @@
     = l(:label_meeting_protocol)
   ="##{h @object.id}"
 
+%h2.show-when-print{style: "text-align: center"}
+  - if @object.is_external?
+    = l(:label_external_meeting_protocol)
+  - else
+    = l(:label_meeting_protocol)
+  ="№#{h @object.id}"
 
 .autoscroll.issue.details
   %table.attributes

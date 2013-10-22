@@ -1,6 +1,9 @@
 %p
   %label= l(:label_meeting_manager_plural)
   = select_tag("settings[principal_id]", principals_options_for_select(Principal.active.all, (Principal.find(@settings[:principal_id]) rescue nil)), :prompt => t(:prompt_please_select))
+%p
+  %label= l(:label_meeting_protocol_head_url)
+  = text_field_tag("settings[protocol_head_url]", @settings[:protocol_head_url], size: 80, maxlength: 255)
 %fieldset
   %legend=l(:label_issue_status_plural)
   %p

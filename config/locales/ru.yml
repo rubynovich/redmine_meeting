@@ -117,6 +117,7 @@ ru:
     new: "Будет создана"
     update: "Будет обновлена"
   label_meeting_answer_issue: "Задача по решению"
+  label_meeting_protocol_head_url: "URL для шапки протокола"
 
   label_period: Период
   label_period_any: любой
