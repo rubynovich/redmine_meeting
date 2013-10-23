@@ -22,6 +22,9 @@
       :javascript
         observeAutocompleteField('meeting_agenda_place', '#{escape_javascript autocomplete_for_place_meeting_agendas_path}')
       = link_to l(:label_meeting_room_reserve_new), {controller: 'meeting_room_selectors', action: 'new'}, remote: true, method: 'get', class: 'icon icon-add', id: 'link_to_meeting_room'
+    %p
+      = f.label :asserter
+      = f.collection_select :asserter_id, User.active.sorted, :id, :name, prompt: t(:prompt_please_select)
     .splitcontentleft
       %p
         = f.label :meet_on, class: 'necessary'

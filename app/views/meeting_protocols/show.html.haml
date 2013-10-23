@@ -47,7 +47,10 @@
               %br
         %td{style: "text-align: center"}
           %h3
-            ___________________/_________
+            - if @object.asserter.present?
+              #{@object.asserter}/_________
+            - else
+              ___________________/_________
             %br
 
 %h2.hide-when-print

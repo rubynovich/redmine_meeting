@@ -6,6 +6,7 @@ class MeetingProtocol < ActiveRecord::Base
 
   belongs_to :author, class_name: 'User', foreign_key: 'author_id'
   belongs_to :meeting_agenda
+  belongs_to :asserter, class_name: 'People', foreign_key: 'asserter_id'
   has_one  :external_company, through: :meeting_agenda
   has_many :meeting_answers, dependent: :delete_all
   has_many :meeting_extra_answers, dependent: :delete_all

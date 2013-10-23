@@ -13,10 +13,13 @@
       %p
         = f.label :start_time, l(:label_meeting_protocol_start_time), class: 'necessary'
         = f.time_select :start_time, minute_step: 5, include_blank: true
-    .splitcontentright
       %p
         = f.label :end_time, l(:label_meeting_protocol_end_time), class: 'necessary'
         = f.time_select :end_time, minute_step: 5, include_blank: true
+    .splitcontentright
+      %p
+        = f.label :asserter
+        = f.collection_select :asserter_id, User.active.sorted, :id, :name, prompt: t(:prompt_please_select)
 
   %h3{style: "margin-top: 33px"}=l :label_meeting_answer_plural
   = f.fields_for :meeting_answers
