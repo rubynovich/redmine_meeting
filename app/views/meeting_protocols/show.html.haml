@@ -39,7 +39,7 @@
           - if approvers.any?
             - approvers.each do |approver|
               %h3
-                #{Person.where(approver.user_id)}/_________
+                #{Person.where(approver.user_id).to_s}/_________
                 %br
           - else
             %h3
