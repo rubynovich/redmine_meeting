@@ -8,7 +8,7 @@ class MeetingAgenda < ActiveRecord::Base
   belongs_to :priority, class_name: 'IssuePriority', foreign_key: 'priority_id'
   belongs_to :meeting_room_reserve, dependent: :destroy
   belongs_to :external_company, class_name: 'Contact', foreign_key: 'external_company_id'
-  belongs_to :asserter, class_name: 'People', foreign_key: 'asserter_id'
+  belongs_to :asserter, class_name: 'Person', foreign_key: 'asserter_id'
   has_one :meeting_protocol
   has_many :meeting_questions, dependent: :delete_all, order: :position
   has_many :issues, through: :meeting_questions, order: :id, uniq: true
