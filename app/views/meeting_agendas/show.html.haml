@@ -18,39 +18,9 @@
       = link_to l(:label_resend_invites), {action: 'resend_invites', id: @object.id}, class: 'icon icon-issue'
     - else
       = link_to l(:label_send_invites), {action: 'send_invites', id: @object.id}, class: 'icon icon-issue'
+  = link_to l(:button_print), {}, {onclick: "window.print();", class: 'icon icon-duplicate' }
 
-- if Setting[:plugin_redmine_meeting][:protocol_head_url].present?
-  .show-when-print
-    = image_tag Setting[:plugin_redmine_meeting][:protocol_head_url]
-    %table{style: "width: 100%; border: 0px;"}
-      %tr
-        %td{style: "text-align: center"}
-          %h3
-            ="«#{t(:label_meeting_protocol_head_agreed)}»"
-            %br
-        %td{style: "text-align: center"}
-          %h3
-            ="«#{t(:label_meeting_protocol_head_approved)}»"
-            %br
-      %tr
-        %td{style: "text-align: center"}
-          - approvers = @object.meeting_approvers.reject(&:deleted)
-          - if approvers.any?
-            - approvers.each do |approver|
-              %h3
-                #{Person.find(approver.user_id)}/_________
-                %br
-          - else
-            %h3
-              ___________________/_________
-              %br
-        %td{style: "text-align: center"}
-          %h3
-            - if @object.asserter.present?
-              #{@object.asserter}/_________
-            - else
-              ___________________/_________
-            %br
+= render partial: 'head_for_print'
 
 %h2.hide-when-print
   = link_to l(:label_meeting_agenda_plural), action: 'index'
@@ -108,35 +78,37 @@
       %td= link_to_protocol(@object)
 
 %h3= l(:field_meeting_members)+":"
-%table.list.issues
-  %tr
-    %th=l(:field_company)
-    %th=l(:field_job_title)
-    %th=l(:field_member)
-    %th.hide-when-print=l(:field_status)
-  - @object.meeting_members.each do |member|
-    %tr.issue
-      %td= h member.user.company rescue ""
-      %td{style: "white-space: pre-line; width: 33%"}= h member.user.job_title rescue ""
-      %td= link_to_user(member.user)
-      %td.hide-when-print= link_to(member.issue.try(:status), controller: 'issues', action: 'show', id: member.issue_id) rescue h l(:label_meeting_member_was_not_invite)
-
-- if @object.contacts.any?
-  %h3= l(:field_meeting_contacts)+":"
+.autoscroll
   %table.list.issues
     %tr
       %th=l(:field_company)
       %th=l(:field_job_title)
-      %th=l(:field_phone)
-      %th=l(:field_email)
-      %th=l(:field_contact)
-    - @object.contacts.each do |contact|
+      %th=l(:field_member)
+      %th.hide-when-print=l(:field_status)
+    - @object.meeting_members.each do |member|
       %tr.issue
-        %td{style: "white-space: pre-line; width: 20%"}= h contact.company
-        %td{style: "white-space: pre-line; width: 20%"}= h contact.job_title
-        %td{style: "white-space: pre-line; width: 20%"}= h contact.phone
-        %td{style: "white-space: pre-line; width: 20%"}= mail_to(h contact.email)
-        %td{style: "white-space: pre-line; width: 25%"}= link_to_contact(contact)
+        %td= h member.user.company rescue ""
+        %td{style: "white-space: pre-line; width: 33%"}= h member.user.job_title rescue ""
+        %td= link_to_user(member.user)
+        %td.hide-when-print= link_to(member.issue.try(:status), controller: 'issues', action: 'show', id: member.issue_id) rescue h l(:label_meeting_member_was_not_invite)
+
+- if @object.contacts.any?
+  %h3= l(:field_meeting_contacts)+":"
+  .autoscroll
+    %table.list.issues
+      %tr
+        %th=l(:field_company)
+        %th=l(:field_job_title)
+        %th=l(:field_phone)
+        %th=l(:field_email)
+        %th=l(:field_contact)
+      - @object.contacts.each do |contact|
+        %tr.issue
+          %td{style: "white-space: pre-line; width: 20%"}= h contact.company
+          %td{style: "white-space: pre-line; width: 20%"}= h contact.job_title
+          %td{style: "white-space: pre-line; width: 20%"}= h contact.phone
+          %td{style: "white-space: pre-line; width: 20%"}= mail_to(h contact.email)
+          %td{style: "white-space: pre-line; width: 25%"}= link_to_contact(contact)
 
 %br
 

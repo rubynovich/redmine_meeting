@@ -9,6 +9,7 @@ class MeetingAgenda < ActiveRecord::Base
   belongs_to :meeting_room_reserve, dependent: :destroy
   belongs_to :external_company, class_name: 'Contact', foreign_key: 'external_company_id'
   belongs_to :asserter, class_name: 'Person', foreign_key: 'asserter_id'
+  belongs_to :meeting_company
   has_one :meeting_protocol
   has_many :meeting_questions, dependent: :delete_all, order: :position
   has_many :issues, through: :meeting_questions, order: :id, uniq: true
@@ -39,10 +40,11 @@ class MeetingAgenda < ActiveRecord::Base
   attr_accessible :meeting_questions_attributes
   attr_accessible :meeting_contacts_attributes
   attr_accessible :meeting_watchers_attributes
-  attr_accessible :subject, :place, :meet_on, :start_time, :end_time, :priority_id, :external_company_id, :is_external, :asserter_id
+  attr_accessible :subject, :place, :meet_on, :start_time, :end_time, :priority_id, :external_company_id
+  attr_accessible :is_external, :asserter_id, :meeting_company_id
 
   validates_uniqueness_of :subject, scope: :meet_on
-  validates_presence_of :subject, :meet_on, :start_time, :end_time, :priority_id, :place
+  validates_presence_of :subject, :meet_on, :start_time, :end_time, :priority_id, :place, :meeting_company_id
   validates_presence_of :external_company_id, if: -> { self.is_external? }
   validate :end_time_less_than_start_time, if: -> { self.start_time && self.end_time && (self.end_time <= self.start_time) }
   validate :meet_on_less_than_today, if: -> { self.meet_on && (self.meet_on < Date.today) }
@@ -91,7 +93,6 @@ class MeetingAgenda < ActiveRecord::Base
       joins(meeting_questions: :issue).where("issues.project_id = ?", q)
     end
   }
-
 
   def attachments_visible?(user=User.current)
     true

@@ -1,0 +1,45 @@
+.show-when-print
+  %table{style: "width: 100%; border: 0px; margin-bottom: 42px", cellpadding: 0, cellspacing: 0}
+    %tr
+      %td{colspan: 4, align: "center"}
+        = image_tag @object.meeting_company.logo
+    %tr
+      %td{align: "center", style: "border-top-style:solid; border-top-width:2px;"}=h @object.meeting_company.fact_address
+      %td{align: "center", style: "border-top-style:solid; border-top-width:2px;"}=h @object.meeting_company.phone
+      %td{align: "center", style: "border-top-style:solid; border-top-width:2px;"}=h @object.meeting_company.fax
+      %td{align: "center", style: "border-top-style:solid; border-top-width:2px;"}=h @object.meeting_company.email
+    %tr
+      %td{align: "center"}=h @object.meeting_company.okpo
+      %td{align: "center"}=h @object.meeting_company.inn
+      %td{align: "center"}=h @object.meeting_company.kpp
+      %td{align: "center"}=h @object.meeting_company.ogrn
+
+  %table{style: "width: 100%; border: 0px;"}
+    %tr
+      %td{style: "text-align: center"}
+        %h3
+          ="«#{t(:label_meeting_protocol_head_agreed)}»"
+          %br
+      %td{style: "text-align: center"}
+        %h3
+          ="«#{t(:label_meeting_protocol_head_approved)}»"
+          %br
+    %tr
+      %td{style: "text-align: center"}
+        - approvers = @object.meeting_approvers.reject(&:deleted)
+        - if approvers.any?
+          - approvers.each do |approver|
+            %h3
+              #{Person.find(approver.user_id)}/_________
+              %br
+        - else
+          %h3
+            ___________________/_________
+            %br
+      %td{style: "text-align: center"}
+        %h3
+          - if @object.asserter.present?
+            #{@object.asserter}/_________
+          - else
+            ___________________/_________
+          %br

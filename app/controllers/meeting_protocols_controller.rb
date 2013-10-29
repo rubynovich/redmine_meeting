@@ -90,7 +90,8 @@ class MeetingProtocolsController < ApplicationController
     session[:meeting_contact_ids] = @object.meeting_agenda.contact_ids
 #    session[:meeting_watcher_ids] = @object.meeting_agenda.watcher_ids
     nested_objects_from_session
-
+    @object.meeting_company = @object.meeting_agenda.meeting_company
+    @object.asserter = @object.meeting_agenda.asserter
 #    @object.meeting_answers_attributes = @object.meeting_agenda.meeting_questions.map do |question|
 #      {meeting_question_id: question.id, reporter_id: question.user_id}
 #    end

@@ -20,6 +20,10 @@
       %p
         = f.label :asserter
         = f.collection_select :asserter_id, User.active.sorted, :id, :name, prompt: t(:prompt_please_select)
+      %p
+        = f.label :meeting_company
+        = f.collection_select :meeting_company_id, MeetingCompany.sorted, :id, :name, prompt: t(:prompt_please_select)
+
 
   %h3{style: "margin-top: 33px"}=l :label_meeting_answer_plural
   = f.fields_for :meeting_answers

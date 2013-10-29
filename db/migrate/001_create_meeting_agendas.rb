@@ -7,6 +7,8 @@ class CreateMeetingAgendas < ActiveRecord::Migration
       t.references :meeting_room_reserve
       t.boolean :is_external, default: false
       t.integer :external_company_id
+      t.integer :asserter_id
+      t.integer :meeting_company_id
       t.date :meet_on
       t.time :start_time
       t.time :end_time

@@ -1,0 +1,15 @@
+.box.tabular
+  .contextual
+    = f.link_to_remove l(:button_delete), class: "icon icon-del"
+  .splitcontentleft
+    %p
+      = f.label :name, class: 'necessary'
+      = f.text_field :name, size: 100, style: 'width: 80%'
+  .splitcontentright
+    %p
+      = f.label :amount, class: 'necessary'
+      = f.text_field :amount, size: 6
+  %div{:style=>"clear:both"}
+  %p
+    = f.label :description, t(:label_building_project_description), class: 'necessary'
+    = f.text_area :description, cols: 60, rows: 15, class: 'wiki-edit'
