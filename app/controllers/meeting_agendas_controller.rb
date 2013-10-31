@@ -137,16 +137,12 @@ class MeetingAgendasController < ApplicationController
     @old_object = MeetingProtocol.find(params[:meeting_protocol_id])
     @object = MeetingAgenda.new(@old_object.meeting_agenda.attributes.merge(@old_object.attributes))
     @object.meeting_questions_attributes = @old_object.meeting_answers.inject({}){ |result, item|
-      result.update((i+=1) => {title: item.description, issue_id: item.issue_id, user_id: item.reporter.try(:id)})
+      result.update((i+=1) => {title: item.description, issue_id: item.issue_id, user_id: item.reporter_id})
     }
     session[:meeting_member_ids] = (@old_object.meeting_agenda.user_ids + [User.current.id]).uniq
     session[:meeting_contact_ids] = @old_object.meeting_agenda.contact_ids
     session[:meeting_watcher_ids] = @old_object.meeting_agenda.watcher_ids
-
-    @users = User.active.sorted.find(session[:meeting_member_ids])
-    @contacts = Contact.order_by_name.find(session[:meeting_contact_ids])
-    @watchers = User.active.sorted.find(session[:meeting_watcher_ids])
-
+    nested_objects_from_session
     render action: 'new'
   end
 
@@ -203,9 +199,9 @@ private
   end
 
   def nested_objects_from_session
-    @users = User.active.sorted.find(session[:meeting_member_ids])
-    @contacts = Contact.order_by_name.find(session[:meeting_contact_ids])
-    @watchers = User.active.sorted.find(session[:meeting_watcher_ids])
+    @users = User.active.sorted.where(id: session[:meeting_member_ids])
+    @contacts = Contact.order_by_name.where(id: session[:meeting_contact_ids])
+    @watchers = User.active.sorted.where(id: session[:meeting_watcher_ids])
   end
 
   def nested_objects_from_database

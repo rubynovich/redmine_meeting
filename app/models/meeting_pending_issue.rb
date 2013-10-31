@@ -15,7 +15,7 @@ class MeetingPendingIssue < ActiveRecord::Base
 #  validates_presence_of :issue_note, if: ->(o) { o.tracker_id.blank? }
   validates_presence_of :author_id, :meeting_container_id, :meeting_container_type
 #  validate :can_update_issue, if: -> { self.tracker_id.blank? }
-  validate :can_create_issue, if: -> { self.tracker_id.present? }
+  validate :can_create_issue, if: ->(object) { object.tracker.present? }
 
 
   def watched_by?(user)

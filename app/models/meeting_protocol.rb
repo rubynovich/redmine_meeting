@@ -41,7 +41,7 @@ class MeetingProtocol < ActiveRecord::Base
   after_save :add_time_entry_to_invites
 
   validates_uniqueness_of :meeting_agenda_id
-  validates_presence_of :meeting_agenda_id, :meeting_company_id
+  validates_presence_of :meeting_agenda_id
   validate :presence_of_meeting_answers, if: -> {self.meeting_answers.blank?}
   validate :presence_of_meeting_participators, if: -> {self.meeting_participators.blank?}
   validate :presence_of_start_time, if: -> {self.start_time.blank? || self.start_time.seconds_since_midnight.zero?}

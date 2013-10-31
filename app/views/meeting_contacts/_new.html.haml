@@ -26,6 +26,8 @@
   #contacts_for_meeting_container
     = principals_check_box_tags 'meeting_container[contact_ids][]', @no_contacts
 
+  = link_to l(:label_contact_new), {controller: 'contacts', action: 'new', project_id: Setting[:plugin_redmine_meeting][:project_id], back_url: params}, class: 'icon icon-add'
+
   %p.buttons
-    = submit_tag l(:button_add), :name => nil, :onclick => "hideModal(this);"
-    = submit_tag l(:button_cancel), :name => nil, :onclick => "hideModal(this);", :type => 'button'
+    = submit_tag l(:button_add), name: nil, onclick: "hideModal(this);"
+    = submit_tag l(:button_cancel), name: nil, onclick: "hideModal(this);", type: 'button'
