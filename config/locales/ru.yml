@@ -98,7 +98,7 @@ ru:
   message_participate_in_the_meeting: "Участие в собрании"
   button_create_agenda: "Сформировать повестку на основании протокола"
   label_meeting_questions_group: "Группировать вопросы по проектам"
-  label_meeting_questions_ungroup: "Рагруппировать вопросы"
+  label_meeting_questions_ungroup: "Разгруппировать вопросы"
   label_grouping: "Группировка"
   label_is_external_meeting: "Выездное совещание"
   field_external_company: "Компания"
