@@ -1,6 +1,6 @@
 - questions.each do |question|
   %tr.issue{style: (question.meeting_comments.present? ? "background: #fff0f5" : "")}
-    %td.subject{onclick: "$('#comments_block_for_#{question.id}').toggle();"}=textilizable(question, :title)
+    %td.subject{onclick: "$('#comments_block_for_#{question.id}').toggle();"}=h question.title
     %td.hide-when-print{width: '80px'}= reorder_links('meeting_question', {controller: 'meeting_questions', action: 'update', id: question, remote: true}, :put)
     %td.subject{onclick: "$('#comments_block_for_#{question.id}').toggle();"}
       - if question.issue.present?
@@ -20,6 +20,10 @@
     %td.hide-when-print{width: '80px', onclick: "$('#comments_block_for_#{question.id}').toggle();"}
       - if question.issue.present?
         = progress_bar(question.issue.done_ratio, width: '80px')
+  - if question.description.present?
+    %tr
+      %td{colspan: 8}
+        = textilizable(question, :description)
   - if can_show_comments?(@object)
     %tr.hide-when-print{id: "comments_block_for_#{question.id}", style: 'display: none;'}
       %td{colspan: 7}

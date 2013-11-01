@@ -121,6 +121,7 @@ ru:
   label_meeting_protocol_head_agreed: "СОГЛАСОВАНО"
   label_meeting_protocol_head_approved: "УТВЕРЖДАЮ"
   field_meeting_company: "Компания"
+  label_meeting_question_description: "Пояснения к вопросу"
 
   label_period: Период
   label_period_any: любой

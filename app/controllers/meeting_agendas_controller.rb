@@ -136,8 +136,8 @@ class MeetingAgendasController < ApplicationController
     i = -1
     @old_object = MeetingProtocol.find(params[:meeting_protocol_id])
     @object = MeetingAgenda.new(@old_object.meeting_agenda.attributes.merge(@old_object.attributes))
-    @object.meeting_questions_attributes = @old_object.meeting_answers.inject({}){ |result, item|
-      result.update((i+=1) => {title: item.description, issue_id: item.issue_id, user_id: item.reporter_id})
+    @object.meeting_questions_attributes = @old_object.all_meeting_answers.inject({}){ |result, item|
+      result.update((i+=1) => {title: item.meeting_question.to_s, description: item.description, issue_id: item.issue_id, user_id: item.reporter_id})
     }
     session[:meeting_member_ids] = (@old_object.meeting_agenda.user_ids + [User.current.id]).uniq
     session[:meeting_contact_ids] = @old_object.meeting_agenda.contact_ids
