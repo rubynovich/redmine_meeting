@@ -182,7 +182,7 @@ ru:
   objects_meeting_company:
   - id: 1
     name: "ООО «ГорКапСтрой»"
-    logo: "https://project.u-k-s.ru/attachments/download/57639/gorkapstroy.png"
+    logo: "https://dl.dropboxusercontent.com/u/2173392/gorkapstroy.png"
     fact_address: "115088, 2-й Южнопортовый проезд, д.18, стр.2"
     okpo: "ОКПО 98911555"
     ogrn: "ОГРН 1067760942534"
@@ -194,7 +194,7 @@ ru:
     site: "http://gorkapstroy.ru"
   - id: 2
     name: "ООО «НВК-Холдинг»"
-    logo: "http://project/attachments/download/57638/nvkholding.png"
+    logo: "https://dl.dropboxusercontent.com/u/2173392/nvkholding.png"
     fact_address: "115088, 2-й Южнопортовый проезд, д.18, стр.2"
     okpo: "ОКПО 80839886"
     ogrn: "ОГРН 5077746749757"
@@ -206,7 +206,7 @@ ru:
     site: "http://www.nvkholding.ru"
   - id: 3
     name: "ООО «НПП Строительство»"
-    logo: "https://project.u-k-s.ru/attachments/download/57641/stroica.png"
+    logo: "https://dl.dropboxusercontent.com/u/2173392/stroica.png"
     fact_address: "115088, 2-й Южнопортовый проезд, д.18, стр.2"
     okpo: "ОКПО 91483234"
     ogrn: "ОГРН 1117746307932"
@@ -218,7 +218,7 @@ ru:
     site: "http://www.stroica.ru"
   - id: 4
     name: "ООО «ЭТП СтройТорги»"
-    logo: "https://project.u-k-s.ru/attachments/download/57640/stroitorgi.png"
+    logo: "https://dl.dropboxusercontent.com/u/2173392/stroitorgi.png"
     fact_address: "115088, 2-й Южнопортовый проезд, д.16, стр.6"
     okpo: "ОКПО 30256300"
     ogrn: "ОГРН 1117746744917"
