@@ -28,7 +28,7 @@ class MeetingPendingIssue < ActiveRecord::Base
 
   def done_ratio
     if self.meeting_container.issue_id && self.executed?
-      self.issue.done_ratio
+      self.meeting_container.issue.done_ratio
     else
       0
     end
