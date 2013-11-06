@@ -25,7 +25,7 @@
             %td=format_date(answer.issue.start_date)
             %td=format_date(answer.issue.due_date)
             %td=h(answer.issue.status)
-                        %td=t(answer.issue_type || 'new', scope: :label_meeting_issue_type_pending_statuses)
+            %td=t(answer.issue_type || 'new', scope: :label_meeting_issue_type_pending_statuses)
             %td.hide-when-show
               - if can_destroy_issue?(answer)
                 =link_to l(:button_dettach), {controller: 'meeting_issues', action: 'destroy', meeting_answer_type: answer.class, id: answer.id}, confirm: l(:text_are_you_sure), method: :delete, remote: true, class: 'icon icon-del'
