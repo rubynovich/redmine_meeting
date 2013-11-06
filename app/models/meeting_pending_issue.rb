@@ -49,7 +49,15 @@ class MeetingPendingIssue < ActiveRecord::Base
     issue.author = self.author
     issue.parent_issue_id = self.parent_issue_id
     unless issue.valid?
-      errors = issue.errors
+      copy_errors_from(issue.errors)
+    end
+  end
+
+  def copy_errors_from(object)
+    object.errors.instance_eval{ @messages }.each do |field, array|
+      array.each do |message|
+        errors.add(field, message)
+      end
     end
   end
 
