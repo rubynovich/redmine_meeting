@@ -26,13 +26,13 @@ class MeetingPendingIssue < ActiveRecord::Base
     "issue tracker-#{tracker_id} status-#{status_id} #{priority.try(:css_classes)}"
   end
 
-  def done_ratio
-    if self.meeting_container.issue_id && self.executed?
-      Issue.find(self.meeting_container.issue_id).done_ratio
-    else
-      0
-    end
-  end
+#  def done_ratio
+#    if self.meeting_container.issue_id && self.executed?
+#      Issue.find(self.meeting_container.issue_id).done_ratio
+#    else
+#      0
+#    end
+#  end
 
 #  def can_update_issue
 #    if issue = self.meeting_container.issue
