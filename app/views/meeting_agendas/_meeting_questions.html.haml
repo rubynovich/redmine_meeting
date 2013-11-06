@@ -10,7 +10,7 @@
           %th=l(:field_status)
           %th=l(:field_start_date)
           %th=l(:field_due_date)
-          %th.hide-when-print=l(:field_done_ratio)
+          %th=l(:field_assigned_to)
       %tbody
         - if session[:meeting_agenda_ungrouped].present?
           = render partial: 'meeting_agendas/questions_list', locals: {questions: @object.meeting_questions}

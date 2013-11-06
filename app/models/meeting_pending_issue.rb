@@ -8,7 +8,7 @@ class MeetingPendingIssue < ActiveRecord::Base
   belongs_to :tracker, class_name: 'Tracker', foreign_key: 'tracker_id'
   belongs_to :priority, class_name: 'IssuePriority', foreign_key: 'priority_id'
   belongs_to :status, class_name: 'IssueStatus', foreign_key: 'status_id'
-  has_one :issue, through: :meeting_container
+#  has_one :issue, through: :meeting_container
 
   validates_uniqueness_of :meeting_container_id, scope: :meeting_container_type
 #  validates_presence_of :subject, :project_id, if: ->(o) { o.issue_note.blank? }
@@ -28,7 +28,7 @@ class MeetingPendingIssue < ActiveRecord::Base
 
   def done_ratio
     if self.meeting_container.issue_id && self.executed?
-      self.meeting_container.issue.done_ratio
+      Issue.find(self.meeting_container.issue_id).done_ratio
     else
       0
     end

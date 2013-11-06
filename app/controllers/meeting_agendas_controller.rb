@@ -16,6 +16,13 @@ class MeetingAgendasController < ApplicationController
 
   def show
     (render_403; return false) unless can_show_agenda?(@object)
+    respond_to do |format|
+      format.pdf {
+        filename = (@object.meet_on.strftime("meeting_agenda_%04d_%Y-%m-%d.pdf") % [@object.id])
+        send_data MeetingAgendaReport.new.to_pdf(@object), filename: filename, type: "application/pdf", disposition: "inline"
+      }
+      format.html
+    end
   end
 
   def group
