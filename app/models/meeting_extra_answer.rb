@@ -16,6 +16,9 @@ class MeetingExtraAnswer < ActiveRecord::Base
   has_many :users, through: :meeting_protocol, uniq: true
 
   validates_presence_of :reporter_id, :user_id, :description, :start_date, :due_date, :meeting_question_name
+  validates :start_date, date: true
+  validates :due_date, date: true
+  validate :validate_due_date
 
   def meeting_question
     self.meeting_question_name
@@ -30,6 +33,17 @@ class MeetingExtraAnswer < ActiveRecord::Base
       super
     elsif self.pending_issue
       self.pending_issue
+    end
+  end
+
+private
+
+  def validate_due_date
+    if self.due_date && (self.due_date < Date.today)
+      errors.add :due_date, :greated_then_now
+    end
+    if self.due_date && self.start_date && (self.due_date < self.start_date)
+      errors.add :due_date, :greater_than_start_date
     end
   end
 end
