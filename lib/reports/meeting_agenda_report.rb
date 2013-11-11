@@ -114,7 +114,7 @@ class MeetingAgendaReport < Prawn::Document
         t.cells.size = 10
         t.cells.padding = [0,10,5,10]
         t.cells.align = :center
-#        t.cells.border_lines = [:dotted]*4
+        t.cells.border_lines = [:dotted]*4
         t.before_rendering_page do |page|
           page.row(0).font_style = :bold
           page.row(0).background_color = "DDDDDD"
@@ -146,15 +146,13 @@ class MeetingAgendaReport < Prawn::Document
           "#{question.issue.to_s.gsub('#','№')}",
           "#{question.user}",
           "#{question.status if question.issue}",
-          "#{format_date(Date.today)}",
-          "#{format_date(Date.today)}",
-#          "#{format_date(question.issue.start_date) if question.issue}",
-#          "#{format_date(question.issue.due_date) if question.issue}",
+          "#{format_date(question.issue.start_date) if question.issue}",
+          "#{format_date(question.issue.due_date) if question.issue}",
           "#{question.issue.assigned_to if question.issue}"]
         question_list << [{content: question.description, colspan: 7}] if question.description.present?
       end
 
-      table question_list, header: true, width: 580, position: :center, column_widths: {4 => 50, 5 => 55} do |t|
+      table question_list, header: true, width: 580, position: :center, column_widths: {4 => 50, 5 => 57} do |t|
         t.cells.size = 8
 #        t.cells.border_lines = [:dotted]*4
         t.cells.padding = [0,5,5,5]
