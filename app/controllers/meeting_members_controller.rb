@@ -22,7 +22,7 @@ class MeetingMembersController < ApplicationController
       @object.save
       @object.users
     else
-      session[:meeting_member_ids] = (members + session[:meeting_member_ids]).uniq
+      session[:meeting_member_ids] = (members + session[:meeting_member_ids]).map(&:to_i).uniq
       User.order(:lastname, :firstname).find(session[:meeting_member_ids])
     end
 

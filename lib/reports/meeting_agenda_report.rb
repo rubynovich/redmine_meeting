@@ -73,44 +73,122 @@ class MeetingAgendaReport < Prawn::Document
         t.position = :center
         t.header = false
         t.width = 580
-        t.cells.border_width = 1
+        t.cells.border_width = 0
         t.cells.size = 10
         t.cells.style = :italic
-        t.cells.align = :right
+#        t.cells.align = :right
         t.cells.valign = :middle
-        t.cells.padding = [0,0,0,0]
+        t.cells.padding = [5,20,0,20]
         t.before_rendering_page do |page|
-          page.row(0).align = :center
-          page.row(0).style = :bold
+          page.column(0).align = :left
+          page.column(2).align = :right
+          page.row(0).font_style = :bold
         end
     end
-    move_down 20
+    move_down 5
 
-    text(l(:label_meeting_agenda) + " №#{agenda.id}", style: :bold, size: 22, align: :center)
-
-    move_down 10
+    text((agenda.is_external? ? l(:label_external_meeting_agenda) : l(:label_meeting_agenda)) + " №#{agenda.id}", style: :bold, size: 22, align: :center)
+#    move_down 10
 
     text("<b>#{l(:field_subject)}:</b> <i>#{agenda.subject}</i>", size: 10, inline_format: true)
+    text("<b>#{l(:field_external_company)}:</b> <i>#{agenda.external_company}</i>", size: 10, inline_format: true) if agenda.is_external?
+    text("<b>#{agenda.is_external? ? l(:field_address) : l(:field_place)}:</b> <i>#{agenda.place}</i>", size: 10, inline_format: true)
+    text("<b>#{l(:field_meet_on)}:</b> <i>#{format_date(agenda.meet_on)}</i>", size: 10, inline_format: true)
+    text("<b>#{l(:label_meeting_agenda_time)}:</b> <i>#{format_time(agenda.start_time, false)} - #{format_time(agenda.end_time, false)}</i>", size: 10, inline_format: true)
+    text("<b>#{l(:field_author)}:</b> <i>#{agenda.author}</i>", size: 10, inline_format: true)
+    move_down 10
 
-#    text l(:label_invoice), style: :bold, size: 30
-#    lines = invoice.lines.map do |line|
-#      [
-#        line.position,
-#        line.description,
-#        line.quantity,
-#        line.price,
-#        line.total
-#      ]
-#    end
-#    lines.insert(0,[l(:field_invoice_line_position),
-#                   l(:field_invoice_line_description),
-#                   l(:field_invoice_line_quantity),
-#                   l(:field_invoice_line_price),
-#                   l(:field_invoice_line_total) ])
+    text("#{l(:field_meeting_members)}:", size: 13, style: :bold)
+    move_down 5
 
-#    table lines,
-#      :row_colors => ["FFFFFF", "DDDDDD"],
-#      :header => true
+    meeting_members = agenda.users.map do |mm|
+      [
+        mm.company,
+        mm.job_title,
+        mm.name
+      ]
+    end
+    meeting_members.insert(0,[l(:field_company), l(:field_job_title), l(:field_member)])
+
+    table meeting_members, header: true, width: 540, position: :center do |t|
+        t.cells.size = 10
+        t.cells.padding = [0,10,5,10]
+        t.cells.align = :center
+#        t.cells.border_lines = [:dotted]*4
+        t.before_rendering_page do |page|
+          page.row(0).font_style = :bold
+          page.row(0).background_color = "DDDDDD"
+          page.row(0).align = :center
+        end
+    end
+    move_down 10
+
+    text("#{l(:label_meeting_question_plural)}:", size: 13, style: :bold)
+#    move_down 5
+
+    agenda.meeting_questions.group_by(&:project).sort_by{ |project, questions| project.to_s }.each do |project, questions|
+      move_down 5
+      text("#{project || l(:label_without_project)}", size: 10, style: :bold, align: :center)
+#      move_down 5
+
+      question_list = [[
+        l(:label_meeting_question_title),
+        l(:field_issue),
+        l(:label_meeting_question_user),
+        l(:field_status),
+        l(:field_start_date),
+        l(:field_due_date),
+        l(:field_assigned_to)]]
+
+      questions.each do |question|
+        question_list << [
+          "#{question}",
+          "#{question.issue.to_s.gsub('#','№')}",
+          "#{question.user}",
+          "#{question.status if question.issue}",
+          "#{format_date(Date.today)}",
+          "#{format_date(Date.today)}",
+#          "#{format_date(question.issue.start_date) if question.issue}",
+#          "#{format_date(question.issue.due_date) if question.issue}",
+          "#{question.issue.assigned_to if question.issue}"]
+        question_list << [{content: question.description, colspan: 7}] if question.description.present?
+      end
+
+      table question_list, header: true, width: 580, position: :center, column_widths: {4 => 50, 5 => 55} do |t|
+        t.cells.size = 8
+#        t.cells.border_lines = [:dotted]*4
+        t.cells.padding = [0,5,5,5]
+        t.before_rendering_page do |page|
+          page.column(0).align = :left
+          page.column(1).align = :left
+          page.column(2).align = :center
+          page.column(2).valign = :center
+          page.column(3).align = :center
+          page.column(3).valign = :center
+          page.column(4).align = :center
+          page.column(4).valign = :center
+          page.column(5).align = :center
+          page.column(5).valign = :center
+          page.column(6).align = :center
+          page.column(6).valign = :center
+          page.row(0).font_style = :bold
+          page.row(0).background_color = "DDDDDD"
+          page.row(0).align = :center
+          page.row(0).valign = :center
+        end
+      end
+    end
+
+    page_options = {
+      align: :right,
+      start_count_at: 1,
+      size: 8,
+      family: 'Callibri',
+      at: [bounds.right - 100, 0],
+      inline_format: true
+    }
+
+    number_pages l(:label_page_counter), page_options
 
     render
   end

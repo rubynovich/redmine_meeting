@@ -15,6 +15,7 @@ ru:
   label_meeting_agenda_show_all: "Посмотреть все повестки совещаний"
   label_meeting_agenda_start_time: "Время начала"
   label_meeting_agenda_end_time: "Время окончания"
+  label_meeting_agenda_time: "Время проведения"
   label_meeting_question: "Рассмотренный вопрос"
   label_meeting_question_plural: "Вопросы на рассмотрение"
   label_meeting_question_title: "Вопрос"
@@ -122,6 +123,7 @@ ru:
   label_meeting_protocol_head_approved: "УТВЕРЖДАЮ"
   field_meeting_company: "Компания"
   label_meeting_question_description: "Пояснения к вопросу"
+  label_page_counter: "Страница <page> из <total>"
 
   label_period: Период
   label_period_any: любой
