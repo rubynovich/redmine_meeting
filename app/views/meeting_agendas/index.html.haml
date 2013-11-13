@@ -34,6 +34,7 @@
             %td{align: 'center'}= format_time(item.created_on)
             %td{align: 'center'}= link_to_protocol(item)
             %td.buttons
+              = render :partial=>'online_meetings/agenda_actions', :local=>item rescue nil
               - if can_update_agenda?(item)
                 = link_to l(:button_update), {action: 'edit', id: item.id}, class: 'icon icon-edit'
               - if can_destroy_agenda?(item)
