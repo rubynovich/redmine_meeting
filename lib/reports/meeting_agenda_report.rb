@@ -4,14 +4,43 @@ class MeetingAgendaReport < Prawn::Document
 
   include Redmine::I18n
 
-  # unloadable
+  def to_pdf(object)
+    set_font_families
+    set_page_counter
 
-  # def initialize(invoice)
-  #   @invoice = invoice
-  #
-  # end
+    # Логотип и информация о компании
+    if object.meeting_company.present?
+      print_company_info(object.meeting_company)
+      move_down 20
+    end
 
-  def to_pdf(agenda)
+    # Информация с согласующими и утверждающим
+    print_approval_list(object.approvers, object.asserter)
+    move_down 5
+
+    # Информация о совещании (номер) и повестке (дата, время, место, адрес и тд)
+    print_agenda_fields(object)
+    move_down 10
+
+    # Приглашенные участники совещания
+    print_meeting_members(object.users)
+    move_down 10
+
+    # Внешние участники совещания
+    if object.contacts.any?
+      print_meeting_contacts(object.contacts)
+      move_down 10
+    end
+
+    # Вопросы совещания
+    print_meeting_questions(object.meeting_questions)
+
+    render
+  end
+
+private
+
+  def set_font_families
     fonts_path = "#{Rails.root}/plugins/redmine_meeting/lib/fonts/"
     font_families.update(
            "FreeSans" => { bold: fonts_path + "FreeSansBold.ttf",
@@ -23,22 +52,36 @@ class MeetingAgendaReport < Prawn::Document
                            bold_italic: fonts_path + "CALIBRIZ.TTF",
                            normal: fonts_path + "CALIBRI.TTF"}
                            )
-
     font "Calibri"
+  end
 
-    image open(agenda.meeting_company.logo), vposition: :top, position: :center, fit: [400, 580]
+  def set_page_counter
+    page_options = {
+      align: :right,
+      start_count_at: 1,
+      size: 8,
+      family: 'Callibri',
+      at: [bounds.right - 100, 0],
+      inline_format: true
+    }
+
+    number_pages l(:label_page_counter), page_options
+  end
+
+  def print_company_info(company)
+    image open(company.logo), vposition: :top, position: :center, fit: [400, 580]
 
     company_details = [
       [
-        agenda.meeting_company.fact_address,
-        agenda.meeting_company.phone,
-        agenda.meeting_company.fax,
-        agenda.meeting_company.email
+        company.fact_address,
+        company.phone,
+        company.fax,
+        company.email
       ], [
-        agenda.meeting_company.okpo,
-        agenda.meeting_company.inn,
-        agenda.meeting_company.kpp,
-        agenda.meeting_company.ogrn
+        company.okpo,
+        company.inn,
+        company.kpp,
+        company.ogrn
       ]
     ]
 
@@ -55,8 +98,9 @@ class MeetingAgendaReport < Prawn::Document
           page.row(0).border_top_width = 3
         end
     end
-    move_down 20
+  end
 
+  def print_approval_list(approvers, asserter)
     approval_list = [[
       {content: "«#{l(:label_meeting_protocol_head_agreed)}»"},
       nil,
@@ -64,29 +108,30 @@ class MeetingAgendaReport < Prawn::Document
     ]]
 
     default_field = "_________________"
-    agreed_list = (agenda.approvers.present? ? agenda.approvers : [default_field]).map{ |o| "#{o}/________/"}
-    approved_list = (agenda.asserter.present? ? [agenda.asserter] : [default_field]).map{ |o| "#{o}/________/"}
+    agreed_list = (approvers.present? ? approvers : [default_field]).map{ |o| "#{o}/________/"}
+    approved_list = (asserter.present? ? [asserter] : [default_field]).map{ |o| "#{o}/________/"}
 
     approval_list += agreed_list.zip([], approved_list)
 
     table approval_list do |t|
-        t.position = :center
-        t.header = false
-        t.width = 580
-        t.cells.border_width = 0
-        t.cells.size = 10
-        t.cells.style = :italic
+      t.position = :center
+      t.header = false
+      t.width = 580
+      t.cells.border_width = 0
+      t.cells.size = 10
+      t.cells.style = :italic
 #        t.cells.align = :right
-        t.cells.valign = :middle
-        t.cells.padding = [5,20,0,20]
-        t.before_rendering_page do |page|
-          page.column(0).align = :left
-          page.column(2).align = :right
-          page.row(0).font_style = :bold
-        end
+      t.cells.valign = :middle
+      t.cells.padding = [5,20,0,20]
+      t.before_rendering_page do |page|
+        page.column(0).align = :left
+        page.column(2).align = :right
+        page.row(0).font_style = :bold
+      end
     end
-    move_down 5
+  end
 
+  def print_agenda_fields(agenda)
     text((agenda.is_external? ? l(:label_external_meeting_agenda) : l(:label_meeting_agenda)) + " №#{agenda.id}", style: :bold, size: 22, align: :center)
 #    move_down 10
 
@@ -96,37 +141,13 @@ class MeetingAgendaReport < Prawn::Document
     text("<b>#{l(:field_meet_on)}:</b> <i>#{format_date(agenda.meet_on)}</i>", size: 10, inline_format: true)
     text("<b>#{l(:label_meeting_agenda_time)}:</b> <i>#{format_time(agenda.start_time, false)} - #{format_time(agenda.end_time, false)}</i>", size: 10, inline_format: true)
     text("<b>#{l(:field_author)}:</b> <i>#{agenda.author}</i>", size: 10, inline_format: true)
-    move_down 10
+  end
 
-    text("#{l(:field_meeting_members)}:", size: 13, style: :bold)
-    move_down 5
-
-    meeting_members = agenda.users.map do |mm|
-      [
-        mm.company,
-        mm.job_title,
-        mm.name
-      ]
-    end
-    meeting_members.insert(0,[l(:field_company), l(:field_job_title), l(:field_member)])
-
-    table meeting_members, header: true, width: 540, position: :center do |t|
-        t.cells.size = 10
-        t.cells.padding = [0,10,5,10]
-        t.cells.align = :center
-        t.cells.border_lines = [:dotted]*4
-        t.before_rendering_page do |page|
-          page.row(0).font_style = :bold
-          page.row(0).background_color = "DDDDDD"
-          page.row(0).align = :center
-        end
-    end
-    move_down 10
-
+  def print_meeting_questions(questions)
     text("#{l(:label_meeting_question_plural)}:", size: 13, style: :bold)
 #    move_down 5
 
-    agenda.meeting_questions.group_by(&:project).sort_by{ |project, questions| project.to_s }.each do |project, questions|
+    questions.group_by(&:project).sort_by{ |project, questions| project.to_s }.each do |project, questions|
       move_down 5
       text("#{project || l(:label_without_project)}", size: 10, style: :bold, align: :center)
 #      move_down 5
@@ -176,18 +197,65 @@ class MeetingAgendaReport < Prawn::Document
         end
       end
     end
+  end
 
-    page_options = {
-      align: :right,
-      start_count_at: 1,
-      size: 8,
-      family: 'Callibri',
-      at: [bounds.right - 100, 0],
-      inline_format: true
-    }
+  def print_meeting_contacts(contacts)
+    text("#{l(:field_meeting_contacts)}:", size: 13, style: :bold)
+    move_down 5
 
-    number_pages l(:label_page_counter), page_options
+    meeting_contacts = contacts.map do |contact|
+      [
+        contact.company,
+        contact.job_title,
+        contact.name
+      ]
+    end
 
-    render
+    meeting_members.insert(0, [
+      l(:field_company),
+      l(:field_job_title),
+      l(:field_contact)])
+
+    table meeting_members, header: true, width: 540, position: :center do |t|
+        t.cells.size = 10
+        t.cells.padding = [0,10,5,10]
+        t.cells.align = :center
+        t.cells.border_lines = [:dotted]*4
+        t.before_rendering_page do |page|
+          page.row(0).font_style = :bold
+          page.row(0).background_color = "DDDDDD"
+          page.row(0).align = :center
+        end
+    end
+  end
+
+  def print_meeting_members(users)
+    text("#{l(:field_meeting_members)}:", size: 13, style: :bold)
+    move_down 5
+
+    meeting_members = users.map do |user|
+      [
+        user.company,
+        user.job_title,
+        user.name
+      ]
+    end
+
+    meeting_members.insert(0, [
+      l(:field_company),
+      l(:field_job_title),
+      l(:field_member)])
+
+    table meeting_members, header: true, width: 540, position: :center do |t|
+        t.cells.size = 10
+        t.cells.padding = [0,10,5,10]
+        t.cells.align = :center
+        t.cells.border_lines = [:dotted]*4
+        t.before_rendering_page do |page|
+          page.row(0).font_style = :bold
+          page.row(0).background_color = "DDDDDD"
+          page.row(0).align = :center
+        end
+    end
   end
 end

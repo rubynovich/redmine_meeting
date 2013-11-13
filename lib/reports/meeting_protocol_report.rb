@@ -1,0 +1,249 @@
+# encoding: utf-8
+
+class MeetingProtocolReport < Prawn::Document
+
+  include Redmine::I18n
+
+  def to_pdf(object)
+    set_font_families
+    set_page_counter
+
+    # Логотип и информация о компании
+    if object.meeting_company.present?
+      print_company_info(object.meeting_company)
+      move_down 20
+    end
+
+    # Информация с согласующими и утверждающим
+    print_approval_list(object.approvers, object.asserter)
+    move_down 5
+
+    # Информация о совещании (номер) и протоколе (дата, время, место, адрес и тд)
+    print_protocol_fields(object)
+    move_down 10
+
+    # Фактические участники совещания
+    print_meeting_participators(object.meeting_agenda.users, object.users)
+    move_down 10
+
+    # Внешние участники совещания
+    if (object.meeting_agenda.contacts | object.contacts).any?
+      print_meeting_contacts(object.meeting_agenda.contacts, object.contacts)
+      move_down 10
+    end
+
+    # Решения по вопросам
+    print_meeting_answers(object.all_meeting_answers)
+
+    render
+  end
+
+private
+
+  def set_page_counter
+    page_options = {
+      align: :right,
+      start_count_at: 1,
+      size: 8,
+      family: 'Callibri',
+      at: [bounds.right - 100, 0],
+      inline_format: true
+    }
+
+    number_pages l(:label_page_counter), page_options
+  end
+
+  def set_font_families
+    fonts_path = "#{Rails.root}/plugins/redmine_meeting/lib/fonts/"
+    font_families.update(
+           "FreeSans" => { bold: fonts_path + "FreeSansBold.ttf",
+                           italic: fonts_path + "FreeSansOblique.ttf",
+                           bold_italic: fonts_path + "FreeSansBoldOblique.ttf",
+                           normal: fonts_path + "FreeSans.ttf" },
+            "Calibri" => { bold: fonts_path + "CALIBRIB.TTF",
+                           italic: fonts_path + "CALIBRII.TTF",
+                           bold_italic: fonts_path + "CALIBRIZ.TTF",
+                           normal: fonts_path + "CALIBRI.TTF"}
+                           )
+    font "Calibri"
+  end
+
+  def print_company_info(company)
+    image open(company.logo), vposition: :top, position: :center, fit: [400, 580]
+
+    company_details = [
+      [
+        company.fact_address,
+        company.phone,
+        company.fax,
+        company.email
+      ], [
+        company.okpo,
+        company.inn,
+        company.kpp,
+        company.ogrn
+      ]
+    ]
+
+    table company_details do |t|
+        t.position = :center
+        t.header = false
+        t.width = 580
+        t.cells.border_width = 0
+        t.cells.size = 8
+        t.cells.align = :center
+        t.cells.valign = :middle
+        t.cells.padding = [0,10,0,10]
+        t.before_rendering_page do |page|
+          page.row(0).border_top_width = 3
+        end
+    end
+  end
+
+  def print_approval_list(approvers, asserter)
+    approval_list = [[
+      {content: "«#{l(:label_meeting_protocol_head_agreed)}»"},
+      nil,
+      {content: "«#{l(:label_meeting_protocol_head_approved)}»"}
+    ]]
+
+    default_field = "_________________"
+    agreed_list = (approvers.present? ? approvers : [default_field]).map{ |o| "#{o}/________/"}
+    approved_list = (asserter.present? ? [asserter] : [default_field]).map{ |o| "#{o}/________/"}
+
+    approval_list += agreed_list.zip([], approved_list)
+
+    table approval_list do |t|
+      t.position = :center
+      t.header = false
+      t.width = 580
+      t.cells.border_width = 0
+      t.cells.size = 10
+      t.cells.style = :italic
+#        t.cells.align = :right
+      t.cells.valign = :middle
+      t.cells.padding = [5,20,0,20]
+      t.before_rendering_page do |page|
+        page.column(0).align = :left
+        page.column(2).align = :right
+        page.row(0).font_style = :bold
+      end
+    end
+  end
+
+  def print_protocol_fields(object)
+    text((object.is_external? ? l(:label_external_meeting_protocol) : l(:label_meeting_protocol)) + " №#{object.id}", style: :bold, size: 22, align: :center)
+#    move_down 10
+
+    text("<b>#{l(:field_subject)}:</b> <i>#{object.subject}</i>", size: 10, inline_format: true)
+    text("<b>#{l(:field_external_company)}:</b> <i>#{object.external_company}</i>", size: 10, inline_format: true) if object.is_external?
+    text("<b>#{object.is_external? ? l(:field_address) : l(:field_place)}:</b> <i>#{object.place}</i>", size: 10, inline_format: true)
+    text("<b>#{l(:field_meet_on)}:</b> <i>#{format_date(object.meet_on)}</i>", size: 10, inline_format: true)
+    move_up 13
+    text("<b>#{l(:label_meeting_agenda_time)}:</b> <i>#{format_time(object.start_time, false)} - #{format_time(object.end_time, false)}</i>", size: 10, inline_format: true, align: :center)
+    move_up 13
+    text("<b>#{l(:field_meeting_agenda)}:</b> <i>№#{object.meeting_agenda_id}</i>", size: 10, inline_format: true, align: :right)
+    text("<b>#{l(:field_author)}:</b> <i>#{object.author}</i>", size: 10, inline_format: true)
+  end
+
+  def print_meeting_participators(agenda_users, protocol_users)
+    text("#{l(:field_meeting_participators)}:", size: 13, style: :bold)
+    move_down 5
+
+    meeting_participators = (agenda_users|protocol_users).compact.sort_by(&:name).map do |user|
+      member = agenda_users.include?(user)
+      participator = protocol_users.include?(user)
+      status = if member && participator
+        l(:label_meeting_member_present)
+      elsif member
+        l(:label_meeting_member_blank)
+      elsif participator
+        l(:label_meeting_member_extra)
+      end
+
+      [
+        (user.company rescue ""),
+        (user.job_title rescue ""),
+        user.name,
+        status
+      ]
+    end
+
+    meeting_participators.insert(0,[l(:field_company), l(:field_job_title), l(:field_member), l(:label_meeting_invite_status)])
+
+    table meeting_participators, header: true, width: 540, position: :center do |t|
+        t.cells.size = 10
+        t.cells.padding = [0,10,5,10]
+        t.cells.align = :center
+        t.cells.border_lines = [:dotted]*4
+        t.before_rendering_page do |page|
+          page.row(0).font_style = :bold
+          page.row(0).background_color = "DDDDDD"
+          page.row(0).align = :center
+        end
+    end
+  end
+
+  def print_meeting_contacts(agenda_contacts, protocol_contacts)
+    text("#{l(:field_meeting_contacts)}:", size: 13, style: :bold)
+    move_down 5
+
+    meeting_contacts = (agenda_contacts|protocol_contacts).compact.sort_by(&:name).map do |contact|
+      member = agenda_contacts.include?(contact)
+      participator = protocol_contacts.include?(contact)
+      status = if member && participator
+        l(:label_meeting_member_present)
+      elsif member
+        l(:label_meeting_member_blank)
+      elsif participator
+        l(:label_meeting_member_extra)
+      end
+
+      [
+        (contact.company rescue ""),
+        (contact.job_title rescue ""),
+        contact.name,
+        status
+      ]
+    end
+
+    meeting_contacts.insert(0,[l(:field_company), l(:field_job_title), l(:field_member), l(:label_meeting_invite_status)])
+
+    table meeting_contacts, header: true, width: 540, position: :center do |t|
+        t.cells.size = 10
+        t.cells.padding = [0,10,5,10]
+        t.cells.align = :center
+        t.cells.border_lines = [:dotted]*4
+        t.before_rendering_page do |page|
+          page.row(0).font_style = :bold
+          page.row(0).background_color = "DDDDDD"
+          page.row(0).align = :center
+        end
+    end
+  end
+
+  def print_meeting_answers(answers)
+    text("#{l(:label_meeting_answer_plural)}:", size: 13, style: :bold)
+#    move_down 5
+
+    answers.group_by(&:project).sort_by{ |project, answers| project.to_s }.each do |project, answers|
+      move_down 5
+      text("#{project || l(:label_without_project)}", size: 11, style: :bold, align: :center)
+#      move_down 5
+      answers.each do |object|
+        text("<b>#{l(:label_meeting_question)}:</b> <i>#{object.meeting_question}</i>", size: 10, inline_format: true)
+        text("<b>#{l(:label_meeting_answer_reporter)}:</b> <i>#{object.reporter}</i>", size: 10, inline_format: true)
+        move_up 13
+        text("<b>#{l(:field_issue)}:</b> <i>№#{object.question_issue.id}</i>", size: 10, inline_format: true, align: :center) if object.question_issue.present?
+        text("<b>#{l(:label_meeting_answer)}:</b> <i>#{object.description}</i>", size: 10, inline_format: true)
+        text("<i>#{object.issue.to_s.gsub('#','№')}</i>", size: 10, inline_format: true) if object.issue_id.present?
+        text("<b>#{l(:label_meeting_answer_user)}:</b> <i>#{object.user}</i>", size: 10, inline_format: true)
+        move_up 13
+        text("<b>#{l(:field_start_date)}:</b> <i>#{format_date(object.start_date)}</i>", size: 10, inline_format: true, align: :center)
+        move_up 13
+        text("<b>#{l(:field_due_date)}:</b> <i>#{format_date(object.due_date)}</i>", size: 10, inline_format: true, align: :right)
+        move_down 10
+      end
+    end
+  end
+end
