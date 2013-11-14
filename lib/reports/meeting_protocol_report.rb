@@ -171,7 +171,7 @@ private
 
     meeting_participators.insert(0,[l(:field_company), l(:field_job_title), l(:field_member), l(:label_meeting_invite_status)])
 
-    table meeting_participators, header: true, width: 540, position: :center do |t|
+    table meeting_participators, header: true, width: 540, position: :center, column_widths: {3 => 100} do |t|
         t.cells.size = 10
         t.cells.padding = [0,10,5,10]
         t.cells.align = :center
@@ -237,7 +237,7 @@ private
           move_up 13
           text("<b>#{l(:field_issue)}:</b> <i>№#{object.question_issue.id}</i>", size: 10, inline_format: true, align: :center)
         end
-        text("<b>#{l(:label_meeting_answer)}:</b> <i>#{object.description.gsub(/[\n\r]{6,}/, "\n").gsub(/[\t ]+/, " ")}</i>", size: 10, inline_format: true)
+        text("<b>#{l(:label_meeting_answer)}:</b> <i>#{object.description.gsub(/[\t ]+/, " ")}</i>", size: 10, inline_format: true)
         text("<i>#{object.issue.to_s.gsub('#','№')}</i>", size: 10, inline_format: true) if object.issue_id.present?
         text("<b>#{l(:label_meeting_answer_user)}:</b> <i>#{object.user}</i>", size: 10, inline_format: true)
         move_up 13
