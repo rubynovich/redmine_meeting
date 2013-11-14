@@ -23,7 +23,7 @@ class MeetingParticipatorsController < ApplicationController
       @object.save
       @object.users
     else
-      session[session_sym] = (new_members + session[session_sym]).uniq
+      session[session_sym] = (new_members + session[session_sym]).map(&:to_i).uniq
       User.sorted.find(session[session_sym])
     end
 

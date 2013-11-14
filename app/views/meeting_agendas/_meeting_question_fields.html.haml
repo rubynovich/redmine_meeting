@@ -5,6 +5,9 @@
     = f.label :title, t(:label_meeting_question_title), class: 'necessary'
     = f.text_field :title, size: 255, style: "width: 90%"
   %p
+    = f.label :description, t(:label_meeting_question_description)
+    = f.text_area :description, cols: 60, rows: 15, class: 'wiki-edit', style: "width: 90%"
+  %p
     = f.label :project_id, t(:field_project)
     = f.collection_select :project_id, Project.active.visible.order(:name), :id, :name, include_blank: t(:prompt_please_select)
   .splitcontentleft

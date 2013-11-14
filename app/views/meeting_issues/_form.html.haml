@@ -24,7 +24,7 @@
     %div{style: "display: none;"}
       %p#watchers_form
         %span#watchers_inputs
-          = watchers_checkboxes(@issue, User.active.sorted)
+          = watchers_checkboxes(@issue, User.active.sorted, false)
   -#%p#watchers_form
     %label= l(:label_issue_watchers)
     %span#watchers_inputs

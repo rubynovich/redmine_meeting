@@ -8,7 +8,7 @@ class MeetingPendingIssue < ActiveRecord::Base
   belongs_to :tracker, class_name: 'Tracker', foreign_key: 'tracker_id'
   belongs_to :priority, class_name: 'IssuePriority', foreign_key: 'priority_id'
   belongs_to :status, class_name: 'IssueStatus', foreign_key: 'status_id'
-  has_one :issue, through: :meeting_container
+#  has_one :issue, through: :meeting_container
 
   validates_uniqueness_of :meeting_container_id, scope: :meeting_container_type
 #  validates_presence_of :subject, :project_id, if: ->(o) { o.issue_note.blank? }
@@ -26,13 +26,13 @@ class MeetingPendingIssue < ActiveRecord::Base
     "issue tracker-#{tracker_id} status-#{status_id} #{priority.try(:css_classes)}"
   end
 
-  def done_ratio
-    if self.meeting_container.issue_id && self.executed?
-      self.issue.done_ratio
-    else
-      0
-    end
-  end
+#  def done_ratio
+#    if self.meeting_container.issue_id && self.executed?
+#      Issue.find(self.meeting_container.issue_id).done_ratio
+#    else
+#      0
+#    end
+#  end
 
 #  def can_update_issue
 #    if issue = self.meeting_container.issue
@@ -49,7 +49,15 @@ class MeetingPendingIssue < ActiveRecord::Base
     issue.author = self.author
     issue.parent_issue_id = self.parent_issue_id
     unless issue.valid?
-      errors = issue.errors
+      copy_errors_from(issue)
+    end
+  end
+
+  def copy_errors_from(object)
+    object.errors.instance_eval{ @messages }.each do |field, array|
+      array.each do |message|
+        errors.add(field, message)
+      end
     end
   end
 

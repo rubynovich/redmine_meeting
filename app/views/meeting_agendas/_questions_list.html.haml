@@ -17,9 +17,13 @@
     %td{onclick: "$('#comments_block_for_#{question.id}').toggle();"}
       - if question.issue.present?
         =format_date(question.issue.due_date)
-    %td.hide-when-print{width: '80px', onclick: "$('#comments_block_for_#{question.id}').toggle();"}
+    %td{onclick: "$('#comments_block_for_#{question.id}').toggle();"}
       - if question.issue.present?
-        = progress_bar(question.issue.done_ratio, width: '80px')
+        = link_to_user question.issue.assigned_to
+  - if question.description.present?
+    %tr
+      %td{colspan: 8}
+        = textilizable(question, :description)
   - if can_show_comments?(@object)
     %tr.hide-when-print{id: "comments_block_for_#{question.id}", style: 'display: none;'}
       %td{colspan: 7}

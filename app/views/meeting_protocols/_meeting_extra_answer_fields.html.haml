@@ -5,7 +5,7 @@
     = f.label :meeting_question_name, t(:label_meeting_question), class: 'necessary'
     = f.text_field :meeting_question_name, size: 100, style: "width: 80%"
   %p
-    = f.label :reporter_id, t(:label_meeting_answer_reporter)
+    = f.label :reporter_id, t(:label_meeting_answer_reporter), class: 'necessary'
     = f.collection_select :reporter_id, User.active.order(:lastname, :firstname), :id, :to_s, include_blank: t(:prompt_please_select)
 
   %p

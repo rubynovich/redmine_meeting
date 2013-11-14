@@ -187,6 +187,10 @@
 .hide-when-print
   = link_to_attachments @object, thumbnails: true
 
+  - other_formats_links do |f|
+    = f.link_to 'PDF'
+
+
 - content_for :sidebar do
   = render partial: 'meeting_approvers/sidebar'
   :css

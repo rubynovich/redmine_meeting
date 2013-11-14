@@ -15,6 +15,7 @@ ru:
   label_meeting_agenda_show_all: "Посмотреть все повестки совещаний"
   label_meeting_agenda_start_time: "Время начала"
   label_meeting_agenda_end_time: "Время окончания"
+  label_meeting_agenda_time: "Время проведения"
   label_meeting_question: "Рассмотренный вопрос"
   label_meeting_question_plural: "Вопросы на рассмотрение"
   label_meeting_question_title: "Вопрос"
@@ -98,7 +99,7 @@ ru:
   message_participate_in_the_meeting: "Участие в собрании"
   button_create_agenda: "Сформировать повестку на основании протокола"
   label_meeting_questions_group: "Группировать вопросы по проектам"
-  label_meeting_questions_ungroup: "Рагруппировать вопросы"
+  label_meeting_questions_ungroup: "Разгруппировать вопросы"
   label_grouping: "Группировка"
   label_is_external_meeting: "Выездное совещание"
   field_external_company: "Компания"
@@ -121,6 +122,8 @@ ru:
   label_meeting_protocol_head_agreed: "СОГЛАСОВАНО"
   label_meeting_protocol_head_approved: "УТВЕРЖДАЮ"
   field_meeting_company: "Компания"
+  label_meeting_question_description: "Пояснения к вопросу"
+  label_page_counter: "Страница <page> из <total>"
 
   label_period: Период
   label_period_any: любой
@@ -156,6 +159,8 @@ ru:
           "должно быть позже, чем Время начала"
         is_not_a_valid_date:
           "не является датой"
+        greater_than_start_date:
+          "не может быть раньше даты начала"
   field_meeting_questions:
     title: "Вопрос"
     user: "Докладчик"
@@ -182,7 +187,7 @@ ru:
   objects_meeting_company:
   - id: 1
     name: "ООО «ГорКапСтрой»"
-    logo: "https://project.u-k-s.ru/attachments/download/57639/gorkapstroy.png"
+    logo: "https://dl.dropboxusercontent.com/u/2173392/gorkapstroy.png"
     fact_address: "115088, 2-й Южнопортовый проезд, д.18, стр.2"
     okpo: "ОКПО 98911555"
     ogrn: "ОГРН 1067760942534"
@@ -194,7 +199,7 @@ ru:
     site: "http://gorkapstroy.ru"
   - id: 2
     name: "ООО «НВК-Холдинг»"
-    logo: "http://project/attachments/download/57638/nvkholding.png"
+    logo: "https://dl.dropboxusercontent.com/u/2173392/nvkholding.png"
     fact_address: "115088, 2-й Южнопортовый проезд, д.18, стр.2"
     okpo: "ОКПО 80839886"
     ogrn: "ОГРН 5077746749757"
@@ -206,7 +211,7 @@ ru:
     site: "http://www.nvkholding.ru"
   - id: 3
     name: "ООО «НПП Строительство»"
-    logo: "https://project.u-k-s.ru/attachments/download/57641/stroica.png"
+    logo: "https://dl.dropboxusercontent.com/u/2173392/stroica.png"
     fact_address: "115088, 2-й Южнопортовый проезд, д.18, стр.2"
     okpo: "ОКПО 91483234"
     ogrn: "ОГРН 1117746307932"
@@ -218,7 +223,7 @@ ru:
     site: "http://www.stroica.ru"
   - id: 4
     name: "ООО «ЭТП СтройТорги»"
-    logo: "https://project.u-k-s.ru/attachments/download/57640/stroitorgi.png"
+    logo: "https://dl.dropboxusercontent.com/u/2173392/stroitorgi.png"
     fact_address: "115088, 2-й Южнопортовый проезд, д.16, стр.6"
     okpo: "ОКПО 30256300"
     ogrn: "ОГРН 1117746744917"
