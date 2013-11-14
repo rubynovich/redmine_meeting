@@ -159,6 +159,8 @@ ru:
           "должно быть позже, чем Время начала"
         is_not_a_valid_date:
           "не является датой"
+        greater_than_start_date:
+          "не может быть раньше даты начала"
   field_meeting_questions:
     title: "Вопрос"
     user: "Докладчик"

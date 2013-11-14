@@ -171,7 +171,7 @@ private
 
     meeting_participators.insert(0,[l(:field_company), l(:field_job_title), l(:field_member), l(:label_meeting_invite_status)])
 
-    table meeting_participators, header: true, width: 540, position: :center, column_widths: {3 => 100} do |t|
+    table meeting_participators, header: true, width: 540, position: :center, column_widths: {0 => 100, 3 => 100} do |t|
         t.cells.size = 10
         t.cells.padding = [0,10,5,10]
         t.cells.align = :center
@@ -209,7 +209,7 @@ private
 
     meeting_contacts.insert(0,[l(:field_company), l(:field_job_title), l(:field_member), l(:label_meeting_invite_status)])
 
-    table meeting_contacts, header: true, width: 540, position: :center, column_widths: {3 => 100} do |t|
+    table meeting_contacts, header: true, width: 540, position: :center, column_widths: {0 => 100, 3 => 100} do |t|
         t.cells.size = 10
         t.cells.padding = [0,10,5,10]
         t.cells.align = :center

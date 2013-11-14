@@ -39,9 +39,9 @@ class MeetingExtraAnswer < ActiveRecord::Base
 private
 
   def validate_due_date
-    if self.due_date && (self.due_date < Date.today)
-      errors.add :due_date, :greated_then_now
-    end
+#    if self.due_date && (self.due_date < Date.today)
+#      errors.add :due_date, :greated_then_now
+#    end
     if self.due_date && self.start_date && (self.due_date < self.start_date)
       errors.add :due_date, :greater_than_start_date
     end
