@@ -173,7 +173,7 @@ private
         question_list << [{content: question.description, colspan: 7}] if question.description.present?
       end
 
-      table question_list, header: true, width: 580, position: :center, column_widths: {4 => 45, 5 => 60} do |t|
+      table question_list, header: true, width: 580, position: :center, column_widths: {2 => 60, 3 => 45, 4 => 45, 5 => 60, 6 => 60} do |t|
         t.cells.size = 8
 #        t.cells.border_lines = [:dotted]*4
         t.cells.padding = [0,5,5,5]
