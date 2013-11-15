@@ -3,7 +3,6 @@
   @media print {
     .show-when-print { display: block;}
   }
-
 .contextual
   - if can_create_agenda?
     = link_to l(:button_add), {action: 'new'}, class: 'icon icon-add'
@@ -76,6 +75,7 @@
     %tr
       %th= l(:label_meeting_protocol)+":"
       %td= link_to_protocol(@object)
+      = render :partial => "online_meetings/add_attributes_table", locals: {item: @object} rescue nil
 
 %h3= l(:field_meeting_members)+":"
 .autoscroll
