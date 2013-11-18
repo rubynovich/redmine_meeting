@@ -147,6 +147,32 @@ private
     text("#{l(:label_meeting_question_plural)}:", size: 13, style: :bold)
 #    move_down 5
 
+    questions.group_by(&:project).sort_by{ |project, collection| project.to_s }.each do |project, collection|
+      move_down 5
+      text("#{project || l(:label_without_project)}", size: 11, style: :bold, align: :center)
+#      move_down 5
+      collection.each do |object|
+        text("<b>#{l(:label_meeting_question_title)}:</b> <i>#{object}</i>", size: 10, inline_format: true)
+        text("<b>#{l(:label_meeting_question_description)}:</b> <i>#{object.description.gsub(/[\n\r]+\Z/, "\n").gsub(/[\t ]+/, " ")}</i>", size: 10, inline_format: true) if object.description.present?
+        text("<b>#{l(:label_meeting_question_user)}:</b> <i>#{object.user}</i>", size: 10, inline_format: true)
+        if object.issue.present?
+          text("<b>#{l(:field_issue)}:</b> <i>#{object.issue.to_s.gsub('#','№')} (#{object.status})</i>", size: 10, inline_format: true, align: :left)
+          text("<b>#{l(:field_assigned_to)}:</b> <i>#{object.issue.assigned_to}</i>", size: 10, inline_format: true, align: :left)
+          move_up 13
+          text("<b>#{l(:field_start_date)}:</b> <i>#{format_date(object.issue.start_date)}</i>", size: 10, inline_format: true, align: :center)
+          move_up 13
+          text("<b>#{l(:field_due_date)}:</b> <i>#{format_date(object.issue.due_date)}</i>", size: 10, inline_format: true, align: :right)
+        end
+        move_down 10
+      end
+    end
+  end
+
+
+  def print_old_meeting_questions(questions)
+    text("#{l(:label_meeting_question_plural)}:", size: 13, style: :bold)
+#    move_down 5
+
     questions.group_by(&:project).sort_by{ |project, questions| project.to_s }.each do |project, questions|
       move_down 5
       text("#{project || l(:label_without_project)}", size: 10, style: :bold, align: :center)
@@ -170,13 +196,17 @@ private
           "#{format_date(question.issue.start_date) if question.issue}",
           "#{format_date(question.issue.due_date) if question.issue}",
           "#{question.issue.assigned_to if question.issue}"]
-        question_list << [{content: question.description, colspan: 7}] if question.description.present?
+#        question_list << [content: [[content: question.description, size: 8]], colspan: 7, ] if question.description.present?
+        question_list << [content: question.description, colspan: 7] if question.description.present?
       end
+#      cell_style: {size: 10, style: :bold, align: :center
+#      question_list.insert(0, [content: "#{project || l(:label_without_project)}", colspan: 7])
 
-      table question_list, header: true, width: 580, position: :center, column_widths: {2 => 60, 3 => 45, 4 => 45, 5 => 60, 6 => 60} do |t|
+      table question_list, header: true, width: 580, position: :center, column_widths: {0 => 150, 1 => 150, 2 => 60, 3 => 50, 4 => 50, 5 => 60, 6 => 60} do |t|
         t.cells.size = 8
 #        t.cells.border_lines = [:dotted]*4
         t.cells.padding = [0,5,5,5]
+        t.cells.border_width = 0.01
         t.before_rendering_page do |page|
           page.column(0).align = :left
           page.column(1).align = :left
@@ -220,7 +250,8 @@ private
         t.cells.size = 10
         t.cells.padding = [0,10,5,10]
         t.cells.align = :center
-        t.cells.border_lines = [:dotted]*4
+#        t.cells.border_lines = [:dotted]*4
+        t.cells.border_width = 0.01
         t.before_rendering_page do |page|
           page.row(0).font_style = :bold
           page.row(0).background_color = "DDDDDD"
@@ -250,7 +281,8 @@ private
         t.cells.size = 10
         t.cells.padding = [0,10,5,10]
         t.cells.align = :center
-        t.cells.border_lines = [:dotted]*4
+#        t.cells.border_lines = [:dotted]*4
+        t.cells.border_width = 0.01
         t.before_rendering_page do |page|
           page.row(0).font_style = :bold
           page.row(0).background_color = "DDDDDD"

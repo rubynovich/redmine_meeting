@@ -47,13 +47,15 @@ Rails.configuration.to_prepare do
   require 'meeting_user_patch'
   require 'meeting_issue_patch'
   require 'meeting_mailer_patch'
+  require 'meeting_prawn_table_cell_patch'
 
   [
    [MeetingAgenda, TimePeriodScope],
    [MeetingProtocol, TimePeriodScope],
    [Issue, MeetingPlugin::IssuePatch],
    [User, MeetingPlugin::UserPatch],
-   [Mailer, MeetingPlugin::MailerPatch]
+   [Mailer, MeetingPlugin::MailerPatch],
+   [Prawn::Table::Cell, MeetingPlugin::PrawnTableCellPatch]
   ].each do |cl, patch|
     cl.send(:include, patch) unless cl.included_modules.include? patch
   end
