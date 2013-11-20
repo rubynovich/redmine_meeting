@@ -9,6 +9,8 @@ class CreateMeetingAnswers < ActiveRecord::Migration
       t.integer  :external_reporter_id
       t.integer :question_issue_id
       t.references :user
+      t.boolean  :user_id_is_contact
+      t.integer  :external_user_id
       t.references :issue
       t.string :issue_type
       t.date :start_date

@@ -4,6 +4,8 @@ class CreateMeetingQuestions < ActiveRecord::Migration
       t.string :title
       t.text :description
       t.references :user
+      t.boolean :user_id_is_contact
+      t.integer :external_user_id
       t.references :contact
       t.references :issue
       t.references :meeting_agenda

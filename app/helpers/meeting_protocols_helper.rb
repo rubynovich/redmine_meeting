@@ -70,7 +70,19 @@ module MeetingProtocolsHelper
 
 
   def link_to_reporter(answer)
-    link_to_user answer.reporter
+    if answer.reporter_id_is_contact?
+      link_to_contact answer.external_reporter
+    else
+      link_to_user answer.reporter
+    end
+  end
+
+  def link_to_assigned_to(answer)
+    if answer.user_id_is_contact?
+      link_to_contact answer.external_user
+    else
+      link_to_user answer.user
+    end
   end
 
   def link_to_meeting_notice(user)

@@ -7,6 +7,7 @@ class MeetingProtocol < ActiveRecord::Base
   belongs_to :author, class_name: 'User', foreign_key: 'author_id'
   belongs_to :meeting_agenda
   belongs_to :asserter, class_name: 'Person', foreign_key: 'asserter_id'
+  belongs_to :external_asserter, class_name: 'Contact', foreign_key: 'external_asserter_id'
   belongs_to :meeting_company
   has_one  :external_company, through: :meeting_agenda
   has_many :meeting_answers, dependent: :delete_all
@@ -35,13 +36,16 @@ class MeetingProtocol < ActiveRecord::Base
   attr_accessible :meeting_contacts_attributes
   attr_accessible :meeting_watchers_attributes
   attr_accessible :meeting_agenda_id, :start_time, :end_time, :asserter_id, :meeting_company_id
+  attr_accessible :external_asserter_id, :asserter_id_is_contact
 
   before_create :add_author_id
   after_save :add_new_users_from_answers
   after_save :add_time_entry_to_invites
 
   validates_uniqueness_of :meeting_agenda_id
-  validates_presence_of :meeting_agenda_id
+  validates_presence_of :meeting_agenda_id, :meeting_company_id
+  validates_presence_of :external_asserter_id, if: -> { self.asserter_id_is_contact? }
+  validates_presence_of :asserter_id, unless: -> { self.asserter_id_is_contact? }
   validate :presence_of_meeting_answers, if: -> {self.meeting_answers.blank?}
   validate :presence_of_meeting_participators, if: -> {self.meeting_participators.blank?}
   validate :presence_of_start_time, if: -> {self.start_time.blank? || self.start_time.seconds_since_midnight.zero?}

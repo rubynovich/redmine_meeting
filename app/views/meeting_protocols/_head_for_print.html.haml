@@ -39,8 +39,14 @@
               %br
         %td{style: "text-align: center"}
           %h3
-            - if @object.asserter.present?
-              #{@object.asserter}/_________
+            - if @object.asserter_id_is_contact?
+              - if @object.external_asserter.present?
+                #{@object.external_asserter}/_________
+              - else
+                ___________________/_________
             - else
-              ___________________/_________
+              - if @object.asserter.present?
+                #{@object.asserter}/_________
+              - else
+                ___________________/_________
             %br

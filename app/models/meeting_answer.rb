@@ -3,8 +3,10 @@ class MeetingAnswer < ActiveRecord::Base
 
   belongs_to :meeting_protocol
   belongs_to :meeting_question
-  belongs_to :user
-  belongs_to :reporter, class_name: "User", foreign_key: "reporter_id"
+  belongs_to :user, class_name: "Person", foreign_key: "user_id"
+  belongs_to :external_user, class_name: "Contact", foreign_key: "external_user_id"
+  belongs_to :reporter, class_name: "Person", foreign_key: "reporter_id"
+  belongs_to :external_reporter, class_name: "Contact", foreign_key: "reporter_id"
   belongs_to :question_issue, class_name: "Issue", foreign_key: "question_issue_id"
   belongs_to :issue
   has_one :pending_issue, class_name: "MeetingPendingIssue", as: :meeting_container

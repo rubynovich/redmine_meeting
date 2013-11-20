@@ -2,7 +2,7 @@ class MeetingQuestion < ActiveRecord::Base
   unloadable
 
   belongs_to :issue
-  belongs_to :user
+  belongs_to :user, class_name: "Person", foreign_key: "user_id"
   belongs_to :contact
   belongs_to :meeting_agenda
   has_one :status, through: :issue

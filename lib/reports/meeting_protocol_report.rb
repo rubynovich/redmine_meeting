@@ -15,7 +15,8 @@ class MeetingProtocolReport < Prawn::Document
     end
 
     # Информация с согласующими и утверждающим
-    print_approval_list(object.approvers, object.asserter)
+    asserter = object.asserter_id_is_contact? ? object.external_asserter : object.asserter
+    print_approval_list(object.approvers, asserter)
     move_down 5
 
     # Информация о совещании (номер) и протоколе (дата, время, место, адрес и тд)
@@ -234,16 +235,24 @@ private
 #      move_down 5
       answers.each do |object|
         text("<b>#{l(:label_meeting_question)}:</b> <i>#{object.meeting_question}</i>", size: 10, inline_format: true)
-        text("<b>#{l(:label_meeting_answer_reporter)}:</b> <i>#{object.reporter}</i>", size: 10, inline_format: true)
+        if object.reporter_id_is_contact?
+          text("<b>#{l(:label_meeting_answer_reporter)}:</b> <i>#{object.external_reporter}</i>", size: 10, inline_format: true)
+        else
+          text("<b>#{l(:label_meeting_answer_reporter)}:</b> <i>#{object.reporter}</i>", size: 10, inline_format: true)
+        end
         if object.question_issue.present?
           move_up 13
           text("<b>#{l(:field_issue)}:</b> <i>№#{object.question_issue.id}</i>", size: 10, inline_format: true, align: :center)
         end
         text("<b>#{l(:label_meeting_answer)}:</b> <i>#{object.description.gsub(/[\n\r]+\Z/, "\n").gsub(/[\t ]+/, " ")}</i>", size: 10, inline_format: true)
-        if object.issue_id.present?
-          text("<b>#{object.issue.tracker} №#{object.issue_id}:</b> <i>#{object.issue.subject} (#{object.status})</i>", size: 10, inline_format: true)
+        if object.user_id_is_contact?
+          text("<b>#{l(:label_meeting_answer_user)}:</b> <i>#{object.external_user}</i>", size: 10, inline_format: true)
+        else
+          if object.issue_id.present?
+            text("<b>#{object.issue.tracker} №#{object.issue_id}:</b> <i>#{object.issue.subject} (#{object.status})</i>", size: 10, inline_format: true)
+          end
+          text("<b>#{l(:label_meeting_answer_user)}:</b> <i>#{object.user}</i>", size: 10, inline_format: true)
         end
-        text("<b>#{l(:label_meeting_answer_user)}:</b> <i>#{object.user}</i>", size: 10, inline_format: true)
         move_up 13
         text("<b>#{l(:field_start_date)}:</b> <i>#{format_date(object.start_date)}</i>", size: 10, inline_format: true, align: :center)
         move_up 13

@@ -8,6 +8,8 @@ class CreateMeetingExtraAnswers < ActiveRecord::Migration
       t.boolean  :reporter_id_is_contact
       t.integer  :external_reporter_id
       t.integer  :user_id
+      t.boolean  :user_id_is_contact
+      t.integer  :external_user_id
       t.integer  :issue_id
       t.integer  :question_issue_id
       t.string   :issue_type

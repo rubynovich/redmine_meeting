@@ -4,17 +4,34 @@
   %p
     = f.label :meeting_question_id, t(:label_meeting_question), class: 'necessary'
     = f.collection_select :meeting_question_id, @object.meeting_agenda.meeting_questions, :id, :title_with_issue, prompt: t(:prompt_please_select)
-  %p
-    = f.label :reporter_id, t(:label_meeting_answer_reporter)
-    = f.collection_select :reporter_id, User.active.order(:lastname, :firstname), :id, :to_s, include_blank: t(:prompt_please_select)
-
+  #reporter
+    %p.user_id
+      = f.label :reporter_id, t(:label_meeting_answer_reporter), class: 'necessary'
+      = f.collection_select :reporter_id, User.active.order(:lastname, :firstname), :id, :to_s, include_blank: t(:prompt_please_select)
+    %p.contact_id
+      = f.label :external_reporter_id, t(:label_meeting_answer_reporter), class: 'necessary'
+      = f.collection_select :external_reporter_id, Contact.visible.people.order_by_name, :id, :name, prompt: t(:prompt_please_select)
+      - project = Project.find(Setting[:plugin_redmine_contacts][:project_id]) rescue nil
+      = link_to l(:label_contact_new), {controller: 'contacts', action: 'new', project_id: project}, class: 'icon icon-add'
+    %p
+      = f.label :reporter_id_is_contact, t(:label_meeting_answer_reporter_is_contact)
+      = f.check_box :reporter_id_is_contact, class: 'user_id_is_contact', onclick: 'toggleReporterType(this);'
   %p
     = f.label :description, t(:label_meeting_answer_description), class: 'necessary'
     = f.text_area :description, cols: 60, rows: 15, class: 'wiki-edit'
   .splitcontentleft
-    %p
-      = f.label :user_id, t(:label_meeting_answer_user), class: 'necessary'
-      = f.collection_select :user_id, User.active.order(:lastname, :firstname), :id, :to_s, include_blank: t(:prompt_please_select)
+    #assigned_to
+      %p.user_id
+        = f.label :user_id, t(:label_meeting_answer_user), class: 'necessary'
+        = f.collection_select :user_id, User.active.order(:lastname, :firstname), :id, :to_s, prompt: t(:prompt_please_select)
+      %p.contact_id
+        = f.label :external_user_id, t(:label_meeting_answer_user), class: 'necessary'
+        = f.collection_select :external_user_id, Contact.visible.people.order_by_name, :id, :name, prompt: t(:prompt_please_select)
+        - project = Project.find(Setting[:plugin_redmine_contacts][:project_id]) rescue nil
+        = link_to l(:label_contact_new), {controller: 'contacts', action: 'new', project_id: project}, class: 'icon icon-add'
+      %p
+        = f.label :user_id_is_contact, t(:label_meeting_answer_user_is_contact)
+        = f.check_box :user_id_is_contact, class: 'user_id_is_contact', onclick: 'toggleReporterType(this);'
     -#%p
       = f.label :issue_id
       = f.text_field :issue_id, size: 100, style: "width: 80%", class: "autocomplete_for_issue"

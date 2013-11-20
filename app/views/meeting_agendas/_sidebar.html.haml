@@ -13,7 +13,7 @@
   %h3=l(:field_asserter)
   #meeting_asserter
     %ul
-      %li{class: "user-#{@object.asserter_id}"}
+      %li
         - if @object.asserter_id_is_contact?
           = avatar(@object.external_asserter, size: 16)
           = link_to_contact(@object.external_asserter, class: 'user')
