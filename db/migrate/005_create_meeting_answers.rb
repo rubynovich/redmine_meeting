@@ -5,6 +5,8 @@ class CreateMeetingAnswers < ActiveRecord::Migration
       t.references :meeting_question
       t.text :description
       t.integer :reporter_id
+      t.boolean  :reporter_id_is_contact
+      t.integer  :external_reporter_id
       t.integer :question_issue_id
       t.references :user
       t.references :issue

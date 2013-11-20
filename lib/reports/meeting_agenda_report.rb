@@ -15,7 +15,8 @@ class MeetingAgendaReport < Prawn::Document
     end
 
     # Информация с согласующими и утверждающим
-    print_approval_list(object.approvers, object.asserter)
+    asserter = object.asserter_id_is_contact? ? object.external_asserter : object.asserter
+    print_approval_list(object.approvers, asserter)
     move_down 5
 
     # Информация о совещании (номер) и повестке (дата, время, место, адрес и тд)
@@ -154,9 +155,9 @@ private
       collection.each do |object|
         text("<b>#{l(:label_meeting_question_title)}:</b> <i>#{object}</i>", size: 10, inline_format: true)
         text("<b>#{l(:label_meeting_question_description)}:</b> <i>#{object.description.gsub(/[\n\r]+\Z/, "\n").gsub(/[\t ]+/, " ")}</i>", size: 10, inline_format: true) if object.description.present?
-        text("<b>#{l(:label_meeting_question_user)}:</b> <i>#{object.user}</i>", size: 10, inline_format: true)
+        text("<b>#{l(:label_meeting_question_user)}:</b> <i>#{object.user_id_is_contact? ? object.contact : object.user}</i>", size: 10, inline_format: true)
         if object.issue.present?
-          text("<b>#{l(:field_issue)}:</b> <i>#{object.issue.to_s.gsub('#','№')} (#{object.status})</i>", size: 10, inline_format: true, align: :left)
+          text("<b>#{object.issue.tracker} №#{object.issue_id}:</b> <i>#{object.issue.subject} (#{object.status})</i>", size: 10, inline_format: true, align: :left)
           text("<b>#{l(:field_assigned_to)}:</b> <i>#{object.issue.assigned_to}</i>", size: 10, inline_format: true, align: :left)
           move_up 13
           text("<b>#{l(:field_start_date)}:</b> <i>#{format_date(object.issue.start_date)}</i>", size: 10, inline_format: true, align: :center)

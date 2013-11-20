@@ -11,9 +11,17 @@
     = f.label :project_id, t(:field_project)
     = f.collection_select :project_id, Project.active.visible.order(:name), :id, :name, include_blank: t(:prompt_please_select)
   .splitcontentleft
-    %p
+    %p.user_id
       = f.label :user_id, t(:label_meeting_question_user), class: 'necessary'
-      = f.collection_select :user_id, User.active.order(:lastname, :firstname), :id, :name, include_blank: t(:prompt_please_select)
+      = f.collection_select :user_id, User.active.sorted, :id, :name, include_blank: t(:prompt_please_select)
+    %p.contact_id
+      = f.label :contact_id, t(:label_meeting_question_user), class: 'necessary'
+      = f.collection_select :contact_id, Contact.visible.people.order_by_name, :id, :name, include_blank: t(:prompt_please_select)
+      - project = Project.find(Setting[:plugin_redmine_contacts][:project_id]) rescue nil
+      = link_to l(:label_contact_new), {controller: 'contacts', action: 'new', project_id: project}, class: 'icon icon-add'
+    %p
+      = f.label :user_id_is_contact, t(:label_meeting_question_user_is_contact)
+      = f.check_box :user_id_is_contact, class: 'user_id_is_contact', onclick: 'toggleReporterType(this);'
   .splitcontentright
     %p
       = f.label :issue_id

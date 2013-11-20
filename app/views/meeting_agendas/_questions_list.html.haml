@@ -6,8 +6,12 @@
       - if question.issue.present?
         = link_to_issue(question.issue, tracker: false)
     %td{onclick: "$('#comments_block_for_#{question.id}').toggle();"}
-      - if question.user.present?
-        = link_to_user question.user
+      - if question.user_id_is_contact?
+        - if question.contact.present?
+          = link_to_contact question.contact
+      - else
+        - if question.user.present?
+          = link_to_user question.user
     %td{onclick: "$('#comments_block_for_#{question.id}').toggle();"}
       - if question.status.present?
         =h question.status

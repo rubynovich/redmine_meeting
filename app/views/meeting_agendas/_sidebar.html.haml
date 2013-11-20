@@ -14,6 +14,10 @@
   #meeting_asserter
     %ul
       %li{class: "user-#{@object.asserter_id}"}
-        = avatar(@object.asserter, size: 16)
-        = link_to_user(@object.asserter, class: 'user')
-  = render partial: 'meeting_comments/sidebar'    
+        - if @object.asserter_id_is_contact?
+          = avatar(@object.external_asserter, size: 16)
+          = link_to_contact(@object.external_asserter, class: 'user')
+        - else
+          = avatar(@object.asserter, size: 16)
+          = link_to_user(@object.asserter, class: 'user')
+    = render partial: 'meeting_comments/sidebar'    

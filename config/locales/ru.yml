@@ -124,6 +124,8 @@ ru:
   field_meeting_company: "Компания"
   label_meeting_question_description: "Пояснения к вопросу"
   label_page_counter: "Страница <page> из <total>"
+  label_meeting_question_user_is_contact: "Внешний докладчик"
+  label_meeting_agenda_asserter_is_contact: "Утверждает внешний сотрудник"
 
   label_period: Период
   label_period_any: любой

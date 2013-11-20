@@ -5,6 +5,8 @@ class CreateMeetingProtocols < ActiveRecord::Migration
       t.time :end_time
       t.references :meeting_agenda
       t.integer :asserter_id
+      t.integer :external_asserter_id
+      t.boolean :asserter_id_is_contact
       t.integer :meeting_company_id
       t.integer :author_id
       t.datetime :created_on

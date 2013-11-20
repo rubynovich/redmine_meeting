@@ -13,8 +13,8 @@
     %p
       = f.label :subject, class: 'necessary'
       = f.text_field :subject, size: 100, style: 'width: 80%'
-    %p{id: 'external_company'}
-      = f.label :external_company
+    %p{id: 'external_company', }
+      = f.label :external_company, class: 'necessary'
       = f.collection_select :external_company_id, Contact.companies.order_by_name, :id, :name, prompt: t(:prompt_please_select)
       = link_to l(:label_contact_new), {controller: 'contacts', action: 'new', project_id: Project.find(Setting[:plugin_redmine_meeting][:project_id]), back_url: url_for(params)}, method: 'get', class: 'icon icon-add'
     %p{id: 'place'}
@@ -23,9 +23,17 @@
       :javascript
         observeAutocompleteField('meeting_agenda_place', '#{escape_javascript autocomplete_for_place_meeting_agendas_path}')
       = link_to l(:label_meeting_room_reserve_new), {controller: 'meeting_room_selectors', action: 'new'}, remote: true, method: 'get', class: 'icon icon-add', id: 'link_to_meeting_room'
-    %p
-      = f.label :asserter
+    %p.user_id
+      = f.label :asserter, class: 'necessary'
       = f.collection_select :asserter_id, User.active.sorted, :id, :name, prompt: t(:prompt_please_select)
+    %p.contact_id
+      = f.label :external_asserter, t(:field_asserter), class: 'necessary'
+      = f.collection_select :external_asserter_id, Contact.visible.people.order_by_name, :id, :name, prompt: t(:prompt_please_select)
+      - project = Project.find(Setting[:plugin_redmine_contacts][:project_id]) rescue nil
+      = link_to l(:label_contact_new), {controller: 'contacts', action: 'new', project_id: project}, class: 'icon icon-add'
+    %p
+      = f.label :asserter_id_is_contact, t(:label_meeting_agenda_asserter_is_contact)
+      = f.check_box :asserter_id_is_contact, class: 'user_id_is_contact', onclick: 'toggleReporterType(this);'
     %p
       = f.label :meeting_company
       = f.collection_select :meeting_company_id, MeetingCompany.sorted, :id, :name, prompt: t(:prompt_please_select)
@@ -67,12 +75,28 @@
         $('#link_to_meeting_room').show();
       }
     }
+
+    function toggleReporterType(element) {
+      var contacts = $(element).parent().parent().find('.contact_id');
+      var users = $(element).parent().parent().find('.user_id');
+      if (element.checked) {
+        contacts.show();
+        users.hide();
+      } else {
+        contacts.hide();
+        users.show();
+      }
+    }
+
     $(function() {
       $('.autocomplete_for_issue:not(.autocomplete)').each( function(index){
         observeAutocompleteField( $(this).attr('id'), '#{escape_javascript autocomplete_for_issue_meeting_agendas_path}')
       } );
       $('.necessary:not(.starred)').each( function(){
         $(this).addClass('starred').append('<span class="required"> *</span>');
+      });
+      $('.check_reporter').each( function(){
+        $(this);
       });
       $(document).on('nested:fieldAdded', function() {
         $('.autocomplete_for_issue:not(.autocomplete)').each( function(index){
@@ -81,6 +105,10 @@
         $('.necessary:not(.starred)').each( function(){
           $(this).addClass('starred').append('<span class="required"> *</span>');
         });
+        toggleReporterType($('.user_id_is_contact'));
       });
       toggleExternal($('#meeting_agenda_is_external'));
+      $('.user_id_is_contact').each( function() {
+        toggleReporterType(this);
+      });
     });

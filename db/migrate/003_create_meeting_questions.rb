@@ -2,7 +2,9 @@ class CreateMeetingQuestions < ActiveRecord::Migration
   def change
     create_table :meeting_questions do |t|
       t.string :title
+      t.text :description
       t.references :user
+      t.references :contact
       t.references :issue
       t.references :meeting_agenda
       t.references :project

@@ -9,6 +9,7 @@ class MeetingAgenda < ActiveRecord::Base
   belongs_to :meeting_room_reserve, dependent: :destroy
   belongs_to :external_company, class_name: 'Contact', foreign_key: 'external_company_id'
   belongs_to :asserter, class_name: 'Person', foreign_key: 'asserter_id'
+  belongs_to :external_asserter, class_name: 'Contact', foreign_key: 'external_asserter_id'
   belongs_to :meeting_company
   has_one :meeting_protocol
   has_many :meeting_questions, dependent: :delete_all, order: :position
@@ -42,10 +43,14 @@ class MeetingAgenda < ActiveRecord::Base
   attr_accessible :meeting_watchers_attributes
   attr_accessible :subject, :place, :meet_on, :start_time, :end_time, :priority_id, :external_company_id
   attr_accessible :is_external, :asserter_id, :meeting_company_id
+  attr_accessible :asserter_id_is_contact, :external_asserter_id
 
   validates_uniqueness_of :subject, scope: :meet_on
   validates_presence_of :subject, :meet_on, :start_time, :end_time, :priority_id, :place
   validates_presence_of :external_company_id, if: -> { self.is_external? }
+  validates_presence_of :asserter_id, unless: -> { self.asserter_id_is_contact? }
+  validates_presence_of :external_asserter_id, if: -> { self.asserter_id_is_contact? }
+  validates_presence_of :meeting_company_id
   validate :end_time_less_than_start_time, if: -> { self.start_time && self.end_time && (self.end_time <= self.start_time) }
   validate :meet_on_less_than_today, if: -> { self.meet_on && (self.meet_on < Date.today) }
   validate :start_time_less_than_now, if: -> {

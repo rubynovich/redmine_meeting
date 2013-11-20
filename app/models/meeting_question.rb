@@ -3,6 +3,7 @@ class MeetingQuestion < ActiveRecord::Base
 
   belongs_to :issue
   belongs_to :user
+  belongs_to :contact
   belongs_to :meeting_agenda
   has_one :status, through: :issue
 #  has_one :project, through: :issue
@@ -16,8 +17,11 @@ class MeetingQuestion < ActiveRecord::Base
 
   acts_as_list scope: :meeting_agenda
 
-  validates_presence_of :title, :user_id
+  validates_presence_of :title
+  validates_presence_of :user_id, unless: ->{ self.user_id_is_contact? }
+  validates_presence_of :contact_id, if: ->{ self.user_id_is_contact? }
 #  validates_uniqueness_of :title, scope: :meeting_agenda_id
+
 
   def <=>(object)
     position <=> object.position

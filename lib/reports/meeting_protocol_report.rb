@@ -175,7 +175,8 @@ private
         t.cells.size = 10
         t.cells.padding = [0,10,5,10]
         t.cells.align = :center
-        t.cells.border_lines = [:dotted]*4
+        t.cells.border_width = 0.01
+#        t.cells.border_lines = [:dotted]*4
         t.before_rendering_page do |page|
           page.row(0).font_style = :bold
           page.row(0).background_color = "DDDDDD"
@@ -213,7 +214,8 @@ private
         t.cells.size = 10
         t.cells.padding = [0,10,5,10]
         t.cells.align = :center
-        t.cells.border_lines = [:dotted]*4
+#        t.cells.border_lines = [:dotted]*4
+        t.cells.border_width = 0.01
         t.before_rendering_page do |page|
           page.row(0).font_style = :bold
           page.row(0).background_color = "DDDDDD"
@@ -238,7 +240,9 @@ private
           text("<b>#{l(:field_issue)}:</b> <i>№#{object.question_issue.id}</i>", size: 10, inline_format: true, align: :center)
         end
         text("<b>#{l(:label_meeting_answer)}:</b> <i>#{object.description.gsub(/[\n\r]+\Z/, "\n").gsub(/[\t ]+/, " ")}</i>", size: 10, inline_format: true)
-        text("<i>#{object.issue.to_s.gsub('#','№')}</i>", size: 10, inline_format: true) if object.issue_id.present?
+        if object.issue_id.present?
+          text("<b>#{object.issue.tracker} №#{object.issue_id}:</b> <i>#{object.issue.subject} (#{object.status})</i>", size: 10, inline_format: true)
+        end
         text("<b>#{l(:label_meeting_answer_user)}:</b> <i>#{object.user}</i>", size: 10, inline_format: true)
         move_up 13
         text("<b>#{l(:field_start_date)}:</b> <i>#{format_date(object.start_date)}</i>", size: 10, inline_format: true, align: :center)

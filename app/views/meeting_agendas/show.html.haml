@@ -17,7 +17,7 @@
       = link_to l(:label_resend_invites), {action: 'resend_invites', id: @object.id}, class: 'icon icon-issue'
     - else
       = link_to l(:label_send_invites), {action: 'send_invites', id: @object.id}, class: 'icon icon-issue'
-  = link_to l(:button_print), {}, {onclick: "window.print();", class: 'icon icon-duplicate' }
+  = link_to l(:button_print), {format: 'pdf'}, { class: 'icon icon-duplicate' }
 
 = render partial: 'head_for_print'
 
@@ -117,9 +117,6 @@
 
 .hide-when-print
   = link_to_attachments @object, thumbnails: true
-
-  - other_formats_links do |f|
-    = f.link_to 'PDF'
 
 - content_for :sidebar do
   = render partial: 'sidebar'
