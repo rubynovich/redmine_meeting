@@ -165,6 +165,8 @@ ru:
           "не является датой"
         greater_than_start_date:
           "не может быть раньше даты начала"
+        has_already_been_used_to_create_protocol:
+          "уже была использована для создания Протокола совещания"
   field_meeting_questions:
     title: "Вопрос"
     user: "Докладчик"

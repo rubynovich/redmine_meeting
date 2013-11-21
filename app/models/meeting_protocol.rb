@@ -43,7 +43,7 @@ class MeetingProtocol < ActiveRecord::Base
   after_save :add_new_contacts
   after_save :add_time_entry_to_invites
 
-  validates_uniqueness_of :meeting_agenda_id
+  validates_uniqueness_of :meeting_agenda_id, message: :has_already_been_used_to_create_protocol
   validates_presence_of :meeting_agenda_id, :meeting_company_id
   validates_presence_of :external_asserter_id, if: -> { self.asserter_id_is_contact? }
   validates_presence_of :asserter_id, unless: -> { self.asserter_id_is_contact? }
