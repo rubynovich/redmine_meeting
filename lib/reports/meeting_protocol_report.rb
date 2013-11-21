@@ -247,7 +247,7 @@ private
           move_up 13
           text("<b>#{l(:field_issue)}:</b> <i>№#{object.question_issue.id}</i>", size: 10, inline_format: true, align: :center)
         end
-        text("<b>#{l(:label_meeting_answer)}:</b> <i>#{object.description.gsub(/[\n\r]+\Z/, "\n").gsub(/[\t ]+/, " ")}</i>", size: 10, inline_format: true)
+        text("<b>#{l(:label_meeting_answer)}:</b> <i>#{object.description.gsub(/[\n\r]+/, "\n").gsub(/[\t ]+/, " ")}</i>", size: 10, inline_format: true)
         if object.user_id_is_contact?
           text("<b>#{l(:label_meeting_answer_user)}:</b> <i>#{object.external_user}</i>", size: 10, inline_format: true)
         else

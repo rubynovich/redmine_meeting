@@ -157,7 +157,7 @@ private
 #      move_down 5
       collection.each do |object|
         text("<b>#{l(:label_meeting_question_title)}:</b> <i>#{object}</i>", size: 10, inline_format: true)
-        text("<b>#{l(:label_meeting_question_description)}:</b> <i>#{object.description.gsub(/[\n\r]+\Z/, "\n").gsub(/[\t ]+/, " ")}</i>", size: 10, inline_format: true) if object.description.present?
+        text("<b>#{l(:label_meeting_question_description)}:</b> <i>#{object.description.gsub(/[\n\r]+/, "\n").gsub(/[\t ]+/, " ")}</i>", size: 10, inline_format: true) if object.description.present?
         text("<b>#{l(:label_meeting_question_user)}:</b> <i>#{object.user_id_is_contact? ? object.contact : object.user}</i>", size: 10, inline_format: true)
         if object.issue.present?
           text("<b>#{object.issue.tracker} №#{object.issue_id}:</b> <i>#{object.issue.subject} (#{object.status})</i>", size: 10, inline_format: true, align: :left)
