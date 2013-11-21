@@ -40,6 +40,7 @@ class MeetingProtocol < ActiveRecord::Base
 
   before_create :add_author_id
   after_save :add_new_users_from_answers
+  after_save :add_new_contacts
   after_save :add_time_entry_to_invites
 
   validates_uniqueness_of :meeting_agenda_id
@@ -164,8 +165,16 @@ private
   end
 
   def add_new_users_from_answers
-    (self.meeting_answers.map(&:reporter) - self.users).compact.each do |user|
-      MeetingParticipator.create(user_id: user.id, meeting_protocol_id: self.id)
+    (self.all_meeting_answers.map(&:reporter) - self.users).compact.each do |user|
+      self.meeting_participators.create(user_id: user.id)
+    end
+  end
+
+  def add_new_contacts
+    new_contacts =  self.all_meeting_answers.select(&:reporter_id_is_contact).map(&:reporter)
+    new_contacts += self.all_meeting_answers.select(&:user_id_is_contact).map(&:user)
+    (new_contacts - self.contacts).compact.each do |contact|
+      self.meeting_contacts.create(contact_id: contact.id)
     end
   end
 end

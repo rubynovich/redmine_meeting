@@ -34,6 +34,7 @@ class MeetingAgenda < ActiveRecord::Base
 
   before_create :add_author_id
   after_save :add_new_users_from_questions
+  after_save :add_new_contacts
   after_create :new_meeting_room_reserve, if: -> { MeetingRoom.where("LOWER(name) = LOWER(?)", self.place).present? }
   after_update :update_meeting_room_reserve, if: -> { MeetingRoom.where("LOWER(name) = LOWER(?)", self.place).present? }
 
@@ -202,7 +203,15 @@ private
 
   def add_new_users_from_questions
     (self.meeting_questions.map(&:user) - self.users).compact.each do |user|
-      MeetingMember.create(user_id: user.id, meeting_agenda_id: self.id)
+      self.meeting_members.create(user_id: user.id)
+    end
+  end
+
+  def add_new_contacts
+    new_contacts = self.meeting_questions.select(&:user_id_is_contact).map(&:contact)
+    new_contacts << self.external_asserter if self.asserter_id_is_contact?
+    (new_contacts - self.contacts).compact.each do |contact|
+      self.meeting_contacts.create(contact_id: contact.id)
     end
   end
 end
