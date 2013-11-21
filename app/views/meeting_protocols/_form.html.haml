@@ -90,6 +90,9 @@
         $('.necessary:not(.starred)').each( function(){
           $(this).addClass('starred').append('<span class="required"> *</span>');
         });
+        $('.user_id_is_contact').each( function() {
+          toggleReporterType(this);
+        });
       });
       $('.user_id_is_contact').each( function() {
         toggleReporterType(this);

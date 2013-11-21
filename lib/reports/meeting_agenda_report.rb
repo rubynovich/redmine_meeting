@@ -70,7 +70,10 @@ private
   end
 
   def print_company_info(company)
-    image open(company.logo), vposition: :top, position: :center, fit: [400, 580]
+    begin
+      image open(company.logo), vposition: :top, position: :center, fit: [400, 580]
+    rescue
+    end
 
     company_details = [
       [

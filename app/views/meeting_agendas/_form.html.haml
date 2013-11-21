@@ -105,7 +105,9 @@
         $('.necessary:not(.starred)').each( function(){
           $(this).addClass('starred').append('<span class="required"> *</span>');
         });
-        toggleReporterType($('.user_id_is_contact'));
+        $('.user_id_is_contact').each( function() {
+          toggleReporterType(this);
+        });
       });
       toggleExternal($('#meeting_agenda_is_external'));
       $('.user_id_is_contact').each( function() {
