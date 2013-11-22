@@ -28,10 +28,15 @@
       %tr
         %td{style: "text-align: center"}
           - approvers = @object.meeting_approvers.reject(&:deleted)
-          - if approvers.any?
+          - external_approvers = @object.external_approvers
+          - if (approvers+external_approvers).any?
             - approvers.each do |approver|
               %h3
-                #{Person.find(approver.user_id)}/_________
+                #{approver.person)}/_________
+                %br
+            - external_approvers.each do |approver|
+              %h3
+                #{approver}/_________
                 %br
           - else
             %h3

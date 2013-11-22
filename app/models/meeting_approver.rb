@@ -6,6 +6,7 @@ class MeetingApprover < ActiveRecord::Base
   validates_uniqueness_of :user_id,  scope: [:meeting_container_id, :meeting_container_type]
 
   belongs_to :user
+  belongs_to :person, foreign_key: 'user_id', class_name: 'Person'
   belongs_to :author, foreign_key: 'author_id', class_name: 'User'
   belongs_to :meeting_container, polymorphic: true
 

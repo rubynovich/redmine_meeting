@@ -20,6 +20,8 @@ class MeetingProtocol < ActiveRecord::Base
   has_many :approvers, through: :meeting_approvers, source: :user
   has_many :meeting_contacts, as: :meeting_container, dependent: :delete_all
   has_many :contacts, through: :meeting_contacts, order: [:last_name, :first_name], uniq: true
+  has_many :meeting_external_approvers, as: :meeting_container, dependent: :delete_all
+  has_many :external_approvers, through: :meeting_external_approvers, source: :contact, order: [:last_name, :first_name], uniq: true
   has_many :meeting_watchers, as: :meeting_container, dependent: :delete_all
   has_many :watchers, through: :meeting_watchers, order: [:lastname, :firstname], uniq: true
   has_many :meeting_comments, as: :meeting_container, order: ["created_on DESC"], dependent: :delete_all, uniq: true
@@ -166,7 +168,7 @@ private
 
   def add_new_users_from_answers
     (self.all_meeting_answers.map(&:reporter) - self.users).compact.each do |user|
-      self.meeting_participators.create(user_id: user.id)
+      MeetingParticipator.create(user_id: user.id, meeting_agenda_id: self.id)
     end
   end
 
@@ -174,7 +176,7 @@ private
     new_contacts =  self.all_meeting_answers.select(&:reporter_id_is_contact).map(&:reporter)
     new_contacts += self.all_meeting_answers.select(&:user_id_is_contact).map(&:user)
     (new_contacts - self.contacts).compact.each do |contact|
-      self.meeting_contacts.create(contact_id: contact.id)
+      MeetingContact.create(meeting_container_type: self.class, meeting_container_id: self.id, contact_id: contact.id)
     end
   end
 end

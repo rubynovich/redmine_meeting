@@ -207,12 +207,14 @@ private
     @users = User.active.sorted.where(id: session[:meeting_member_ids])
     @contacts = Contact.order_by_name.where(id: session[:meeting_contact_ids])
     @watchers = User.active.sorted.where(id: session[:meeting_watcher_ids])
+    @external_approvers = Contact.order_by_name.where(id: session[:meeting_external_approvers_ids])
   end
 
   def nested_objects_from_database
     @users = @object.users
     @contacts = @object.contacts
     @watchers = @object.watchers
+    @external_approvers = @object.external_approvers
   end
 
   def model_class

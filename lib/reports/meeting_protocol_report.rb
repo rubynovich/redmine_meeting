@@ -15,7 +15,7 @@ class MeetingProtocolReport < Prawn::Document
 
     # Информация с согласующими и утверждающим
     asserter = object.asserter_id_is_contact? ? object.external_asserter : object.asserter
-    print_approval_list(object.approvers, asserter)
+    print_approval_list(object.approvers+object.external_approvers, asserter)
     move_down 5
 
     # Информация о совещании (номер) и протоколе (дата, время, место, адрес и тд)

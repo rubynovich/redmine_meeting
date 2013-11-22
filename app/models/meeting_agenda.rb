@@ -23,6 +23,8 @@ class MeetingAgenda < ActiveRecord::Base
   has_many :approvers, source: :user, through: :meeting_approvers, order: [:lastname, :firstname], uniq: true
   has_many :meeting_contacts, as: :meeting_container, dependent: :delete_all
   has_many :contacts, through: :meeting_contacts, order: [:last_name, :first_name], uniq: true
+  has_many :meeting_external_approvers, as: :meeting_container, dependent: :delete_all
+  has_many :external_approvers, through: :meeting_external_approvers, source: :contact, order: [:last_name, :first_name], uniq: true
   has_many :meeting_watchers, as: :meeting_container, dependent: :delete_all
   has_many :watchers, through: :meeting_watchers, order: [:lastname, :firstname], uniq: true
   has_many :meeting_comments, as: :meeting_container, order: ["created_on DESC"], dependent: :delete_all, uniq: true
@@ -203,7 +205,7 @@ private
 
   def add_new_users_from_questions
     (self.meeting_questions.map(&:user) - self.users).compact.each do |user|
-      self.meeting_members.create(user_id: user.id)
+      MeetingMember.create(user_id: user.id, meeting_agenda_id: self.id)
     end
   end
 
@@ -211,7 +213,7 @@ private
     new_contacts = self.meeting_questions.select(&:user_id_is_contact).map(&:contact)
     new_contacts << self.external_asserter if self.asserter_id_is_contact?
     (new_contacts - self.contacts).compact.each do |contact|
-      self.meeting_contacts.create(contact_id: contact.id)
+      MeetingContact.create(meeting_container_type: self.class, meeting_container_id: self.id, contact_id: contact.id)
     end
   end
 end

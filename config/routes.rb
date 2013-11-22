@@ -61,3 +61,9 @@ resources :meeting_room_selectors do
 end
 
 resources :meeting_questions
+
+resources :meeting_external_approvers do
+  collection do
+    get 'autocomplete_for_contact'
+  end
+end
