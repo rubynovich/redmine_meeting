@@ -6,7 +6,6 @@ class MeetingProtocolReport < Prawn::Document
 
   def to_pdf(object)
     set_font_families
-    set_page_counter
 
     # Логотип и информация о компании
     if object.meeting_company.present?
@@ -35,6 +34,9 @@ class MeetingProtocolReport < Prawn::Document
 
     # Решения по вопросам
     print_meeting_answers(object.all_meeting_answers)
+
+    # Счетчик страниц
+    set_page_counter
 
     render
   end
