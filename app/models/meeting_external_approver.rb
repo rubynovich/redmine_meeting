@@ -21,6 +21,9 @@ private
   end
 
   def send_mail
-    Mailer.meeting_external_approver_agenda_create(self).deliver
+    case meeting_container_type
+    when 'MeetingAgenda'
+      Mailer.meeting_external_approver_agenda_create(self).deliver
+    end
   end
 end

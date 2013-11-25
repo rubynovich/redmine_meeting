@@ -131,7 +131,8 @@ module MeetingPlugin
           result.gsub("%#{item.first}%", "#{item.last}")
         }
 
-        mail(to: contact.mail, subject: subject)
+        attachments["Pv%04d_#{key_words[:meet_on]}.pdf" % container.id] = MeetingAgendaReport.new.to_pdf(container)
+        mail(to: contact.email, subject: subject)
       end
 
 

@@ -8,7 +8,7 @@
   %p
     = f.label :is_external, l(:label_is_external_meeting)
     = f.check_box :is_external, value: 1, onclick: 'toggleExternal(this);'
-  = render :partial => "online_meetings/form_meeting_agendas", :locals=>{f:f} rescue nil
+  = render partial: "online_meetings/form_meeting_agendas", locals: {f: f} rescue nil
   %fieldset
     %p
       = f.label :subject, class: 'necessary'
