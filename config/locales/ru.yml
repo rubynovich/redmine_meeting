@@ -130,6 +130,7 @@ ru:
   label_meeting_answer_user_is_contact: "Внешний исполнитель"
   label_new_meeting_external_approvers: "Добавление внешних наблюдателей"
   field_meeting_external_approvers: "Внешние согласующие"
+  label_meeting_external_approvers_agenda: "Согласование повестки у внешних согласующих"
 
   label_period: Период
   label_period_any: любой

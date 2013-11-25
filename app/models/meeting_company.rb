@@ -10,4 +10,8 @@ class MeetingCompany < ActiveRecord::Base
   attr_accessible :name, :inn, :ogrn, :kpp, :okpo, :logo, :fact_address, :phone, :fax, :email, :site
 
   scope :sorted, -> { order(:name) }
+
+  def to_s
+    self.name
+  end
 end

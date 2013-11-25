@@ -56,6 +56,10 @@ module MeetingPlugin
         comment = comment.note
         mail_meeting_comment_create(author, user, container, comment, comment_for)
       end
+
+      def meeting_external_approver_agenda_create(approver)
+        mail_meeting_external_approver_agenda_create(approver)
+      end
     end
 
     module InstanceMethods
@@ -100,6 +104,36 @@ module MeetingPlugin
 
         mail(to: author.mail, subject: subject)
       end
+
+      def mail_meeting_external_approver_agenda_create(approver)
+        container = approver.meeting_container
+        author = container.author
+        contact = approver.contact
+        address = container.is_external? ? container.place : container.meeting_company.fact_address
+
+        key_words = {
+          contact: contact,
+          meet_on: container.meet_on.strftime("%d-%m-%Y"),
+          start_time: container.start_time.strftime("%H:%M"),
+          end_time: container.end_time.strftime("%H:%M"),
+          author: author,
+          "author.job_title" => author.job_title,
+          "author.mail" => author.mail,
+          "author.phone" => author.phone,
+          meeting_company: container.meeting_company,
+          address: address
+        }
+
+        @body = key_words.inject(Setting.plugin_redmine_meeting[:external_approvers_agenda_description]){ |result, item|
+          result.gsub("%#{item.first}%", "#{item.last}")
+        }
+        subject = key_words.inject(Setting.plugin_redmine_meeting[:external_approvers_agenda_subject]){ |result, item|
+          result.gsub("%#{item.first}%", "#{item.last}")
+        }
+
+        mail(to: contact.mail, subject: subject)
+      end
+
 
 #      def mail_meeting_approver_create(author, user, container)
 #        set_language_if_valid user.language
