@@ -109,7 +109,9 @@
           toggleReporterType(this);
         });
       });
-      toggleExternal($('#meeting_agenda_is_external'));
+      $('#meeting_agenda_is_external').each( function() {
+        toggleExternal(this);
+      });
       $('.user_id_is_contact').each( function() {
         toggleReporterType(this);
       });
