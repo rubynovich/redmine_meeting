@@ -37,8 +37,8 @@ class MeetingAgenda < ActiveRecord::Base
   before_create :add_author_id
   after_save :add_new_users_from_questions
   after_save :add_new_contacts
-  after_create :new_meeting_room_reserve, if: -> { MeetingRoom.where("LOWER(name) = LOWER(?)", self.place).present? }
-  after_update :update_meeting_room_reserve, if: -> { MeetingRoom.where("LOWER(name) = LOWER(?)", self.place).present? }
+  after_create :new_meeting_room_reserve, if: -> { MeetingRoom.where("LOWER(name) = LOWER(?)", self.place).present? && !self.is_external? }
+  after_update :update_meeting_room_reserve, if: -> { MeetingRoom.where("LOWER(name) = LOWER(?)", self.place).present? && !self.is_external? }
 
   attr_accessible :meeting_members_attributes
   attr_accessible :meeting_questions_attributes
@@ -46,10 +46,11 @@ class MeetingAgenda < ActiveRecord::Base
   attr_accessible :meeting_watchers_attributes
   attr_accessible :subject, :place, :meet_on, :start_time, :end_time, :priority_id, :external_company_id
   attr_accessible :is_external, :asserter_id, :meeting_company_id
-  attr_accessible :asserter_id_is_contact, :external_asserter_id
+  attr_accessible :asserter_id_is_contact, :external_asserter_id, :address
 
   validates_uniqueness_of :subject, scope: :meet_on
-  validates_presence_of :subject, :meet_on, :start_time, :end_time, :priority_id, :place
+  validates_presence_of :subject, :meet_on, :start_time, :end_time, :priority_id
+  validates_presence_of :place, unless: -> { self.is_external? }
   validates_presence_of :external_company_id, if: -> { self.is_external? }
   validates_presence_of :asserter_id, unless: -> { self.asserter_id_is_contact? }
   validates_presence_of :external_asserter_id, if: -> { self.asserter_id_is_contact? }
@@ -66,7 +67,7 @@ class MeetingAgenda < ActiveRecord::Base
   }
   validate :presence_of_meeting_questions, if: -> { self.meeting_questions.blank? }
   validate :presence_of_meeting_members, if: -> { self.meeting_members.blank? }
-  validate :meeting_room_reserve_validation, if: -> { MeetingRoom.where("LOWER(name) = LOWER(?)", self.place).present? }
+  validate :meeting_room_reserve_validation, if: -> { MeetingRoom.where("LOWER(name) = LOWER(?)", self.place).present? && !self.is_external? }
   validate :meeting_question_title_uniq, if: -> { mq = self.meeting_questions.map(&:title); mq.size != mq.uniq.size }
 
   scope :free, -> {
@@ -102,6 +103,14 @@ class MeetingAgenda < ActiveRecord::Base
     end
   }
 
+  def place_or_address
+    if self.is_external?
+      address
+    else
+      self.place
+    end
+  end
+
   def attachments_visible?(user=User.current)
     true
   end
@@ -114,8 +123,8 @@ class MeetingAgenda < ActiveRecord::Base
     self.subject
   end
 
-  def place
-    if super.blank? && self.is_external? && self.external_company.present?
+  def address
+    if super.blank? && self.external_company.present?
       self.external_company.address
     else
       super

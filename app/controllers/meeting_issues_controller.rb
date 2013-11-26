@@ -88,7 +88,7 @@ private
       question: @object.meeting_question.to_s,
       description: @object.description,
       assigned_to: @object.user.name,
-      place: @object.meeting_agenda.place,
+      place: @object.meeting_agenda.place_or_address,
       url: meeting_protocol_url(@object.meeting_protocol)
     }
   end

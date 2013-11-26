@@ -24,6 +24,8 @@ private
     case meeting_container_type
     when 'MeetingAgenda'
       Mailer.meeting_external_approver_agenda_create(self).deliver
+    when 'MeetingProtocol'
+      Mailer.meeting_external_approver_protocol_create(self).deliver
     end
   end
 end

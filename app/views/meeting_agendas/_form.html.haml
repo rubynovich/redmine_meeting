@@ -13,16 +13,19 @@
     %p
       = f.label :subject, class: 'necessary'
       = f.text_field :subject, size: 100, style: 'width: 80%'
-    %p{id: 'external_company', }
+    %p{id: 'external_company'}
       = f.label :external_company, class: 'necessary'
       = f.collection_select :external_company_id, Contact.companies.order_by_name, :id, :name, prompt: t(:prompt_please_select)
       = link_to l(:label_contact_new), {controller: 'contacts', action: 'new', project_id: Project.find(Setting[:plugin_redmine_meeting][:project_id]), back_url: url_for(params)}, method: 'get', class: 'icon icon-add'
     %p{id: 'place'}
-      = f.label :place
+      = f.label :place, class: 'necessary'
       = f.text_field :place, size: 100, style: 'width: 60%'
       :javascript
         observeAutocompleteField('meeting_agenda_place', '#{escape_javascript autocomplete_for_place_meeting_agendas_path}')
       = link_to l(:label_meeting_room_reserve_new), {controller: 'meeting_room_selectors', action: 'new'}, remote: true, method: 'get', class: 'icon icon-add', id: 'link_to_meeting_room'
+    %p{id: 'address'}
+      = f.label :address
+      = f.text_field :address, size: 100, style: 'width: 60%'
     %p.user_id
       = f.label :asserter, class: 'necessary'
       = f.collection_select :asserter_id, User.active.sorted, :id, :name, prompt: t(:prompt_please_select)
@@ -66,12 +69,14 @@
       if (element.checked) {
         $('#external_company').show();
         $('label[for=meeting_agenda_external_company]').get(0).innerHTML='#{l(:field_external_company)}<span class="required"> *</span>';
-        $('label[for=meeting_agenda_place]').get(0).innerHTML ='#{l(:field_address)}<span class="required"> *</span>';
+        $('#address').show();
+        $('#place').hide();
         $('#link_to_meeting_room').hide();
       } else {
         $('#external_company').hide();
         $('label[for=meeting_agenda_external_company]').get(0).innerHTML='#{l(:field_external_company)}';
-        $('label[for=meeting_agenda_place]').get(0).innerHTML='#{l(:field_place)}<span class="required"> *</span>';
+        $('#address').hide();
+        $('#place').show();
         $('#link_to_meeting_room').show();
       }
     }

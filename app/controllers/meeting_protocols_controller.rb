@@ -202,7 +202,7 @@ private
       start_time: @object.meeting_agenda.start_time.strftime("%H:%M"),
       end_time: @object.meeting_agenda.end_time.strftime("%H:%M"),
       author: @object.author,
-      place: @object.meeting_agenda.place,
+      place: @object.meeting_agenda.place_or_address,
       url: url_for(controller: 'meeting_protocols', action: 'show', id: @object.id)
     }
   end

@@ -114,6 +114,10 @@ class MeetingProtocol < ActiveRecord::Base
     self.meeting_agenda.place
   end
 
+  def address
+    self.meeting_agenda.address
+  end
+
   def is_external?
     self.meeting_agenda.is_external?
   end
@@ -168,7 +172,7 @@ private
 
   def add_new_users_from_answers
     (self.all_meeting_answers.map(&:reporter) - self.users).compact.each do |user|
-      MeetingParticipator.create(user_id: user.id, meeting_agenda_id: self.id)
+      MeetingParticipator.create(user_id: user.id, meeting_protocol_id: self.id)
     end
   end
 

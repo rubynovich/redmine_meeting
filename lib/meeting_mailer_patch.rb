@@ -60,6 +60,10 @@ module MeetingPlugin
       def meeting_external_approver_agenda_create(approver)
         mail_meeting_external_approver_agenda_create(approver)
       end
+
+      def meeting_external_approver_protocol_create(approver)
+        mail_meeting_external_approver_protocol_create(approver)
+      end
     end
 
     module InstanceMethods
@@ -109,7 +113,7 @@ module MeetingPlugin
         container = approver.meeting_container
         author = container.author
         contact = approver.contact
-        address = container.is_external? ? container.place : container.meeting_company.fact_address
+        address = container.is_external? ? container.address : container.meeting_company.fact_address
 
         key_words = {
           contact: contact,
@@ -135,6 +139,35 @@ module MeetingPlugin
         mail(to: contact.email, subject: subject)
       end
 
+      def mail_meeting_external_approver_protocol_create(approver)
+        container = approver.meeting_container
+        author = container.author
+        contact = approver.contact
+        address = container.is_external? ? container.address : container.meeting_company.fact_address
+
+        key_words = {
+          contact: contact,
+          meet_on: container.meet_on.strftime("%d-%m-%Y"),
+          start_time: container.start_time.strftime("%H:%M"),
+          end_time: container.end_time.strftime("%H:%M"),
+          author: author,
+          "author.job_title" => author.job_title,
+          "author.mail" => author.mail,
+          "author.phone" => author.phone,
+          meeting_company: container.meeting_company,
+          address: address
+        }
+
+        @body = key_words.inject(Setting.plugin_redmine_meeting[:external_approvers_protocol_description]){ |result, item|
+          result.gsub("%#{item.first}%", "#{item.last}")
+        }
+        subject = key_words.inject(Setting.plugin_redmine_meeting[:external_approvers_protocol_subject]){ |result, item|
+          result.gsub("%#{item.first}%", "#{item.last}")
+        }
+
+        attachments["Pt%04d_#{key_words[:meet_on]}.pdf" % container.id] = MeetingProtocolReport.new.to_pdf(container)
+        mail(to: contact.email, subject: subject)
+      end
 
 #      def mail_meeting_approver_create(author, user, container)
 #        set_language_if_valid user.language

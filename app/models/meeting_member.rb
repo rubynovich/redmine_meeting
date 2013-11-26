@@ -60,7 +60,7 @@ private
       start_time: self.meeting_agenda.start_time.strftime("%H:%M"),
       end_time: self.meeting_agenda.end_time.strftime("%H:%M"),
       author: self.meeting_agenda.author.name,
-      place: self.meeting_agenda.place,
+      place: self.meeting_agenda.place_or_address,
       url: url_for(controller: 'meeting_agendas', action: 'show', id: self.meeting_agenda_id, only_path: false)
     }
   end

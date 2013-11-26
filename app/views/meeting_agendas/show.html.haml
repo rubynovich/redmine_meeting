@@ -47,16 +47,13 @@
         %th=l(:field_external_company)+":"
         %td{colspan: 3}=link_to_contact @object.external_company
     %tr
-      %th
-        - if @object.is_external?
-          =l(:field_address)+":"
-        - else
-          =l(:field_place)+":"
-      %td{colspan: 3}
-        - if @object.is_external? && @object.place.present?
-          =link_to @object.place, "http://maps.google.com/maps?f=q&ie=UTF8&om=1&q=#{h @object.place.gsub("\r\n"," ").gsub("\n"," ")}+(#{h @object.external_company.to_s.gsub(/["']+/,"")})"
-        - else
-          =h @object.place
+      - if @object.is_external?
+        %th=l(:field_address)+":"
+        %td{colspan: 3}
+          =link_to @object.address, "http://maps.google.com/maps?f=q&ie=UTF8&om=1&q=#{h @object.address.gsub("\r\n"," ").gsub("\n"," ")}+(#{h @object.external_company.to_s.gsub(/["']+/,"")})"
+      - else
+        %th=l(:field_place)+":"
+        %td{colspan: 3}=h @object.place
     %tr
       %th= l(:field_meet_on)+":"
       %td= format_date(@object.meet_on)
