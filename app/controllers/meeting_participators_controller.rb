@@ -19,8 +19,9 @@ class MeetingParticipatorsController < ApplicationController
     new_members = (params[model_sym].present? ? params[model_sym][:user_ids] : [])
 
     @members = if @object.present?
-      @object.meeting_participators << new_members.map{ |user_id| MeetingParticipator.new(user_id: user_id) }.compact
-      @object.save
+      new_members.each do |user_id|
+        MeetingParticipator.create!(user_id: user_id, meeting_protocol_id: params[:meeting_protocol_id])
+      end
       @object.users
     else
       session[session_sym] = (new_members + session[session_sym]).map(&:to_i).uniq

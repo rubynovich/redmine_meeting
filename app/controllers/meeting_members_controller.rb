@@ -15,14 +15,15 @@ class MeetingMembersController < ApplicationController
   end
 
   def create
-    members = (params[model_sym].present? ? params[model_sym][:user_ids] : [])
+    new_members = (params[model_sym].present? ? params[model_sym][:user_ids] : [])
 
     @users = if @object.present?
-      @object.meeting_members << members.map{ |user_id| MeetingMember.new(user_id: user_id) }.compact
-      @object.save
+      new_members.each do |user_id|
+        MeetingMember.create!(user_id: user_id, meeting_agenda_id: params[:meeting_agenda_id])
+      end
       @object.users
     else
-      session[:meeting_member_ids] = (members + session[:meeting_member_ids]).map(&:to_i).uniq
+      session[:meeting_member_ids] = (new_members + session[:meeting_member_ids]).map(&:to_i).uniq
       User.order(:lastname, :firstname).find(session[:meeting_member_ids])
     end
 
