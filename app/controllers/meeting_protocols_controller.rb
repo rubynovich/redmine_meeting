@@ -25,6 +25,10 @@ class MeetingProtocolsController < ApplicationController
       send_notice(member)
     end
 
+    @object.meeting_contacts.each do |contact|
+      Mailer.meeting_contacts_notice(contact).deliver rescue nil
+    end
+
     execute_pending_issues
 
     redirect_to controller: 'meeting_protocols', action: 'show', id: @object.id
@@ -34,6 +38,10 @@ class MeetingProtocolsController < ApplicationController
     (render_403; return false) unless can_send_notices?(@object)
     @object.meeting_participators.each do |member|
       resend_notice(member)
+    end
+
+    @object.meeting_contacts.each do |contact|
+      Mailer.meeting_contacts_notice(contact).deliver rescue nil
     end
 
     execute_pending_issues
