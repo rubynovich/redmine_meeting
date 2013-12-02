@@ -1,2 +1,1 @@
-- @body.each_line do |text|
-  %p= text
+= @body.gsub("\n","<br>")
