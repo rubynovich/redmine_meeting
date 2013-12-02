@@ -133,7 +133,7 @@ ru:
   label_meeting_external_approvers_agenda: "Согласование повестки у внешних согласующих"
   label_meeting_external_approvers_protocol: "Согласование протокола у внешних согласующих"
   label_meeting_contacts_agenda: "Приглашение внешних участников"
-  label_meeting_contacts_agenda: "Рассылка протокола внешним участникам"
+  label_meeting_contacts_protocol: "Рассылка протокола внешним участникам"
 
   label_period: Период
   label_period_any: любой
