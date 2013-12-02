@@ -39,7 +39,11 @@ class MeetingAgendasController < ApplicationController
     (render_403; return false) unless can_send_invites?(@object)
     @object.meeting_members.reject(&:issue).each(&:send_invite)
     @object.meeting_contacts.each do |contact|
-      Mailer.meeting_contacts_invite(contact).deliver rescue nil
+      begin
+        Mailer.meeting_contacts_invite(contact).deliver
+      rescue
+        nil
+      end
     end
     redirect_to controller: 'meeting_agendas', action: 'show', id: @object.id
   end
@@ -48,7 +52,11 @@ class MeetingAgendasController < ApplicationController
     (render_403; return false) unless can_send_invites?(@object)
     @object.meeting_members.each(&:resend_invite)
     @object.meeting_contacts.each do |contact|
-      Mailer.meeting_contacts_invite(contact).deliver rescue nil
+      begin
+        Mailer.meeting_contacts_invite(contact).deliver
+      rescue
+        nil
+      end
     end
     redirect_to controller: 'meeting_agendas', action: 'show', id: @object.id
   end

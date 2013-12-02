@@ -26,7 +26,11 @@ class MeetingProtocolsController < ApplicationController
     end
 
     @object.meeting_contacts.each do |contact|
-      Mailer.meeting_contacts_notice(contact).deliver rescue nil
+      begin
+        Mailer.meeting_contacts_notice(contact).deliver
+      rescue
+        nil
+      end
     end
 
     execute_pending_issues
@@ -41,7 +45,11 @@ class MeetingProtocolsController < ApplicationController
     end
 
     @object.meeting_contacts.each do |contact|
-      Mailer.meeting_contacts_notice(contact).deliver rescue nil
+      begin
+        Mailer.meeting_contacts_notice(contact).deliver
+      rescue
+        nil
+      end
     end
 
     execute_pending_issues
