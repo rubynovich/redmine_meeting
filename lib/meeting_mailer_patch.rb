@@ -134,7 +134,8 @@ module MeetingPlugin
           "author.mail" => author.mail,
           "author.phone" => author.phone,
           meeting_company: container.meeting_company,
-          address: address
+          address: address,
+          place: place
         }
 
         @body = key_words.inject(Setting.plugin_redmine_meeting[:external_approvers_agenda_description]){ |result, item|
