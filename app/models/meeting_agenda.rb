@@ -222,7 +222,7 @@ private
     new_contacts = self.meeting_questions.select(&:user_id_is_contact).map(&:contact)
     new_contacts << self.external_asserter if self.asserter_id_is_contact?
     (new_contacts - self.contacts).compact.each do |contact|
-      MeetingContact.create(meeting_container_type: self.class, meeting_container_id: self.id, contact_id: contact.id)
+      MeetingContact.create(meeting_container_type: self.class.to_s, meeting_container_id: self.id, contact_id: contact.id)
     end
   end
 end

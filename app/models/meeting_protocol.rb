@@ -180,7 +180,7 @@ private
     new_contacts =  self.all_meeting_answers.select(&:reporter_id_is_contact).map(&:reporter)
     new_contacts += self.all_meeting_answers.select(&:user_id_is_contact).map(&:user)
     (new_contacts - self.contacts).compact.each do |contact|
-      MeetingContact.create(meeting_container_type: self.class, meeting_container_id: self.id, contact_id: contact.id)
+      MeetingContact.create(meeting_container_type: self.class.to_s, meeting_container_id: self.id, contact_id: contact.id)
     end
   end
 end
