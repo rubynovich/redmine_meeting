@@ -125,6 +125,7 @@ module MeetingPlugin
 
         key_words = {
           contact: contact,
+          subject: container.subject,
           meet_on: container.meet_on.strftime("%d-%m-%Y"),
           start_time: container.start_time.strftime("%H:%M"),
           end_time: container.end_time.strftime("%H:%M"),
@@ -155,6 +156,7 @@ module MeetingPlugin
 
         key_words = {
           contact: contact,
+          subject: container.subject,
           meet_on: container.meet_on.strftime("%d-%m-%Y"),
           start_time: container.start_time.strftime("%H:%M"),
           end_time: container.end_time.strftime("%H:%M"),
