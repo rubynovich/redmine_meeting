@@ -166,7 +166,8 @@ module MeetingPlugin
           "author.mail" => author.mail,
           "author.phone" => author.phone,
           meeting_company: container.meeting_company,
-          address: address
+          address: address,
+          place: container.place
         }
 
         @body = key_words.inject(Setting.plugin_redmine_meeting[:external_approvers_protocol_description]){ |result, item|
@@ -197,7 +198,8 @@ module MeetingPlugin
           "author.mail" => author.mail,
           "author.phone" => author.phone,
           meeting_company: container.meeting_company,
-          address: address
+          address: address,
+          place: container.place
         }
 
         @body = key_words.inject(Setting.plugin_redmine_meeting[:contacts_agenda_description]){ |result, item|
@@ -228,7 +230,8 @@ module MeetingPlugin
           "author.mail" => author.mail,
           "author.phone" => author.phone,
           meeting_company: container.meeting_company,
-          address: address
+          address: address,
+          place: container.place
         }
 
         @body = key_words.inject(Setting.plugin_redmine_meeting[:contacts_protocol_description]){ |result, item|
