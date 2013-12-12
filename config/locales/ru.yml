@@ -134,6 +134,23 @@ ru:
   label_meeting_external_approvers_protocol: "Согласование протокола у внешних согласующих"
   label_meeting_contacts_agenda: "Приглашение внешних участников"
   label_meeting_contacts_protocol: "Рассылка протокола внешним участникам"
+  label_contact_invites_send: "Отправить приглашения внешним участникам"
+  label_participation_form_for_select:
+    direct: "Личное"
+    executor: "Ответственный исполнитель"
+    any: "Личное или ответственный исполнитель"
+
+  message_participation_form_for_select:
+    direct: "Просим Вас принять личное участие."
+    executor: "Просим Вас направить ответственного исполнитель."
+    any: "Просим Вас принять личное участие или направить ответственного исполнителя."
+
+  label_participation_form: Форма участия
+  label_dear_contact: "Уважаемый %{contact}!"
+  label_contact_invite_info: "%{meet_on} с %{start_time} по %{end_time} проводится совещание %{subject}."
+  label_contact_invite_address: "Место проведения: %{address}."
+  label_contact_invite_outgoing_code: "Исх.№ %{code} от %{date}"
+  label_contact_invite_incoming_code: "На №______ от __________"
 
   label_period: Период
   label_period_any: любой

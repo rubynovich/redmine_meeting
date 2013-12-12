@@ -109,8 +109,8 @@ class MeetingProtocolsController < ApplicationController
 
   def new
     (render_403; return false) unless can_create_protocol?(@object)
-    session[:meeting_participator_ids] = @object.meeting_agenda.user_ids
-    session[:meeting_contact_ids] = @object.meeting_agenda.contact_ids
+    session[:meeting_protocol_participator_ids] = @object.meeting_agenda.user_ids
+    session[:meeting_protocol_contact_ids] = @object.meeting_agenda.contact_ids
 #    session[:meeting_watcher_ids] = @object.meeting_agenda.watcher_ids
     nested_objects_from_session
     @object.meeting_company = @object.meeting_agenda.meeting_company
@@ -128,9 +128,9 @@ class MeetingProtocolsController < ApplicationController
   def create
     (render_403; return false) unless can_create_protocol?(@object)
     @object.save_attachments(params[:attachments] || (params[:issue] && params[:issue][:uploads]))
-    @object.meeting_participators_attributes = session[:meeting_participator_ids].map{ |user_id| {user_id: user_id} } if session[:meeting_participator_ids].present?
-    @object.meeting_contacts_attributes = session[:meeting_contact_ids].map{ |contact_id| {contact_id: contact_id} } if session[:meeting_contact_ids].present?
-    @object.meeting_watchers_attributes = session[:meeting_watcher_ids].map{ |user_id| {user_id: user_id} } if session[:meeting_watcher_ids].present?
+    @object.meeting_participators_attributes = session[:meeting_protocol_participator_ids].map{ |user_id| {user_id: user_id} } if session[:meeting_protocol_participator_ids].present?
+    @object.meeting_contacts_attributes = session[:meeting_protocol_contact_ids].map{ |contact_id| {contact_id: contact_id} } if session[:meeting_protocol_contact_ids].present?
+#    @object.meeting_watchers_attributes = session[:meeting_watcher_ids].map{ |user_id| {user_id: user_id} } if session[:meeting_watcher_ids].present?
     if @object.save
       flash[:notice] = l(:notice_successful_create)
       render_attachment_warning_if_needed(@object)
@@ -168,8 +168,8 @@ class MeetingProtocolsController < ApplicationController
 
 private
   def nested_objects_from_session
-    @members = User.active.sorted.find(session[:meeting_participator_ids])
-    @contacts = Contact.order_by_name.find(session[:meeting_contact_ids])
+    @members = User.active.sorted.find(session[:meeting_protocol_participator_ids])
+    @contacts = Contact.order_by_name.find(session[:meeting_protocol_contact_ids])
 #    @watchers = User.active.sorted.find(session[:meeting_watcher_ids])
   end
 
@@ -245,7 +245,7 @@ private
       subject: issue_subject,
       project: Project.find(settings[:notice_project_id]),
       description: issue_description,
-      author: User.current,
+      author: self.author,
       start_date: Date.today,
       due_date: Date.today + settings[:notice_duration].to_i.days,
       priority: @object.meeting_agenda.priority || IssuePriority.default,

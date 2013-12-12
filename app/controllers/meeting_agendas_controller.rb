@@ -131,9 +131,9 @@ class MeetingAgendasController < ApplicationController
 
   def new
     @object.priority = IssuePriority.default
-    session[:meeting_member_ids] = [User.current.id]
-    session[:meeting_contact_ids] = []
-    session[:meeting_watcher_ids] = []
+    session[:meeting_agenda_member_ids] = [User.current.id]
+    session[:meeting_agenda_contact_ids] = []
+#    session[:meeting_agenda_watcher_ids] = []
     nested_objects_from_session
   end
 
@@ -144,9 +144,9 @@ class MeetingAgendasController < ApplicationController
     @object.meeting_questions_attributes = @old_object.meeting_questions.map(&:attributes).inject({}){ |result, item|
       result.update((i+=1) => item.delete_if{|key, value| %w{updated_on created_on meeting_agenda_id id}.include?(key) } )
     }
-    session[:meeting_member_ids] = (@old_object.user_ids + [User.current.id]).uniq
-    session[:meeting_contact_ids] = @old_object.contact_ids
-    session[:meeting_watcher_ids] = @old_object.watcher_ids
+    session[:meeting_agenda_member_ids] = (@old_object.user_ids + [User.current.id]).uniq
+    session[:meeting_agenda_contact_ids] = @old_object.contact_ids
+#    session[:meeting_agenda_watcher_ids] = @old_object.watcher_ids
     nested_objects_from_session
     render action: 'new'
   end
@@ -158,18 +158,18 @@ class MeetingAgendasController < ApplicationController
     @object.meeting_questions_attributes = @old_object.all_meeting_answers.inject({}){ |result, item|
       result.update((i+=1) => {title: item.meeting_question.to_s, description: item.description, issue_id: item.issue_id, user_id: item.reporter_id, contact_id: item.external_reporter_id, user_id_is_contact: item.reporter_id_is_contact})
     }
-    session[:meeting_member_ids] = (@old_object.meeting_agenda.user_ids + [User.current.id]).uniq
-    session[:meeting_contact_ids] = @old_object.meeting_agenda.contact_ids
-    session[:meeting_watcher_ids] = @old_object.meeting_agenda.watcher_ids
+    session[:meeting_agenda_member_ids] = (@old_object.meeting_agenda.user_ids + [User.current.id]).uniq
+    session[:meeting_agenda_contact_ids] = @old_object.meeting_agenda.contact_ids
+#    session[:meeting_watcher_ids] = @old_object.meeting_agenda.watcher_ids
     nested_objects_from_session
     render action: 'new'
   end
 
 
   def create
-    @object.meeting_members_attributes = session[:meeting_member_ids].map{ |user_id| {user_id: user_id} } if session[:meeting_member_ids].present?
-    @object.meeting_contacts_attributes = session[:meeting_contact_ids].map{ |contact_id| {contact_id: contact_id} } if session[:meeting_contact_ids].present?
-    @object.meeting_watchers_attributes = session[:meeting_watcher_ids].map{ |user_id| {user_id: user_id} } if session[:meeting_watcher_ids].present?
+    @object.meeting_members_attributes = session[:meeting_agenda_member_ids].map{ |user_id| {user_id: user_id} } if session[:meeting_agenda_member_ids].present?
+    @object.meeting_contacts_attributes = session[:meeting_agenda_contact_ids].map{ |contact_id| {contact_id: contact_id} } if session[:meeting_agenda_contact_ids].present?
+#    @object.meeting_watchers_attributes = session[:meeting_watcher_ids].map{ |user_id| {user_id: user_id} } if session[:meeting_watcher_ids].present?
     @object.save_attachments(params[:attachments])
     if @object.save
       flash[:notice] = l(:notice_successful_create)
@@ -218,17 +218,17 @@ private
   end
 
   def nested_objects_from_session
-    @users = User.active.sorted.where(id: session[:meeting_member_ids])
-    @contacts = Contact.order_by_name.where(id: session[:meeting_contact_ids])
-    @watchers = User.active.sorted.where(id: session[:meeting_watcher_ids])
-    @external_approvers = Contact.order_by_name.where(id: session[:meeting_external_approvers_ids])
+    @users = User.active.sorted.where(id: session[:meeting_agenda_member_ids])
+    @contacts = Contact.order_by_name.where(id: session[:meeting_agenda_contact_ids])
+#    @watchers = User.active.sorted.where(id: session[:meeting_watcher_ids])
+#    @external_approvers = Contact.order_by_name.where(id: session[:meeting_external_approvers_ids])
   end
 
   def nested_objects_from_database
     @users = @object.users
     @contacts = @object.contacts
-    @watchers = @object.watchers
-    @external_approvers = @object.external_approvers
+#    @watchers = @object.watchers
+#    @external_approvers = @object.external_approvers
   end
 
   def model_class

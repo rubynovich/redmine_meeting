@@ -1,0 +1,35 @@
+:css
+  table .email, table .fax, table .sms { width: 1px; text-align: center}
+  table .participation_form { width: 1px; text-align: center}
+
+%h3.title= l(:label_contact_invites_send)
+
+= form_tag(url_for(controller: 'meeting_contact_invites', action: 'create', meeting_container_type: @object.class, meeting_container_id: @object.id), method: :post, remote: true) do
+  %table.issues{width: "100%"}
+    %thead
+      %tr
+        %th.contact=l(:label_contact)
+        %th.email
+          email
+        %th.fax
+          fax
+        %th.sms
+          sms
+        %th.participation_form
+          =l(:label_participation_form)
+    %tbody
+      - @object.contacts.order_by_name.each do |contact|
+        %tr
+          %td.contact
+            = contact
+          %td.email
+            = check_box_tag("contact_invites[#{contact.id}][email]", true, contact.emails.any?, disabled: !contact.emails.any?)
+          %td.fax
+            = check_box_tag("contact_invites[#{contact.id}][fax]", true, contact.faxes.any?, disabled: !contact.faxes.any?)
+          %td.sms
+            = check_box_tag("contact_invites[#{contact.id}][sms]", true, contact.phones.any?, disabled: !contact.phones.any?)
+          %td.participation_form
+            = select_tag("contact_invites[#{contact.id}][participation_form]", options_for_select(t(:label_participation_form_for_select).invert))
+  %p.buttons
+    = submit_tag(l(:button_add), name: nil, onclick: "hideModal(this);")
+    = submit_tag(l(:button_cancel), name: nil, onclick: "hideModal(this);", type: 'button')

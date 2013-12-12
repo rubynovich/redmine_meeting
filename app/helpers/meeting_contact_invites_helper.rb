@@ -1,0 +1,2 @@
+module MeetingContactInvitesHelper
+end

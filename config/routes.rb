@@ -67,3 +67,5 @@ resources :meeting_external_approvers do
     get 'autocomplete_for_contact'
   end
 end
+
+resources :meeting_contact_invites, only: [:new, :create]

@@ -213,7 +213,7 @@ private
   end
 
   def add_new_users_from_questions
-    (self.meeting_questions.map(&:user) - self.users).compact.each do |user|
+    (self.meeting_questions.reject(&:user_id_is_contact).map(&:user) - self.users).compact.each do |user|
       MeetingMember.create(user_id: user.id, meeting_agenda_id: self.id)
     end
   end

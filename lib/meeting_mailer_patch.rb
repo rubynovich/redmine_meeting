@@ -72,6 +72,10 @@ module MeetingPlugin
       def meeting_contacts_notice(meeting_contact)
         mail_meeting_contacts_notice(meeting_contact)
       end
+
+      def meeting_contacts_registered_invite(meeting_contact, participation_form)
+        mail_meeting_contacts_registered_invite(meeting_contact, participation_form)
+      end
     end
 
     module InstanceMethods
@@ -210,6 +214,47 @@ module MeetingPlugin
         }
 
         attachments["Pv%04d_#{key_words[:meet_on]}.pdf" % container.id] = MeetingAgendaReport.new.to_pdf(container)
+        mail(to: contact.email, subject: subject)
+      end
+
+      def mail_meeting_contacts_registered_invite(meeting_contact, participation_form)
+        container = meeting_contact.meeting_container
+        author = container.author
+        contact = meeting_contact.contact
+        address = container.is_external? ? container.address : container.meeting_company.fact_address
+
+        key_words = {
+          contact: contact,
+          subject: container.subject,
+          meet_on: container.meet_on.strftime("%d-%m-%Y"),
+          start_time: container.start_time.strftime("%H:%M"),
+          end_time: container.end_time.strftime("%H:%M"),
+          author: author,
+          "author.job_title" => author.job_title,
+          "author.mail" => author.mail,
+          "author.phone" => author.phone,
+          meeting_company: container.meeting_company,
+          address: address,
+          place: container.place
+        }
+
+        @body = key_words.inject(Setting.plugin_redmine_meeting[:contacts_agenda_description]){ |result, item|
+          result.gsub("%#{item.first}%", "#{item.last}")
+        }
+        subject = key_words.inject(Setting.plugin_redmine_meeting[:contacts_agenda_subject]){ |result, item|
+          result.gsub("%#{item.first}%", "#{item.last}")
+        }
+
+        company = Organization.all.inject({}){ |result, org|
+          result.update MeetingCompany.where("name LIKE ?", "%#{org.title}%").first => org
+        }[container.meeting_company]
+
+        prev_code = PreviousCode.where(organization_id: 3, name: "outgoing_letter").last
+        outgoing_code = [prev_code.value.next, prev_code.year].join('-')
+        pdf_file = MeetingAgendaInvite.new.to_pdf(container, contact, participation_form, outgoing_code)
+        project =
+
+        attachments["Pv%04d_#{key_words[:meet_on]}.pdf" % container.id] = pdf_file
         mail(to: contact.email, subject: subject)
       end
 

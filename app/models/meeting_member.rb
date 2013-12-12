@@ -87,7 +87,7 @@ private
       subject: issue_subject,
       project: Project.find(settings[:project_id]),
       description: issue_description,
-      author: User.current,
+      author: self.meeting_agenda.author,
       start_date: Date.today,
       due_date: self.meeting_agenda.meet_on,
       priority: self.meeting_agenda.priority || IssuePriority.default,
