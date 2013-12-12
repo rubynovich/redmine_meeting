@@ -71,17 +71,17 @@ module MeetingProtocolsHelper
 
   def link_to_reporter(answer)
     if answer.reporter_id_is_contact?
-      link_to_contact answer.external_reporter
+      link_to_contact answer.external_reporter if answer.external_reporter.present?
     else
-      link_to_user answer.reporter
+      link_to_user answer.reporter if answer.reporter.present?
     end
   end
 
   def link_to_assigned_to(answer)
     if answer.user_id_is_contact?
-      link_to_contact answer.external_user
+      link_to_contact answer.external_user if answer.external_user.present?
     else
-      link_to_user answer.user
+      link_to_user answer.user if answer.user.present?
     end
   end
 
