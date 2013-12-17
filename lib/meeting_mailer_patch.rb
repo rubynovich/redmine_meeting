@@ -13,6 +13,10 @@ module MeetingPlugin
     end
 
     module ClassMethods
+      def default_url_options
+        { host: Setting.host_name, protocol: Setting.protocol }
+      end
+
       def meeting_approver_create(approver)
         author = User.current#approver.meeting_container.author
         user = approver.user
@@ -135,7 +139,8 @@ module MeetingPlugin
           "author.phone" => author.phone,
           meeting_company: container.meeting_company,
           address: address,
-          place: container.place
+          place: container.place,
+          url: url_for(controller: 'meeting_agendas', action: 'show', id: container.id, only_path: false)
         }
 
         @body = key_words.inject(Setting.plugin_redmine_meeting[:external_approvers_agenda_description]){ |result, item|
@@ -167,7 +172,8 @@ module MeetingPlugin
           "author.phone" => author.phone,
           meeting_company: container.meeting_company,
           address: address,
-          place: container.place
+          place: container.place,
+          url: url_for(controller: 'meeting_protocols', action: 'show', id: container.id, only_path: false)
         }
 
         @body = key_words.inject(Setting.plugin_redmine_meeting[:external_approvers_protocol_description]){ |result, item|
@@ -199,7 +205,8 @@ module MeetingPlugin
           "author.phone" => author.phone,
           meeting_company: container.meeting_company,
           address: address,
-          place: container.place
+          place: container.place,
+          url: url_for(controller: 'meeting_agendas', action: 'show', id: container.id, only_path: false)
         }
 
         @body = key_words.inject(Setting.plugin_redmine_meeting[:contacts_agenda_description]){ |result, item|
@@ -231,7 +238,8 @@ module MeetingPlugin
           "author.phone" => author.phone,
           meeting_company: container.meeting_company,
           address: address,
-          place: container.place
+          place: container.place,
+          url: url_for(controller: 'meeting_protocols', action: 'show', id: container.id, only_path: false)
         }
 
         @body = key_words.inject(Setting.plugin_redmine_meeting[:contacts_protocol_description]){ |result, item|

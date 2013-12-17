@@ -4,7 +4,7 @@ class MeetingMember < ActiveRecord::Base
   include Rails.application.routes.url_helpers
 
   def self.default_url_options
-    { :host => Setting.host_name, :protocol => Setting.protocol }
+    { host: Setting.host_name, protocol: Setting.protocol }
   end
 
   belongs_to :meeting_agenda
