@@ -5,6 +5,7 @@ class MeetingQuestion < ActiveRecord::Base
   belongs_to :user, class_name: "Person", foreign_key: "user_id"
   belongs_to :contact
   belongs_to :meeting_agenda
+  belongs_to :parent, class_name: "MeetingAgenda", foreign_key: "meeting_agenda_id"
   has_one :status, through: :issue
 #  has_one :project, through: :issue
   belongs_to :project

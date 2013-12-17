@@ -15,13 +15,13 @@ module MeetingCommentsHelper
     admin? ||
     meeting_manager? ||
     container.users.include?(User.current) ||
-    @object.watchers.include?(User.current)
+    container.parent.watchers.include?(User.current)
   end
 
   def can_create_comments?(container)
     admin? ||
     meeting_manager? ||
     container.users.include?(User.current) ||
-    @object.watchers.include?(User.current)
+    container.parent.watchers.include?(User.current)
   end
 end

@@ -11,6 +11,7 @@ class MeetingAgenda < ActiveRecord::Base
   belongs_to :asserter, class_name: 'Person', foreign_key: 'asserter_id'
   belongs_to :external_asserter, class_name: 'Contact', foreign_key: 'external_asserter_id'
   belongs_to :meeting_company
+  belongs_to :parent, class_name: 'MeetingAgenda', foreign_key: 'id'
   has_one :meeting_protocol
   has_many :meeting_questions, dependent: :delete_all, order: :position
   has_many :issues, through: :meeting_questions, order: :id, uniq: true

@@ -2,6 +2,7 @@ class MeetingExtraAnswer < ActiveRecord::Base
   unloadable
 
   belongs_to :meeting_protocol
+  belongs_to :parent, class_name: "MeetingProtocol", foreign_key: "meeting_protocol_id"
   belongs_to :user, class_name: "Person", foreign_key: "user_id"
   belongs_to :external_user, class_name: "Contact", foreign_key: "external_user_id"
   belongs_to :reporter, class_name: "Person", foreign_key: "reporter_id"

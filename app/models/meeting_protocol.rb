@@ -9,6 +9,7 @@ class MeetingProtocol < ActiveRecord::Base
   belongs_to :asserter, class_name: 'Person', foreign_key: 'asserter_id'
   belongs_to :external_asserter, class_name: 'Contact', foreign_key: 'external_asserter_id'
   belongs_to :meeting_company
+  belongs_to :parent, class_name: 'MeetingProtocol', foreign_key: 'id'
   has_one  :external_company, through: :meeting_agenda
   has_many :meeting_answers, dependent: :delete_all
   has_many :meeting_extra_answers, dependent: :delete_all
