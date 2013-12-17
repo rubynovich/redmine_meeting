@@ -150,7 +150,7 @@ module MeetingPlugin
           result.gsub("%#{item.first}%", "#{item.last}".strip)
         }
 
-        attachments["Pv%04d_#{key_words[:meet_on]}.pdf" % container.id] = MeetingAgendaReport.new.to_pdf(container)
+        attachments["Povestka_%04d_#{key_words[:meet_on]}.pdf" % container.id] = MeetingAgendaReport.new.to_pdf(container)
         mail(to: contact.email, subject: subject)
       end
 
@@ -183,7 +183,7 @@ module MeetingPlugin
           result.gsub("%#{item.first}%", "#{item.last}".strip)
         }
 
-        attachments["Pt%04d_#{key_words[:meet_on]}.pdf" % container.id] = MeetingProtocolReport.new.to_pdf(container)
+        attachments["Protokol_%04d_#{key_words[:meet_on]}.pdf" % container.id] = MeetingProtocolReport.new.to_pdf(container)
         mail(to: contact.email, subject: subject)
       end
 
@@ -216,7 +216,7 @@ module MeetingPlugin
           result.gsub("%#{item.first}%", "#{item.last}".strip)
         }
 
-        attachments["Pv%04d_#{key_words[:meet_on]}.pdf" % container.id] = MeetingAgendaReport.new.to_pdf(container)
+        attachments["Povestka_%04d_#{key_words[:meet_on]}.pdf" % container.id] = MeetingAgendaReport.new.to_pdf(container)
         mail(to: contact.email, subject: subject)
       end
 
@@ -249,7 +249,7 @@ module MeetingPlugin
           result.gsub("%#{item.first}%", "#{item.last}".strip)
         }
 
-        attachments["Pt%04d_#{key_words[:meet_on]}.pdf" % container.id] = MeetingProtocolReport.new.to_pdf(container)
+        attachments["Protokol_%04d_#{key_words[:meet_on]}.pdf" % container.id] = MeetingProtocolReport.new.to_pdf(container)
         mail(to: contact.email, subject: subject)
       end
 
