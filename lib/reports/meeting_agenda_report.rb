@@ -157,7 +157,7 @@ private
       move_down 5
       text("#{project || l(:label_without_project)}", size: 11, style: :bold, align: :center)
 #      move_down 5
-      collection.each_index do |object, index|
+      collection.each_with_index do |object, index|
         text("<b>#{l(:label_meeting_question_title)} #{index+1}:</b> <i>#{object}</i>", size: 10, inline_format: true)
         text("<b>#{l(:label_meeting_question_description)}:</b> <i>#{object.description.gsub(/[\n\r]+/, "\n").gsub(/[\t ]+/, " ")}</i>", size: 10, inline_format: true) if object.description.present?
         text("<b>#{l(:label_meeting_question_user)}:</b> <i>#{object.user_id_is_contact? ? object.contact : object.user}</i>", size: 10, inline_format: true)
