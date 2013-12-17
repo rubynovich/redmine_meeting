@@ -238,8 +238,8 @@ private
       move_down 5
       text("#{project || l(:label_without_project)}", size: 11, style: :bold, align: :center)
 #      move_down 5
-      answers.each do |object|
-        text("<b>#{l(:label_meeting_question)}:</b> <i>#{object.meeting_question}</i>", size: 10, inline_format: true)
+      answers.each_with_index do |object, index|
+        text("<b>#{l(:label_meeting_question)} #{index+1}:</b> <i>#{object.meeting_question}</i>", size: 10, inline_format: true)
         if object.reporter_id_is_contact?
           text("<b>#{l(:label_meeting_answer_reporter)}:</b> <i>#{object.external_reporter}</i>", size: 10, inline_format: true)
         else
