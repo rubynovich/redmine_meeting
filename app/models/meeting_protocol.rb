@@ -171,15 +171,15 @@ private
   end
 
   def add_new_users_from_answers
-    (self.all_meeting_answers.map(&:reporter) - self.users).compact.each do |user|
+    (self.all_meeting_answers.reject(&:reporter_id_is_contact).map(&:reporter).compact - self.users).compact.each do |user|
       MeetingParticipator.create(user_id: user.id, meeting_protocol_id: self.id)
     end
   end
 
   def add_new_contacts
-    new_contacts =  self.all_meeting_answers.select(&:reporter_id_is_contact).map(&:reporter)
-    new_contacts += self.all_meeting_answers.select(&:user_id_is_contact).map(&:user)
-    (new_contacts - self.contacts).compact.each do |contact|
+    new_contacts = self.all_meeting_answers.select(&:reporter_id_is_contact).map(&:external_reporter)
+    new_contacts += self.all_meeting_answers.select(&:user_id_is_contact).map(&:external_user)
+    (new_contacts.compact - self.contacts).compact.each do |contact|
       MeetingContact.create(meeting_container_type: self.class.to_s, meeting_container_id: self.id, contact_id: contact.id)
     end
   end

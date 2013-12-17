@@ -12,10 +12,16 @@ module MeetingCommentsHelper
   end
 
   def can_show_comments?(container)
-    admin? || meeting_manager? || container.users.include?(User.current)
+    admin? ||
+    meeting_manager? ||
+    container.users.include?(User.current) ||
+    container.watchers.include?(User.current)
   end
 
   def can_create_comments?(container)
-    admin? || meeting_manager? || container.users.include?(User.current)
+    admin? ||
+    meeting_manager? ||
+    container.users.include?(User.current) ||
+    container.watchers.include?(User.current)
   end
 end

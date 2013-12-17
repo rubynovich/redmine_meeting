@@ -213,7 +213,7 @@ private
   end
 
   def add_new_users_from_questions
-    (self.meeting_questions.map(&:user) - self.users).compact.each do |user|
+    (self.meeting_questions.reject(&:user_id_is_contact).map(&:user) - self.users).compact.each do |user|
       MeetingMember.create(user_id: user.id, meeting_agenda_id: self.id)
     end
   end
@@ -221,7 +221,7 @@ private
   def add_new_contacts
     new_contacts = self.meeting_questions.select(&:user_id_is_contact).map(&:contact)
     new_contacts << self.external_asserter if self.asserter_id_is_contact?
-    (new_contacts - self.contacts).compact.each do |contact|
+    (new_contacts.compact - self.contacts).compact.each do |contact|
       MeetingContact.create(meeting_container_type: self.class.to_s, meeting_container_id: self.id, contact_id: contact.id)
     end
   end
