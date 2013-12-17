@@ -144,10 +144,10 @@ module MeetingPlugin
         }
 
         @body = key_words.inject(Setting.plugin_redmine_meeting[:external_approvers_agenda_description]){ |result, item|
-          result.gsub("%#{item.first}%", "#{item.last}")
+          result.gsub("%#{item.first}%", "#{item.last}".strip)
         }
         subject = key_words.inject(Setting.plugin_redmine_meeting[:external_approvers_agenda_subject]){ |result, item|
-          result.gsub("%#{item.first}%", "#{item.last}")
+          result.gsub("%#{item.first}%", "#{item.last}".strip)
         }
 
         attachments["Pv%04d_#{key_words[:meet_on]}.pdf" % container.id] = MeetingAgendaReport.new.to_pdf(container)
@@ -177,10 +177,10 @@ module MeetingPlugin
         }
 
         @body = key_words.inject(Setting.plugin_redmine_meeting[:external_approvers_protocol_description]){ |result, item|
-          result.gsub("%#{item.first}%", "#{item.last}")
+          result.gsub("%#{item.first}%", "#{item.last}".strip)
         }
         subject = key_words.inject(Setting.plugin_redmine_meeting[:external_approvers_protocol_subject]){ |result, item|
-          result.gsub("%#{item.first}%", "#{item.last}")
+          result.gsub("%#{item.first}%", "#{item.last}".strip)
         }
 
         attachments["Pt%04d_#{key_words[:meet_on]}.pdf" % container.id] = MeetingProtocolReport.new.to_pdf(container)
@@ -210,10 +210,10 @@ module MeetingPlugin
         }
 
         @body = key_words.inject(Setting.plugin_redmine_meeting[:contacts_agenda_description]){ |result, item|
-          result.gsub("%#{item.first}%", "#{item.last}")
+          result.gsub("%#{item.first}%", "#{item.last}".strip)
         }
         subject = key_words.inject(Setting.plugin_redmine_meeting[:contacts_agenda_subject]){ |result, item|
-          result.gsub("%#{item.first}%", "#{item.last}")
+          result.gsub("%#{item.first}%", "#{item.last}".strip)
         }
 
         attachments["Pv%04d_#{key_words[:meet_on]}.pdf" % container.id] = MeetingAgendaReport.new.to_pdf(container)
@@ -243,10 +243,10 @@ module MeetingPlugin
         }
 
         @body = key_words.inject(Setting.plugin_redmine_meeting[:contacts_protocol_description]){ |result, item|
-          result.gsub("%#{item.first}%", "#{item.last}")
+          result.gsub("%#{item.first}%", "#{item.last}".strip)
         }
         subject = key_words.inject(Setting.plugin_redmine_meeting[:contacts_protocol_subject]){ |result, item|
-          result.gsub("%#{item.first}%", "#{item.last}")
+          result.gsub("%#{item.first}%", "#{item.last}".strip)
         }
 
         attachments["Pt%04d_#{key_words[:meet_on]}.pdf" % container.id] = MeetingProtocolReport.new.to_pdf(container)
