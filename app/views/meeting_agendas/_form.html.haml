@@ -15,10 +15,10 @@
       = f.text_field :subject, size: 100, style: 'width: 80%'
     %p{id: 'external_place_type'}
       = f.label :external_place_type, class: 'necessary'
-      = f.radio_button :external_place_type, :building_object
-      = t(:building_object, scope: 'external_place_for_select')
       = f.radio_button :external_place_type, :external_company
       = t(:external_company, scope: 'external_place_for_select')
+      = f.radio_button :external_place_type, :building_object
+      = t(:building_object, scope: 'external_place_for_select')
     %p{id: 'external_company'}
       = f.label :external_company, class: 'necessary'
       = f.collection_select :external_company_id, Contact.companies.order_by_name, :id, :name, prompt: t(:prompt_please_select)
