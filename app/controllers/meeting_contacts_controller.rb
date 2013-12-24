@@ -2,6 +2,7 @@ class MeetingContactsController < ApplicationController
   unloadable
 
   before_filter :find_object, only: [:new, :create, :destroy, :autocomplete_for_contact]
+  before_filter :require_meeting_manager
 
   def new
     @no_contacts = Contact.order_by_name.people
@@ -73,5 +74,9 @@ private
 
   def contacts_from_session
     Contact.order_by_name.people.find(session[session_id])
+  end
+
+  def require_meeting_manager
+    (render_403; return false) unless User.current.meeting_manager?
   end
 end

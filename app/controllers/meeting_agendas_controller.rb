@@ -3,6 +3,7 @@ class MeetingAgendasController < ApplicationController
 
   before_filter :find_object, only: [:edit, :show, :destroy, :update, :send_invites, :resend_invites, :group, :ungroup]
   before_filter :new_object, only: [:new, :create]
+  before_filter :require_meeting_manager, except: [:index, :show]
 
   helper :attachments
   include AttachmentsHelper
@@ -245,5 +246,9 @@ private
 
   def new_object
     @object = model_class.new(params[model_sym])
+  end
+
+  def require_meeting_manager
+    (render_403; return false) unless User.current.meeting_manager?
   end
 end

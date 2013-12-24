@@ -2,6 +2,7 @@ class MeetingApproversController < ApplicationController
   unloadable
 
   helper :watchers
+  before_filter :require_meeting_manager
 
   def new
     @show_form = "true"
@@ -69,5 +70,9 @@ private
 
   def meeting_approver_users
     meeting_approvers.map(&:user)
+  end
+
+  def require_meeting_manager
+    (render_403; return false) unless User.current.meeting_manager?
   end
 end

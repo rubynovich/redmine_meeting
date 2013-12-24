@@ -12,4 +12,10 @@ class MeetingRoomSelectorsController < ApplicationController
   def create
     @room = MeetingRoom.open.find(params[:meeting_room_id])
   end
+
+private
+
+  def require_meeting_manager
+    (render_403; return false) unless User.current.meeting_manager?
+  end
 end

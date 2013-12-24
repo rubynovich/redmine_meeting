@@ -18,6 +18,7 @@ class MeetingProtocolsController < ApplicationController
 
   before_filter :find_object, only: [:edit, :show, :destroy, :update, :send_notices, :resend_notices]
   before_filter :new_object, only: [:new, :create]
+  before_filter :require_meeting_manager, except: [:index, :show]
 
   def send_notices
     (render_403; return false) unless can_send_notices?(@object)
@@ -254,5 +255,9 @@ private
 
   def execute_pending_issues
     (@object.meeting_answers + @object.meeting_extra_answers).select(&:pending_issue).map(&:pending_issue).map(&:execute)
+  end
+
+  def require_meeting_manager
+    (render_403; return false) unless User.current.meeting_manager?
   end
 end

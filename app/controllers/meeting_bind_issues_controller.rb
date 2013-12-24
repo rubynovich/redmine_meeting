@@ -7,6 +7,7 @@ class MeetingBindIssuesController < ApplicationController
   include MeetingIssuesHelper
 
   before_filter :find_answer, only: [:new, :create]
+  before_filter :require_meeting_manager
 
   def create
     unless @answer.update_attributes(params[params[:meeting_answer_type].underscore])
@@ -23,5 +24,9 @@ private
       when 'MeetingExtraAnswer'
         MeetingExtraAnswer
     end.find(params[:meeting_answer_id])
+  end
+
+  def require_meeting_manager
+    (render_403; return false) unless User.current.meeting_manager?
   end
 end

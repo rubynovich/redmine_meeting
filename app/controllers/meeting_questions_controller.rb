@@ -3,6 +3,7 @@ class MeetingQuestionsController < ApplicationController
 
   helper :meeting_comments
   include MeetingCommentsHelper
+  before_filter require_meeting_manager
 
   def update
     @question = MeetingQuestion.find(params[:id])
@@ -12,5 +13,11 @@ class MeetingQuestionsController < ApplicationController
       @question.save
 #      redirect_back_or_default controller: 'meeting_agendas', action: 'show', id: @object.meeting_agenda_id
     end
+  end
+
+private
+
+  def require_meeting_manager
+    (render_403; return false) unless User.current.meeting_manager?
   end
 end
