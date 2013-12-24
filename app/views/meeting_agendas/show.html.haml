@@ -42,7 +42,7 @@
     %tr
       %th=l(:field_subject)+":"
       %td{colspan: 3}=h @object.subject
-    - if @object.is_external?
+    - if @object.is_external? && @object.external_place_type["external_company"]
       %tr
         %th=l(:field_external_company)+":"
         %td{colspan: 3}=link_to_contact @object.external_company

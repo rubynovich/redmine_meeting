@@ -7,12 +7,18 @@
 .box.tabular
   %p
     = f.label :is_external, l(:label_is_external_meeting)
-    = f.check_box :is_external, value: 1, onclick: 'toggleExternal(this);'
+    = f.check_box :is_external, value: 1
   = render partial: "online_meetings/form_meeting_agendas", locals: {f: f} rescue nil
   %fieldset
     %p
       = f.label :subject, class: 'necessary'
       = f.text_field :subject, size: 100, style: 'width: 80%'
+    %p{id: 'external_place_type'}
+      = f.label :external_place_type, class: 'necessary'
+      = f.radio_button :external_place_type, :building_object
+      = t(:building_object, scope: 'external_place_for_select')
+      = f.radio_button :external_place_type, :external_company
+      = t(:external_company, scope: 'external_place_for_select')
     %p{id: 'external_company'}
       = f.label :external_company, class: 'necessary'
       = f.collection_select :external_company_id, Contact.companies.order_by_name, :id, :name, prompt: t(:prompt_please_select)
@@ -38,7 +44,7 @@
       = f.label :asserter_id_is_contact, t(:label_meeting_agenda_asserter_is_contact)
       = f.check_box :asserter_id_is_contact, class: 'user_id_is_contact', onclick: 'toggleReporterType(this);'
     %p
-      = f.label :meeting_company
+      = f.label :meeting_company, class: 'necessary'
       = f.collection_select :meeting_company_id, MeetingCompany.sorted, :id, :name, prompt: t(:prompt_please_select)
     .splitcontentleft
       %p
@@ -66,18 +72,40 @@
 
   :javascript
     function toggleExternal(element) {
+      $('#external_company').hide();
+      $('#address').hide();
       if (element.checked) {
-        $('#external_company').show();
+        $('#external_place_type').show();
         $('label[for=meeting_agenda_external_company]').get(0).innerHTML='#{l(:field_external_company)}<span class="required"> *</span>';
-        $('#address').show();
         $('#place').hide();
         $('#link_to_meeting_room').hide();
+        $('#meeting_agenda_external_place_type_building_object').each( function(){
+          toggleBuildingObject(this);
+        });
+        $('#meeting_agenda_external_place_type_external_company').each( function(){
+           toggleExternalCompany(this);
+        });
       } else {
-        $('#external_company').hide();
+        $('#external_place_type').hide();
         $('label[for=meeting_agenda_external_company]').get(0).innerHTML='#{l(:field_external_company)}';
-        $('#address').hide();
         $('#place').show();
         $('#link_to_meeting_room').show();
+      }
+    }
+
+    function toggleBuildingObject(element) {
+      if (element.checked) {
+        $('#external_company').hide();
+        $('#address').show();
+        $('label[for=meeting_agenda_address]').get(0).innerHTML='#{l(:field_address)}<span class="required"> *</span>';
+      }
+    }
+
+    function toggleExternalCompany(element) {
+      if (element.checked) {
+        $('#external_company').show();
+        $('#address').show();
+        $('label[for=meeting_agenda_address]').get(0).innerHTML='#{l(:field_address)}';
       }
     }
 
@@ -113,6 +141,15 @@
         $('.user_id_is_contact').each( function() {
           toggleReporterType(this);
         });
+      });
+      $('#meeting_agenda_is_external').on('click', function() {
+        toggleExternal(this);
+      });
+      $('#meeting_agenda_external_place_type_external_company').on('click', function() {
+        toggleExternalCompany(this);
+      });
+      $('#meeting_agenda_external_place_type_building_object').on('click', function() {
+        toggleBuildingObject(this);
       });
       $('#meeting_agenda_is_external').each( function() {
         toggleExternal(this);

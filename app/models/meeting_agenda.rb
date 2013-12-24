@@ -48,11 +48,13 @@ class MeetingAgenda < ActiveRecord::Base
   attr_accessible :subject, :place, :meet_on, :start_time, :end_time, :priority_id, :external_company_id
   attr_accessible :is_external, :asserter_id, :meeting_company_id
   attr_accessible :asserter_id_is_contact, :external_asserter_id, :address
+  attr_accessible :external_place_type
 
   validates_uniqueness_of :subject, scope: :meet_on
   validates_presence_of :subject, :meet_on, :start_time, :end_time, :priority_id
   validates_presence_of :place, unless: -> { self.is_external? }
-  validates_presence_of :external_company_id, if: -> { self.is_external? }
+  validates_presence_of :external_company_id, if: -> { self.is_external? && self.external_place_type && self.external_place_type["external_company"] }
+  validates_presence_of :address, if: -> { self.is_external? && self.external_place_type && self.external_place_type["building_object"] }
   validates_presence_of :asserter_id, unless: -> { self.asserter_id_is_contact? }
   validates_presence_of :external_asserter_id, if: -> { self.asserter_id_is_contact? }
   validates_presence_of :meeting_company_id

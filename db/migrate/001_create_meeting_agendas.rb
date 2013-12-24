@@ -3,6 +3,8 @@ class CreateMeetingAgendas < ActiveRecord::Migration
     create_table :meeting_agendas do |t|
       t.string :subject
       t.string :place
+      t.string :address
+      t.string :external_place_type
       t.integer :priority_id
       t.references :meeting_room_reserve
       t.boolean :is_external, default: false

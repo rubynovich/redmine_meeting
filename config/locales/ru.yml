@@ -7,7 +7,7 @@ ru:
   field_meeting_members: "Заявленные участники"
   field_member: "Участник"
   field_meet_on: "Дата совещания"
-  field_place: "Место"
+  field_place: "Место проведения"
   label_meeting_agenda: "Повестка совещания"
   label_meeting_agenda_plural: "Повестки совещаний"
   label_meeting_agenda_new: "Новая повестка совещания"
@@ -198,6 +198,7 @@ ru:
   field_meeting_agenda: "Повестка совещания"
   field_asserter: "Утверждающий"
   field_external_asserter: "Утверждающий"
+  field_external_place_type: "Место проведения"
   error_messages_meeting_answers_must_exist: "Рассмотренные вопросы должны присутствовать"
   error_messages_meeting_questions_must_exist: "Вопросы на рассмотрение должны присутствовать"
   error_messages_meeting_room_not_reserved: "Невозможно зарезервировать переговорную на указанное время"
@@ -251,3 +252,6 @@ ru:
     fax: ""
     email: "E-mail:info@stroytorgi.ru"
     site: "http://www.stroytorgi.ru"
+  external_place_for_select:
+    building_object: "Объект"
+    external_company: "Компания"
