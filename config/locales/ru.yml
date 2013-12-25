@@ -128,7 +128,7 @@ ru:
   label_meeting_agenda_asserter_is_contact: "Утверждает внешний сотрудник"
   label_meeting_answer_reporter_is_contact: "Внешний докладчик"
   label_meeting_answer_user_is_contact: "Внешний исполнитель"
-  label_new_meeting_external_approvers: "Добавление внешних наблюдателей"
+  label_new_meeting_external_approvers: "Добавление внешних согласующих"
   field_meeting_external_approvers: "Внешние согласующие"
   label_meeting_external_approvers_agenda: "Согласование повестки у внешних согласующих"
   label_meeting_external_approvers_protocol: "Согласование протокола у внешних согласующих"
