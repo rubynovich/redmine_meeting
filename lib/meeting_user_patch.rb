@@ -19,12 +19,13 @@ module MeetingPlugin
     module InstanceMethods
       def meeting_manager?
         begin
-          principal = Principal.find(Setting[:plugin_redmine_meeting][:principal_id])
-          if principal.is_a?(Group)
-            principal.users.include?(self)
-          elsif principal.is_a?(User)
-            principal == self
-          end
+          principal = Principal.find(Setting.plugin_redmine_meeting[:principal_id])
+          self.is_or_belongs_to?(principal)
+#          if principal.is_a?(Group)
+#            principal.users.include?(self)
+#          elsif principal.is_a?(User)
+#            principal == self
+#          end
         rescue
           nil
         end
