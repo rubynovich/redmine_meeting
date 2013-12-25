@@ -101,9 +101,9 @@
         %th=l(:field_company)
         %th=l(:field_job_title)
         %th=l(:field_contact)
-        %th=l(:field_mobile_phone)
+        %th=l(:field_contact_mobile_phone)
         %th=l(:field_email)
-        %th=l(:field_fax)
+        %th=l(:field_contact_fax)
       - @object.contacts.each do |contact|
         %tr.issue
           %td{style: "white-space: pre-line; width: 20%"}= h contact.company

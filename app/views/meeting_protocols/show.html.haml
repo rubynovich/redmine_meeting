@@ -117,9 +117,9 @@
         %th{style: "white-space: pre-line; width: 25%"}=l(:field_company)
         %th{style: "white-space: pre-line; width: 25%"}=l(:field_job_title)
         %th=l(:field_contact)
-        %th=l(:field_mobile_phone)
+        %th=l(:field_contact_mobile_phone)
         %th=l(:field_email)
-        %th=l(:field_fax)
+        %th=l(:field_contact_fax)
         %th=l(:label_meeting_invite_status)
       - (agenda_contacts|protocol_contacts).compact.sort_by(&:name).each do |contact|
         %tr.issue
