@@ -152,20 +152,21 @@ private
   def print_meeting_questions(questions)
     text("#{l(:label_meeting_question_plural)}:", size: 13, style: :bold)
 #    move_down 5
-
+    project_index = 0
     questions.group_by(&:project).sort_by{ |project, collection| project.to_s }.each do |project, collection|
+      project_index += 1
       move_down 5
-      text("#{project || l(:label_without_project)}", size: 11, style: :bold, align: :center)
+      text("#{project_index}. #{project || l(:label_without_project)}", size: 11, style: :bold, align: :center)
 #      move_down 5
       collection.each_with_index do |object, index|
-        text("<b>#{l(:label_meeting_question_title)} #{index+1}:</b> <i>#{object}</i>", size: 10, inline_format: true)
+        text("<b>#{project_index}.#{index+1}. #{l(:label_meeting_question_title)}:</b> <i>#{object}</i>", size: 10, inline_format: true)
         text("<b>#{l(:label_meeting_question_description)}:</b> <i>#{object.description.gsub(/[\n\r]+/, "\n").gsub(/[\t ]+/, " ")}</i>", size: 10, inline_format: true) if object.description.present?
         text("<b>#{l(:label_meeting_question_user)}:</b> <i>#{object.user_id_is_contact? ? object.contact : object.user}</i>", size: 10, inline_format: true)
         if object.issue.present?
           text("<b>#{object.issue.tracker} №#{object.issue_id}:</b> <i>#{object.issue.subject} (#{object.status})</i>", size: 10, inline_format: true, align: :left)
           text("<b>#{l(:field_assigned_to)}:</b> <i>#{object.issue.assigned_to}</i>", size: 10, inline_format: true, align: :left)
-          move_up 13
-          text("<b>#{l(:field_start_date)}:</b> <i>#{format_date(object.issue.start_date)}</i>", size: 10, inline_format: true, align: :center)
+#          move_up 13
+#          text("<b>#{l(:field_start_date)}:</b> <i>#{format_date(object.issue.start_date)}</i>", size: 10, inline_format: true, align: :center)
           move_up 13
           text("<b>#{l(:field_due_date)}:</b> <i>#{format_date(object.issue.due_date)}</i>", size: 10, inline_format: true, align: :right)
         end
@@ -178,10 +179,10 @@ private
   def print_old_meeting_questions(questions)
     text("#{l(:label_meeting_question_plural)}:", size: 13, style: :bold)
 #    move_down 5
-
+    project_index = 0
     questions.group_by(&:project).sort_by{ |project, questions| project.to_s }.each do |project, questions|
       move_down 5
-      text("#{project || l(:label_without_project)}", size: 10, style: :bold, align: :center)
+      text("#{project_index} #{project || l(:label_without_project)}", size: 10, style: :bold, align: :center)
 #      move_down 5
 
       question_list = [[

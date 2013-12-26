@@ -233,13 +233,14 @@ private
   def print_meeting_answers(answers)
     text("#{l(:label_meeting_answer_plural)}:", size: 13, style: :bold)
 #    move_down 5
-
+    project_index = 0
     answers.group_by(&:project).sort_by{ |project, answers| project.to_s }.each do |project, answers|
+      project_index += 1
       move_down 5
       text("#{project || l(:label_without_project)}", size: 11, style: :bold, align: :center)
 #      move_down 5
       answers.each_with_index do |object, index|
-        text("<b>#{l(:label_meeting_question)} #{index+1}:</b> <i>#{object.meeting_question}</i>", size: 10, inline_format: true)
+        text("<b>#{project_index}.#{index+1}. #{l(:label_meeting_question)}:</b> <i>#{object.meeting_question}</i>", size: 10, inline_format: true)
         if object.reporter_id_is_contact?
           text("<b>#{l(:label_meeting_answer_reporter)}:</b> <i>#{object.external_reporter}</i>", size: 10, inline_format: true)
         else
@@ -258,8 +259,8 @@ private
           end
           text("<b>#{l(:label_meeting_answer_user)}:</b> <i>#{object.user}</i>", size: 10, inline_format: true)
         end
-        move_up 13
-        text("<b>#{l(:field_start_date)}:</b> <i>#{format_date(object.start_date)}</i>", size: 10, inline_format: true, align: :center)
+#        move_up 13
+#        text("<b>#{l(:field_start_date)}:</b> <i>#{format_date(object.start_date)}</i>", size: 10, inline_format: true, align: :center)
         move_up 13
         text("<b>#{l(:field_due_date)}:</b> <i>#{format_date(object.due_date)}</i>", size: 10, inline_format: true, align: :right)
         move_down 10
