@@ -63,7 +63,7 @@ class MeetingProtocolsController < ApplicationController
     @watchers = @object.watchers
     respond_to do |format|
       format.pdf {
-        filename = (@object.meet_on.strftime("meeting_protocol_%04d_%Y-%m-%d.pdf") % [@object.id])
+        filename = ("Protokol_%04d" % [@object.id]) + @object.meet_on.strftime("_%Y-%m-%d.pdf")
         send_data MeetingProtocolReport.new.to_pdf(@object), filename: filename, type: "application/pdf", disposition: "inline"
       }
       format.html
