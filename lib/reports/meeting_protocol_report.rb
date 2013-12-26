@@ -237,7 +237,7 @@ private
     answers.group_by(&:project).sort_by{ |project, answers| project.to_s }.each do |project, answers|
       project_index += 1
       move_down 5
-      text("#{project || l(:label_without_project)}", size: 11, style: :bold, align: :center)
+      text("#{project_index}. #{project || l(:label_without_project)}", size: 11, style: :bold, align: :center)
 #      move_down 5
       answers.each_with_index do |object, index|
         text("<b>#{project_index}.#{index+1}. #{l(:label_meeting_question)}:</b> <i>#{object.meeting_question}</i>", size: 10, inline_format: true)
