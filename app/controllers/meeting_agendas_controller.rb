@@ -132,7 +132,7 @@ class MeetingAgendasController < ApplicationController
   end
 
   def new
-    (render_403; return false) unless can_create_agenda?(@object)
+    (render_403; return false) unless can_create_agenda?
     @object.priority = IssuePriority.default
     session[:meeting_member_ids] = [User.current.id]
     session[:meeting_contact_ids] = []
@@ -141,7 +141,7 @@ class MeetingAgendasController < ApplicationController
   end
 
   def copy
-    (render_403; return false) unless can_create_agenda?(@object)
+    (render_403; return false) unless can_create_agenda?
     i = -1
     @old_object = model_class.find(params[:id])
     @object = model_class.new(@old_object.attributes)
