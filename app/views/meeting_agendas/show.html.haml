@@ -3,6 +3,13 @@
   @media print {
     .show-when-print { display: block;}
   }
+  .is_deleted{
+    color: white;
+    background-color: red;
+    text-transform: uppercase;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
 .contextual
   - if can_create_agenda?
     = link_to l(:button_add), {action: 'new'}, class: 'icon icon-add'
@@ -29,6 +36,8 @@
   - else
     = l(:label_meeting_agenda)
   ="##{h @object.id}"
+  - if @object.is_deleted?
+    %span.is_deleted= l(:label_meeting_agenda_is_deleted)
 
 %h2.show-when-print{style: "text-align: center"}
   - if @object.is_external?

@@ -73,7 +73,9 @@ class MeetingProtocolsController < ApplicationController
   def index
     @limit = per_page_option
 
-    @scope = model_class.includes(:meeting_agenda).
+    @scope = model_class.
+      active.
+      includes(:meeting_agenda).
       time_period(params[:time_period_created_on], 'meeting_protocols.created_on').
       time_period(params[:time_period_meet_on], 'meeting_agendas.meet_on').
       eql_field(params[:author_id], 'meeting_protocols.author_id').
@@ -163,7 +165,9 @@ class MeetingProtocolsController < ApplicationController
 
   def destroy
     (render_403; return false) unless can_destroy_protocol?(@object)
-    flash[:notice] = l(:notice_successful_delete) if @object.destroy
+    if @object.update_attribute(:is_deleted, true)
+      flash[:notice] = l(:notice_successful_delete)
+    end
     redirect_to action: 'index'
   end
 

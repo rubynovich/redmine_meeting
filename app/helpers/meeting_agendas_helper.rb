@@ -41,10 +41,14 @@ module MeetingAgendasHelper
 
   def link_to_protocol(item)
     if item.meeting_protocol.present?
-      if can_show_protocol?(item.meeting_protocol)
-        link_to "#{t(:label_meeting_protocol)} ##{item.meeting_protocol.id}", controller: 'meeting_protocols', action: 'show', id: item.meeting_protocol.id
+      if item.meeting_protocol.is_deleted?
+        t(:label_meeting_protocol_is_deleted)
       else
-        "#{t(:label_meeting_protocol)} ##{item.meeting_protocol.id}"
+        if can_show_protocol?(item.meeting_protocol)
+          link_to "#{t(:label_meeting_protocol)} ##{item.meeting_protocol.id}", controller: 'meeting_protocols', action: 'show', id: item.meeting_protocol.id
+        else
+          "#{t(:label_meeting_protocol)} ##{item.meeting_protocol.id}"
+        end
       end
     elsif can_create_protocol?(item)
       link_to t(:button_add), {controller: 'meeting_protocols', action: 'new', meeting_protocol: {meeting_agenda_id: item.id}}, {class: 'icon icon-add'}
@@ -56,7 +60,8 @@ module MeetingAgendasHelper
       agenda.meet_on && (
         (agenda.meet_on < Date.today) ||
         (agenda.meet_on == Date.today) && (agenda.start_time.seconds_since_midnight < Time.now.seconds_since_midnight)
-      )
+      ) &&
+      !agenda.is_deleted?
   end
 
   def can_send_invites?(agenda)
@@ -81,7 +86,7 @@ module MeetingAgendasHelper
   end
 
   def can_destroy_agenda?(agenda)
-    (admin? || meeting_manager? && author?(agenda)) && agenda.meeting_protocol.blank?
+    (admin? || meeting_manager? && author?(agenda)) && agenda.meeting_protocol.blank? && !agenda.is_deleted?
   end
 
 #  def can_show_comments?(question)

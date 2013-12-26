@@ -58,6 +58,10 @@ class MeetingProtocol < ActiveRecord::Base
     self.start_time && self.end_time && (self.end_time.seconds_since_midnight < self.start_time.seconds_since_midnight)
   }
 
+  scope :active, -> {
+    where('meeting_protocols.is_deleted' => false)
+  }
+
   scope :like_field, ->(q, field) {
     if q.present? && field.present?
       where("LOWER(#{field}) LIKE LOWER(?)", "%#{q.to_s.downcase}%")

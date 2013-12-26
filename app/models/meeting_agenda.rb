@@ -73,6 +73,10 @@ class MeetingAgenda < ActiveRecord::Base
   validate :meeting_room_reserve_validation, if: -> { MeetingRoom.where("LOWER(name) = LOWER(?)", self.place).present? && !self.is_external? }
   validate :meeting_question_title_uniq, if: -> { mq = self.meeting_questions.map(&:title); mq.size != mq.uniq.size }
 
+  scope :active, -> {
+    where('meeting_agendas.is_deleted' => false)
+  }
+
   scope :free, -> {
     where("id NOT IN (SELECT meeting_agenda_id FROM meeting_protocols)")
   }

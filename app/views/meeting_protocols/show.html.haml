@@ -6,6 +6,13 @@
   @media print {
     .show-when-print { display: block;}
   }
+  .is_deleted{
+    color: white;
+    background-color: red;
+    text-transform: uppercase;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
 
 .contextual
   - if can_update_protocol?(@object)
@@ -31,6 +38,9 @@
   - else
     = l(:label_meeting_protocol)
   ="##{h @object.id}"
+  - if @object.is_deleted?
+    %span.private= l(:label_meeting_protocol_is_deleted)
+
 
 %h2.show-when-print{style: "text-align: center"}
   - if @object.is_external?

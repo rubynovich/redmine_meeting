@@ -96,6 +96,7 @@ class MeetingAgendasController < ApplicationController
     @limit = per_page_option
 
     @scope = model_class.
+      active.
       time_period(params[:time_period_created_on], 'meeting_agendas.created_on').
       time_period(params[:time_period_meet_on], 'meeting_agendas.meet_on').
       eql_field(params[:author_id], 'meeting_agendas.author_id').
@@ -131,6 +132,7 @@ class MeetingAgendasController < ApplicationController
   end
 
   def new
+    (render_403; return false) unless can_create_agenda?(@object)
     @object.priority = IssuePriority.default
     session[:meeting_member_ids] = [User.current.id]
     session[:meeting_contact_ids] = []
@@ -139,6 +141,7 @@ class MeetingAgendasController < ApplicationController
   end
 
   def copy
+    (render_403; return false) unless can_create_agenda?(@object)
     i = -1
     @old_object = model_class.find(params[:id])
     @object = model_class.new(@old_object.attributes)
@@ -153,6 +156,7 @@ class MeetingAgendasController < ApplicationController
   end
 
   def from_protocol
+    (render_403; return false) unless can_create_agenda?(@object)
     i = -1
     @old_object = MeetingProtocol.find(params[:meeting_protocol_id])
     @object = MeetingAgenda.new(@old_object.meeting_agenda.attributes.merge(@old_object.attributes))
@@ -168,6 +172,7 @@ class MeetingAgendasController < ApplicationController
 
 
   def create
+    (render_403; return false) unless can_create_agenda?(@object)
     @object.meeting_members_attributes = session[:meeting_member_ids].map{ |user_id| {user_id: user_id} } if session[:meeting_member_ids].present?
     @object.meeting_contacts_attributes = session[:meeting_contact_ids].map{ |contact_id| {contact_id: contact_id} } if session[:meeting_contact_ids].present?
     @object.meeting_watchers_attributes = session[:meeting_watcher_ids].map{ |user_id| {user_id: user_id} } if session[:meeting_watcher_ids].present?
@@ -183,10 +188,12 @@ class MeetingAgendasController < ApplicationController
   end
 
   def edit
+    (render_403; return false) unless can_update_agenda?(@object)
     nested_objects_from_database
   end
 
   def update
+    (render_403; return false) unless can_update_agenda?(@object)
     @object.save_attachments(params[:attachments])
     if @object.update_attributes(params[model_sym])
       flash[:notice] = l(:notice_successful_update)
@@ -199,8 +206,11 @@ class MeetingAgendasController < ApplicationController
   end
 
   def destroy
+    (render_403; return false) unless can_destroy_agenda?(@object)
     close_invites
-    flash[:notice] = l(:notice_successful_delete) if @object.destroy
+    if @object.update_attribute(:is_deleted, true)
+      flash[:notice] = l(:notice_successful_delete)
+    end
     redirect_to action: 'index'
   end
 
@@ -214,7 +224,7 @@ private
 
   def cancel_issue(issue)
     issue.init_journal(User.current, ::I18n.t(:message_meeting_canceled))
-    issue.status = IssueStatus.find(Setting[:plugin_redmine_meeting][:cancel_issue_status])
+    issue.status = IssueStatus.find(Setting.plugin_redmine_meeting[:cancel_issue_status])
     issue.save!
   end
 
