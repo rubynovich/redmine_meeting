@@ -8,10 +8,14 @@
   }
   .is_deleted{
     color: white;
-    background-color: red;
     text-transform: uppercase;
-    padding-left: 10px;
-    padding-right: 10px;
+    padding-left: 5px;
+    padding-right: 5px;
+    font-size: 50%;
+    border-radius: 4px;
+    background: #d22;
+    position: relative;
+    bottom: 4px;
   }
 
 .contextual
@@ -33,13 +37,13 @@
 %h2.hide-when-print
   = link_to l(:label_meeting_protocol_plural), action: 'index'
   &#187;
+  - if @object.is_deleted?
+    %span.is_deleted= l(:label_meeting_protocol_is_deleted)
   - if @object.is_external?
     = l(:label_external_meeting_protocol)
   - else
     = l(:label_meeting_protocol)
   ="##{h @object.id}"
-  - if @object.is_deleted?
-    %span.private= l(:label_meeting_protocol_is_deleted)
 
 
 %h2.show-when-print{style: "text-align: center"}

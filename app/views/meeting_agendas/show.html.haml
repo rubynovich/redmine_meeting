@@ -6,12 +6,15 @@
   .is_deleted{
     color: white;
     text-transform: uppercase;
-    padding-left: 10px;
-    padding-right: 10px;
-    font-size: 60%;
-    border-radius: 10px;
+    padding-left: 5px;
+    padding-right: 5px;
+    font-size: 50%;
+    border-radius: 4px;
     background: #d22;
+    position: relative;
+    bottom: 4px;
   }
+
 .contextual
   - if can_create_agenda?
     = link_to l(:button_add), {action: 'new'}, class: 'icon icon-add'
@@ -33,13 +36,13 @@
 %h2.hide-when-print
   = link_to l(:label_meeting_agenda_plural), action: 'index'
   &#187;
+  - if @object.is_deleted?
+    %span.is_deleted= l(:label_meeting_agenda_is_deleted)
   - if @object.is_external?
     = l(:label_external_meeting_agenda)
   - else
     = l(:label_meeting_agenda)
   ="##{h @object.id}"
-  - if @object.is_deleted?
-    %span.is_deleted= l(:label_meeting_agenda_is_deleted)
 
 %h2.show-when-print{style: "text-align: center"}
   - if @object.is_external?
