@@ -156,7 +156,7 @@ class MeetingAgendasController < ApplicationController
   end
 
   def from_protocol
-    (render_403; return false) unless can_create_agenda?(@object)
+    (render_403; return false) unless can_create_agenda?
     i = -1
     @old_object = MeetingProtocol.find(params[:meeting_protocol_id])
     @object = MeetingAgenda.new(@old_object.meeting_agenda.attributes.merge(@old_object.attributes))
@@ -172,7 +172,7 @@ class MeetingAgendasController < ApplicationController
 
 
   def create
-    (render_403; return false) unless can_create_agenda?(@object)
+    (render_403; return false) unless can_create_agenda?
     @object.meeting_members_attributes = session[:meeting_member_ids].map{ |user_id| {user_id: user_id} } if session[:meeting_member_ids].present?
     @object.meeting_contacts_attributes = session[:meeting_contact_ids].map{ |contact_id| {contact_id: contact_id} } if session[:meeting_contact_ids].present?
     @object.meeting_watchers_attributes = session[:meeting_watcher_ids].map{ |user_id| {user_id: user_id} } if session[:meeting_watcher_ids].present?

@@ -82,7 +82,12 @@ module MeetingAgendasHelper
   end
 
   def can_update_agenda?(agenda)
-    (admin? || meeting_manager? && author?(agenda)) && agenda.meeting_protocol.blank? && (agenda.meet_on >= Date.today)
+    (admin? ||
+      (meeting_manager? &&
+        (author?(agenda) || approver?(agenda)))) &&
+      (agenda.meeting_protocol.blank? ||
+        (agenda.meeting_protocol.present? && agenda.meeting_protocol.is_deleted?)) &&
+      (agenda.meet_on >= Date.today)
   end
 
   def can_destroy_agenda?(agenda)

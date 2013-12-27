@@ -142,7 +142,10 @@ module MeetingProtocolsHelper
   end
 
   def can_update_protocol?(protocol)
-    admin? || (meeting_manager? && author?(protocol))
+    (admin? ||
+      (meeting_manager? &&
+        (author?(protocol) || approver?(protocol)))) &&
+    !protocol.is_deleted?
   end
 
   def can_destroy_protocol?(protocol)
