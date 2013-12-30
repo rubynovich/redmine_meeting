@@ -43,7 +43,7 @@ class MeetingProtocol < ActiveRecord::Base
 
   before_create :add_author_id
   after_save :add_new_users_from_answers
-  after_save :add_new_contacts
+  # after_save :add_new_contacts
   after_save :add_time_entry_to_invites
 
   validates_uniqueness_of :meeting_agenda_id, message: :has_already_been_used_to_create_protocol
