@@ -136,10 +136,10 @@ class MeetingProtocol < ActiveRecord::Base
     (new_user_ids - self.user_ids).compact.uniq
   end
 
-  def new_contacts_from_answers
-    new_contacts = self.all_meeting_answers.select(&:reporter_id_is_contact).map(&:external_reporter)
-    new_contacts += self.all_meeting_answers.select(&:user_id_is_contact).map(&:external_user)
-    (new_contacts - self.contacts).compact.uniq
+  def new_contact_ids_from_answers
+    new_contact_ids = self.all_meeting_answers.select(&:reporter_id_is_contact).map(&:external_reporter_id)
+    new_contact_ids += self.all_meeting_answers.select(&:user_id_is_contact).map(&:external_user_id)
+    (new_contact_ids - self.contact_ids).compact.uniq
   end
 
 private
@@ -193,8 +193,8 @@ private
   end
 
   def add_new_contacts_from_answers
-    new_contacts_from_answers.each do |contact|
-      MeetingContact.create(meeting_container_type: self.class.to_s, meeting_container_id: self.id, contact_id: contact.id)
+    new_contact_ids_from_answers.each do |contact_id|
+      MeetingContact.create(meeting_container_type: self.class.to_s, meeting_container_id: self.id, contact_id: contact_id)
     end
   end
 end
