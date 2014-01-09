@@ -55,7 +55,7 @@ class MeetingProtocol < ActiveRecord::Base
 
   before_create :add_author_id
   after_save :add_new_users_from_answers
-  # after_save :add_new_contacts_from_answers
+  after_save :add_new_contacts_from_answers
   after_save :add_time_entry_to_invites
 
   scope :active, -> {
