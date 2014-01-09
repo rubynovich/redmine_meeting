@@ -139,9 +139,9 @@ class MeetingAgenda < ActiveRecord::Base
     end
   end
 
-  def new_users_from_questions
-    new_users = self.meeting_questions.reject(&:user_id_is_contact).map(&:user)
-    (new_users - self.users).compact.uniq
+  def new_user_ids_from_questions
+    new_user_ids = self.meeting_questions.reject(&:user_id_is_contact).map(&:user_id)
+    (new_user_ids - self.user_ids).compact.uniq
   end
 
   def new_contacts_from_questions
@@ -232,8 +232,8 @@ private
   end
 
   def add_new_users_from_questions
-    new_users_from_questions.each do |user|
-      MeetingMember.create(user_id: user.id, meeting_agenda_id: self.id)
+    new_user_ids_from_questions.each do |user_id|
+      MeetingMember.create(user_id: user_id, meeting_agenda_id: self.id)
     end
   end
 

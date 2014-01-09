@@ -131,9 +131,9 @@ class MeetingProtocol < ActiveRecord::Base
     self.meeting_agenda.is_external
   end
 
-  def new_users_from_answers
-    new_users = self.all_meeting_answers.reject(&:reporter_id_is_contact).map(&:reporter)
-    (new_users - self.users).compact.uniq
+  def new_user_ids_from_answers
+    new_user_ids = self.all_meeting_answers.reject(&:reporter_id_is_contact).map(&:reporter_id)
+    (new_user_ids - self.user_ids).compact.uniq
   end
 
   def new_contacts_from_answers
@@ -187,8 +187,8 @@ private
   end
 
   def add_new_users_from_answers
-    new_users_from_answers.each do |user|
-      MeetingParticipator.create(user_id: user.id, meeting_protocol_id: self.id)
+    new_user_ids_from_answers.each do |user_id|
+      MeetingParticipator.create(user_id: user_id, meeting_protocol_id: self.id)
     end
   end
 
