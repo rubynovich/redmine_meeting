@@ -35,12 +35,6 @@ class MeetingAgenda < ActiveRecord::Base
   accepts_nested_attributes_for :meeting_contacts, allow_destroy: true
   accepts_nested_attributes_for :meeting_watchers, allow_destroy: true
 
-  before_create :add_author_id
-  after_save :add_new_users_from_questions
-  after_save :add_new_contacts
-  after_create :new_meeting_room_reserve, if: -> { MeetingRoom.where("LOWER(name) = LOWER(?)", self.place).present? && !self.is_external? }
-  after_update :update_meeting_room_reserve, if: -> { MeetingRoom.where("LOWER(name) = LOWER(?)", self.place).present? && !self.is_external? }
-
   attr_accessible :meeting_members_attributes
   attr_accessible :meeting_questions_attributes
   attr_accessible :meeting_contacts_attributes
@@ -72,6 +66,13 @@ class MeetingAgenda < ActiveRecord::Base
   validate :presence_of_meeting_members, if: -> { self.meeting_members.blank? }
   validate :meeting_room_reserve_validation, if: -> { MeetingRoom.where("LOWER(name) = LOWER(?)", self.place).present? && !self.is_external? }
   validate :meeting_question_title_uniq, if: -> { mq = self.meeting_questions.map(&:title); mq.size != mq.uniq.size }
+
+  before_create :add_author_id
+  after_save :add_new_users_from_questions
+  after_save :add_new_contacts_from_questions
+  after_create :new_meeting_room_reserve, if: -> { MeetingRoom.where("LOWER(name) = LOWER(?)", self.place).present? && !self.is_external? }
+  after_update :update_meeting_room_reserve, if: -> { MeetingRoom.where("LOWER(name) = LOWER(?)", self.place).present? && !self.is_external? }
+
 
   scope :active, -> {
     where('meeting_agendas.is_deleted' => false)
@@ -136,6 +137,17 @@ class MeetingAgenda < ActiveRecord::Base
     else
       super
     end
+  end
+
+  def new_users_from_questions
+    new_users = self.meeting_questions.reject(&:user_id_is_contact).map(&:user)
+    (new_users - self.users).compact.uniq
+  end
+
+  def new_contacts_from_questions
+    new_contacts = self.meeting_questions.select(&:user_id_is_contact).map(&:contact)
+    new_contacts << self.external_asserter if self.asserter_id_is_contact?
+    (new_contacts - self.contacts).compact.uniq
   end
 
 private
@@ -220,15 +232,13 @@ private
   end
 
   def add_new_users_from_questions
-    (self.meeting_questions.reject(&:user_id_is_contact).map(&:user) - self.users).compact.each do |user|
+    new_users_from_questions.each do |user|
       MeetingMember.create(user_id: user.id, meeting_agenda_id: self.id)
     end
   end
 
-  def add_new_contacts
-    new_contacts = self.meeting_questions.select(&:user_id_is_contact).map(&:contact)
-    new_contacts << self.external_asserter if self.asserter_id_is_contact?
-    (new_contacts.compact - self.contacts).compact.each do |contact|
+  def add_new_contacts_from_questions
+    new_contacts_from_questions.each do |contact|
       MeetingContact.create(meeting_container_type: self.class.to_s, meeting_container_id: self.id, contact_id: contact.id)
     end
   end
