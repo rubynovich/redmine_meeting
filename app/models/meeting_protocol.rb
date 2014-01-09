@@ -41,11 +41,6 @@ class MeetingProtocol < ActiveRecord::Base
   attr_accessible :meeting_agenda_id, :start_time, :end_time, :asserter_id, :meeting_company_id
   attr_accessible :external_asserter_id, :asserter_id_is_contact
 
-  before_create :add_author_id
-  after_save :add_new_users_from_answers
-  # after_save :add_new_contacts
-  after_save :add_time_entry_to_invites
-
   validates_uniqueness_of :meeting_agenda_id, message: :has_already_been_used_to_create_protocol
   validates_presence_of :meeting_agenda_id, :meeting_company_id
   validates_presence_of :external_asserter_id, if: -> { self.asserter_id_is_contact? }
@@ -57,6 +52,11 @@ class MeetingProtocol < ActiveRecord::Base
   validate :end_time_less_than_start_time, if: -> {
     self.start_time && self.end_time && (self.end_time.seconds_since_midnight < self.start_time.seconds_since_midnight)
   }
+
+  before_create :add_author_id
+  after_save :add_new_users_from_answers
+  # after_save :add_new_contacts_from_answers
+  after_save :add_time_entry_to_invites
 
   scope :active, -> {
     where('meeting_protocols.is_deleted' => false)
@@ -131,6 +131,17 @@ class MeetingProtocol < ActiveRecord::Base
     self.meeting_agenda.is_external
   end
 
+  def new_users_from_answers
+    new_users = self.all_meeting_answers.reject(&:reporter_id_is_contact).map(&:reporter)
+    (new_users - self.users).compact.uniq
+  end
+
+  def new_contacts_from_answers
+    new_contacts = self.all_meeting_answers.select(&:reporter_id_is_contact).map(&:external_reporter)
+    new_contacts += self.all_meeting_answers.select(&:user_id_is_contact).map(&:external_user)
+    (new_contacts - self.contacts).compact.uniq
+  end
+
 private
   def add_time_entry_to_invites
     self.meeting_members.select(&:meeting_participator).select(&:issue).each do |member|
@@ -176,15 +187,13 @@ private
   end
 
   def add_new_users_from_answers
-    (self.all_meeting_answers.reject(&:reporter_id_is_contact).map(&:reporter).compact - self.users).compact.each do |user|
+    new_users_from_answers.each do |user|
       MeetingParticipator.create(user_id: user.id, meeting_protocol_id: self.id)
     end
   end
 
-  def add_new_contacts
-    new_contacts = self.all_meeting_answers.select(&:reporter_id_is_contact).map(&:external_reporter)
-    new_contacts += self.all_meeting_answers.select(&:user_id_is_contact).map(&:external_user)
-    (new_contacts.compact - self.contacts).compact.each do |contact|
+  def add_new_contacts_from_answers
+    new_contacts_from_answers.each do |contact|
       MeetingContact.create(meeting_container_type: self.class.to_s, meeting_container_id: self.id, contact_id: contact.id)
     end
   end
