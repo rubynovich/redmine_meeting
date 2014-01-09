@@ -144,10 +144,10 @@ class MeetingAgenda < ActiveRecord::Base
     (new_user_ids - self.user_ids).compact.uniq
   end
 
-  def new_contacts_from_questions
-    new_contacts = self.meeting_questions.select(&:user_id_is_contact).map(&:contact)
-    new_contacts << self.external_asserter if self.asserter_id_is_contact?
-    (new_contacts - self.contacts).compact.uniq
+  def new_contact_ids_from_questions
+    new_contact_ids = self.meeting_questions.select(&:user_id_is_contact).map(&:contact_id)
+    new_contact_ids << self.external_asserter_id if self.asserter_id_is_contact?
+    (new_contact_ids - self.contact_ids).compact.uniq
   end
 
 private
@@ -238,8 +238,8 @@ private
   end
 
   def add_new_contacts_from_questions
-    new_contacts_from_questions.each do |contact|
-      MeetingContact.create(meeting_container_type: self.class.to_s, meeting_container_id: self.id, contact_id: contact.id)
+    new_contact_ids_from_questions.each do |contact_id|
+      MeetingContact.create(meeting_container_type: self.class.to_s, meeting_container_id: self.id, contact_id: contact_id)
     end
   end
 end
