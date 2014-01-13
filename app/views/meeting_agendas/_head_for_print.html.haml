@@ -29,12 +29,8 @@
         %td{style: "text-align: center"}
           - approvers = @object.meeting_approvers.reject(&:deleted)
           - external_approvers = @object.external_approvers
-          - if (approvers+external_approvers).any?
-            - approvers.each do |approver|
-              %h3
-                #{approver.person}/_________
-                %br
-            - external_approvers.each do |approver|
+          - if (approvers+external_approvers).present?
+            - (approvers+external_approvers).each do |approver|
               %h3
                 #{approver}/_________
                 %br

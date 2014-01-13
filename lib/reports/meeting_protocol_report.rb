@@ -138,7 +138,8 @@ private
   end
 
   def print_protocol_fields(object)
-    text((object.is_external? ? l(:label_external_meeting_protocol) : l(:label_meeting_protocol)) + " №#{object.id}", style: :bold, size: 22, align: :center)
+#    text((object.is_external? ? l(:label_external_meeting_protocol) : l(:label_meeting_protocol)) + " №#{object.id}", style: :bold, size: 22, align: :center)
+    text(l(:label_meeting_protocol) + " №#{object.id}", style: :bold, size: 22, align: :center)
 #    move_down 10
 
     text("<b>#{l(:field_subject)}:</b> <i>#{object.subject}</i>", size: 10, inline_format: true)
