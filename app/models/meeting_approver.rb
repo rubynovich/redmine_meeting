@@ -7,7 +7,7 @@ class MeetingApprover < ActiveRecord::Base
 
   belongs_to :user
   belongs_to :person, foreign_key: 'user_id', class_name: 'Person'
-  belongs_to :author, foreign_key: 'author_id', class_name: 'User'
+  belongs_to :author, foreign_key: 'author_id', class_name: 'Person'
   belongs_to :meeting_container, polymorphic: true
 
   before_validation :add_approved_on, if: -> { self.approved? && self.id && !self.class.find(self.id).approved? }

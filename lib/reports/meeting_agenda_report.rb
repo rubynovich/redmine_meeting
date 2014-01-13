@@ -138,7 +138,8 @@ private
   end
 
   def print_agenda_fields(agenda)
-    text((agenda.is_external? ? l(:label_external_meeting_agenda) : l(:label_meeting_agenda)) + " №#{agenda.id}", style: :bold, size: 22, align: :center)
+#    text((agenda.is_external? ? l(:label_external_meeting_agenda) : l(:label_meeting_agenda)) + " №#{agenda.id}", style: :bold, size: 22, align: :center)
+    text(l(:label_meeting_agenda) + " №#{agenda.id}", style: :bold, size: 22, align: :center)
 #    move_down 10
 
     text("<b>#{l(:field_subject)}:</b> <i>#{agenda.subject}</i>", size: 10, inline_format: true)

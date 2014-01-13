@@ -4,7 +4,7 @@ class MeetingProtocol < ActiveRecord::Base
   acts_as_attachable
   attr_accessor :project
 
-  belongs_to :author, class_name: 'User', foreign_key: 'author_id'
+  belongs_to :author, class_name: 'Person', foreign_key: 'author_id'
   belongs_to :meeting_agenda
   belongs_to :asserter, class_name: 'Person', foreign_key: 'asserter_id'
   belongs_to :external_asserter, class_name: 'Contact', foreign_key: 'external_asserter_id'
@@ -18,7 +18,7 @@ class MeetingProtocol < ActiveRecord::Base
   has_many :users, through: :meeting_participators, order: [:lastname, :firstname], uniq: true
   has_many :meeting_members, through: :meeting_agenda, uniq: true
   has_many :meeting_approvers, as: :meeting_container, dependent: :delete_all
-  has_many :approvers, through: :meeting_approvers, source: :user
+  has_many :approvers, through: :meeting_approvers, source: :person
   has_many :meeting_contacts, as: :meeting_container, dependent: :delete_all
   has_many :contacts, through: :meeting_contacts, order: [:last_name, :first_name], uniq: true
   has_many :meeting_external_approvers, as: :meeting_container, dependent: :delete_all

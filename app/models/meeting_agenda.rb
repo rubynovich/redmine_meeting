@@ -4,7 +4,7 @@ class MeetingAgenda < ActiveRecord::Base
   acts_as_attachable
   attr_accessor :project
 
-  belongs_to :author, class_name: 'User', foreign_key: 'author_id'
+  belongs_to :author, class_name: 'Person', foreign_key: 'author_id'
   belongs_to :priority, class_name: 'IssuePriority', foreign_key: 'priority_id'
   belongs_to :meeting_room_reserve, dependent: :destroy
   belongs_to :external_company, class_name: 'Contact', foreign_key: 'external_company_id'
@@ -21,7 +21,7 @@ class MeetingAgenda < ActiveRecord::Base
   has_many :invites, through: :meeting_members, source: :issue
   has_many :users, through: :meeting_members, order: [:lastname, :firstname], uniq: true
   has_many :meeting_approvers, as: :meeting_container, dependent: :delete_all
-  has_many :approvers, source: :user, through: :meeting_approvers, order: [:lastname, :firstname], uniq: true
+  has_many :approvers, source: :person, through: :meeting_approvers, order: [:lastname, :firstname], uniq: true
   has_many :meeting_contacts, as: :meeting_container, dependent: :delete_all
   has_many :contacts, through: :meeting_contacts, order: [:last_name, :first_name], uniq: true
   has_many :meeting_external_approvers, as: :meeting_container, dependent: :delete_all
