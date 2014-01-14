@@ -4,7 +4,7 @@ module MeetingCommentsHelper
   end
 
   def author?(item)
-    User.current == item.author
+    User.current.id == item.author_id
   end
 
   def meeting_manager?

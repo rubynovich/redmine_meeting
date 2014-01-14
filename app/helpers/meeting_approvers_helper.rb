@@ -4,7 +4,7 @@ module MeetingApproversHelper
   end
 
   def author?(item)
-    User.current == item.author
+    User.current.id == item.author_id
   end
 
   def can_create_approver?(item)

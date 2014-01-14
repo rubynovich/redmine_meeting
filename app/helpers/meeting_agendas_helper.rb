@@ -1,6 +1,6 @@
 module MeetingAgendasHelper
   def author_id_for_select
-    User.where("#{User.table_name}.id IN (SELECT #{MeetingAgenda.table_name}.author_id FROM #{MeetingAgenda.table_name})").all(:order => [:lastname, :firstname])
+    User.where("#{User.table_name}.id IN (SELECT #{MeetingAgenda.table_name}.author_id FROM #{MeetingAgenda.table_name})").sorted
   end
 
   def protocol_for_select
@@ -75,7 +75,8 @@ module MeetingAgendasHelper
         (agenda.meet_on < Date.today) ||
         (agenda.meet_on == Date.today) && (agenda.start_time.seconds_since_midnight < Time.now.seconds_since_midnight)
       ) &&
-      !agenda.is_deleted?
+      !agenda.is_deleted? &&
+      !agenda.asserted?
   end
 
   def can_send_invites?(agenda)
@@ -88,7 +89,7 @@ module MeetingAgendasHelper
   end
 
   def can_show_agenda?(agenda)
-    admin? || meeting_manager? || agenda.users.include?(User.current) || approver?(agenda)
+    admin? || meeting_manager? || agenda.user_ids.include?(User.current.id) || approver?(agenda)
   end
 
   def can_create_agenda?
@@ -119,7 +120,7 @@ module MeetingAgendasHelper
 #  end
 
   def can_show_protocol?(protocol)
-    meeting_manager? || protocol.users.include?(User.current)
+    meeting_manager? || protocol.user_ids.include?(User.current.id)
   end
 
   def can_assert?(agenda)
