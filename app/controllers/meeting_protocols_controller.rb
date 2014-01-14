@@ -11,6 +11,8 @@ class MeetingProtocolsController < ApplicationController
   include MeetingCommentsHelper
   helper :meeting_approvers
   include MeetingApproversHelper
+  helper :meeting_external_approvers
+  include MeetingExternalApproversHelper
   helper :meeting_watchers
   include MeetingWatchersHelper
   helper :meeting_bind_issues

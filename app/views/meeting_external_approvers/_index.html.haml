@@ -1,7 +1,9 @@
 %ul
-  - @object.external_approvers.each do |contact|
+  - @object.meeting_external_approvers.each do |external_approver|
+    - contact = external_approver.contact
     %li{class: "contact-#{contact.id}"}
       = avatar_to(contact, size: 16)
       = link_to_contact(contact, class: 'contact')
-      - url = {controller: 'meeting_external_approvers', action: 'destroy', id: contact.id, meeting_container_id: @object.id, meeting_container_type: @object.class}
-      = link_to(image_tag('delete.png'), url, remote: true, method: 'delete', class: "delete")
+      - if can_destroy_external_approver?(external_approver)
+        - url = {controller: 'meeting_external_approvers', action: 'destroy', id: contact.id, meeting_container_id: @object.id, meeting_container_type: @object.class}
+        = link_to(image_tag('delete.png'), url, remote: true, method: 'delete', class: "delete")

@@ -1,11 +1,11 @@
 module MeetingWatchersHelper
-  def admin?
-    User.current.admin?
-  end
+#  def admin?
+#    User.current.admin?
+#  end
 
-  def author?(item)
-    item.author_id == User.current.id
-  end
+#  def author?(item)
+#    item.author_id == User.current.id
+#  end
 
   def can_create_watcher?(item)
     admin? || author?(item)

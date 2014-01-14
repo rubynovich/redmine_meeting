@@ -112,7 +112,7 @@ module MeetingAgendasHelper
         (agenda.meeting_protocol.present? && agenda.meeting_protocol.is_deleted?)) &&
       (agenda.meet_on >= Date.today) &&
       !agenda.is_deleted? &&
-      asserted?(agenda)
+      !asserted?(agenda)
   end
 
   def can_destroy_agenda?(agenda)
