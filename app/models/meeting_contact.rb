@@ -12,6 +12,6 @@ class MeetingContact < ActiveRecord::Base
 private
 
   def add_author_id
-    self.author = User.current
+    self.author_id = User.current.id
   end
 end

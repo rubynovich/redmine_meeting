@@ -35,23 +35,37 @@ module MeetingAgendasHelper
     item.meeting_approvers.map(&:user).include?(User.current)
   end
 
+  def asserter?(item)
+    (item.asserter_id == User.current.id) && !item.asserter_id_is_contact?
+  end
+
   def link_to_copy_agenda(item)
     link_to(t(:button_copy), {controller: 'meeting_agendas', action: 'copy', id: item.id}, class: 'icon icon-copy')
   end
 
   def link_to_protocol(item)
-    if item.meeting_protocol.present?
-      if item.meeting_protocol.is_deleted?
-        t(:label_meeting_protocol_is_deleted)
-      else
+    if item.meeting_protocol.present? && !item.meeting_protocol.is_deleted?
+#      if item.meeting_protocol.is_deleted?
+#        t(:label_meeting_protocol_is_deleted)
+#      else
         if can_show_protocol?(item.meeting_protocol)
-          link_to "#{t(:label_meeting_protocol)} ##{item.meeting_protocol.id}", controller: 'meeting_protocols', action: 'show', id: item.meeting_protocol.id
+          link_to("#{t(:label_meeting_protocol)} ##{item.meeting_protocol.id}",
+            {controller: 'meeting_protocols', action: 'show', id: item.meeting_protocol.id})
         else
           "#{t(:label_meeting_protocol)} ##{item.meeting_protocol.id}"
         end
-      end
+#      end
     elsif can_create_protocol?(item)
-      link_to t(:button_add), {controller: 'meeting_protocols', action: 'new', meeting_protocol: {meeting_agenda_id: item.id}}, {class: 'icon icon-add'}
+      if item.meeting_protocol.present? && item.meeting_protocol.is_deleted?
+        t(:label_meeting_protocol_is_deleted) + " "
+      else
+        ""
+      end.html_safe +
+        link_to(t(:button_add), {
+          controller: 'meeting_protocols',
+          action: 'new',
+          meeting_protocol: {meeting_agenda_id: item.id}
+        }, {class: 'icon icon-add'})
     end
   end
 
@@ -88,7 +102,8 @@ module MeetingAgendasHelper
       (agenda.meeting_protocol.blank? ||
         (agenda.meeting_protocol.present? && agenda.meeting_protocol.is_deleted?)) &&
       (agenda.meet_on >= Date.today) &&
-      !agenda.is_deleted?
+      !agenda.is_deleted? &&
+      !agenda.asserted?
   end
 
   def can_destroy_agenda?(agenda)
@@ -105,5 +120,10 @@ module MeetingAgendasHelper
 
   def can_show_protocol?(protocol)
     meeting_manager? || protocol.users.include?(User.current)
+  end
+
+  def can_assert?(agenda)
+    asserter?(agenda) && !agenda.asserted? &&
+      agenda.meeting_approvers.reject(&:deleted).all?(&:approved?)
   end
 end

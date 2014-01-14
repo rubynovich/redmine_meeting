@@ -255,5 +255,5 @@ ru:
   external_place_for_select:
     building_object: "Объект"
     external_company: "Компания"
-  label_meeting_protocol_is_deleted: "удален"
-  label_meeting_agenda_is_deleted: "удалена"
+  label_meeting_protocol_is_deleted: "Удален"
+  label_meeting_agenda_is_deleted: "Удалена"
