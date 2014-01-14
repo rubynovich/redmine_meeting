@@ -76,7 +76,7 @@ module MeetingAgendasHelper
         (agenda.meet_on == Date.today) && (agenda.start_time.seconds_since_midnight < Time.now.seconds_since_midnight)
       ) &&
       !agenda.is_deleted? &&
-      !agenda.asserted?
+      agenda.asserted?
   end
 
   def can_send_invites?(agenda)
@@ -85,7 +85,8 @@ module MeetingAgendasHelper
         (agenda.meet_on > Date.today) || (
           (agenda.meet_on == Date.today) && (agenda.start_time.seconds_since_midnight > Time.now.seconds_since_midnight)
         )
-      )
+      ) &&
+      agenda.asserted?
   end
 
   def can_show_agenda?(agenda)
