@@ -28,11 +28,11 @@ module MeetingAgendasHelper
   end
 
   def author?(item)
-    item.author == User.current
+    item.author_id == User.current.id
   end
 
   def approver?(item)
-    item.meeting_approvers.map(&:user).include?(User.current)
+    item.approver_ids.include?(User.current.id)
   end
 
   def asserter?(item)
