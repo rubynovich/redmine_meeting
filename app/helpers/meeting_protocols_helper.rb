@@ -28,19 +28,19 @@ module MeetingProtocolsHelper
   end
 
   def author?(item)
-    item.author == User.current
+    item.author_id == User.current.id
   end
 
   def member?(item)
-    item.users.include?(User.current)
+    item.user_ids.include?(User.current.id)
   end
 
   def approver?(item)
-    item.approvers.include?(User.current)
+    item.approver_ids.include?(User.current.id)
   end
 
   def watcher?(item)
-    item.watchers.include?(User.current)
+    item.watcher_ids.include?(User.current.id)
   end
 
   def link_to_agenda(item)
