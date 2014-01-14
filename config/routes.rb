@@ -33,6 +33,7 @@ resources :meeting_protocols do
   member do
     get :send_notices
     get :resend_notices
+    put :assert
   end
 end
 

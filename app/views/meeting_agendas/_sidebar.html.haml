@@ -18,7 +18,7 @@
         - if @object.asserter_id_is_contact?
           = avatar(@object.external_asserter, size: 16)
           = link_to_contact(@object.external_asserter, class: 'user')
-        - else
+        - elsif @object.asserter.present?
           = check_box_tag :asserted, "1", @object.asserted?, disabled: !can_assert?(@object), onclick: "assert_container(this,'#{url_for({controller: 'meeting_agendas', action: 'assert', id: @object.id})}','#{@object.id}')"
           = label_tag :asserted, h(@object.asserter)
           -#

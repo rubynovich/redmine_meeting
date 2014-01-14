@@ -39,6 +39,12 @@ module MeetingAgendasHelper
     (item.asserter_id == User.current.id) && !item.asserter_id_is_contact?
   end
 
+  def asserted?(agenda)
+    (agenda.asserted? ||
+      (agenda.asserter_id_is_contact? &&
+        agenda.meeting_approvers.reject(&:deleted).all?(&:approved?)))
+  end
+
   def link_to_copy_agenda(item)
     link_to(t(:button_copy), {controller: 'meeting_agendas', action: 'copy', id: item.id}, class: 'icon icon-copy')
   end
@@ -57,7 +63,7 @@ module MeetingAgendasHelper
 #      end
     elsif can_create_protocol?(item)
       if item.meeting_protocol.present? && item.meeting_protocol.is_deleted?
-        t(:label_meeting_protocol_is_deleted) + " "
+        content_tag(:span, t(:label_meeting_protocol_is_deleted), class: 'is_deleted')
       else
         ""
       end.html_safe +
@@ -76,7 +82,7 @@ module MeetingAgendasHelper
         (agenda.meet_on == Date.today) && (agenda.start_time.seconds_since_midnight < Time.now.seconds_since_midnight)
       ) &&
       !agenda.is_deleted? &&
-      agenda.asserted?
+      asserted?(agenda)
   end
 
   def can_send_invites?(agenda)
@@ -86,7 +92,8 @@ module MeetingAgendasHelper
           (agenda.meet_on == Date.today) && (agenda.start_time.seconds_since_midnight > Time.now.seconds_since_midnight)
         )
       ) &&
-      agenda.asserted?
+      !agenda.is_deleted? &&
+      asserted?(agenda)
   end
 
   def can_show_agenda?(agenda)
@@ -105,7 +112,7 @@ module MeetingAgendasHelper
         (agenda.meeting_protocol.present? && agenda.meeting_protocol.is_deleted?)) &&
       (agenda.meet_on >= Date.today) &&
       !agenda.is_deleted? &&
-      !agenda.asserted?
+      asserted?(agenda)
   end
 
   def can_destroy_agenda?(agenda)

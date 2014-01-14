@@ -1,3 +1,15 @@
+:css
+  .is_deleted{
+    color: white;
+    text-transform: uppercase;
+    padding-left: 5px;
+    padding-right: 5px;
+    border-radius: 4px;
+    background: #d22;
+    position: relative;
+    margin-right: 5px;
+  }
+
 .contextual
   - if can_create_agenda?
     = link_to t(:label_new_meeting_agenda), {action: 'new'}, class: 'icon icon-add'
