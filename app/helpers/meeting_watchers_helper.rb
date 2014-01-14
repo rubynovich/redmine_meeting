@@ -4,7 +4,7 @@ module MeetingWatchersHelper
   end
 
   def author?(item)
-    item.author == User.current
+    item.author_id == User.current.id
   end
 
   def can_create_watcher?(item)
