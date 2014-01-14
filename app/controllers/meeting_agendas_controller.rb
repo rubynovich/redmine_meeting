@@ -13,6 +13,8 @@ class MeetingAgendasController < ApplicationController
   include MeetingCommentsHelper
   helper :meeting_approvers
   include MeetingApproversHelper
+  helper :meeting_external_approvers
+  include MeetingExternalApproversHelper
   include ApplicationHelper
 
   def show
