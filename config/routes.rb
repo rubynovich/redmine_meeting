@@ -13,6 +13,7 @@ resources :meeting_agendas do
     get :send_invites
     get :resend_invites
     get :copy
+    put :assert
   end
 end
 resources :meeting_members do

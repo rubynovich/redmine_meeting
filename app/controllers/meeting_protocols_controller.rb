@@ -59,7 +59,7 @@ class MeetingProtocolsController < ApplicationController
   end
 
   def show
-    (render_403; return false) unless can_show_protocol?(@object)
+#    (render_403; return false) unless can_show_protocol?(@object)
     @watchers = @object.watchers
     respond_to do |format|
       format.pdf {

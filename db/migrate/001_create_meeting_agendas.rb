@@ -12,6 +12,7 @@ class CreateMeetingAgendas < ActiveRecord::Migration
       t.integer :asserter_id
       t.integer :external_asserter_id
       t.boolean :asserter_id_is_contact
+      t.boolean :asserted
       t.integer :meeting_company_id
       t.date :meet_on
       t.time :start_time
