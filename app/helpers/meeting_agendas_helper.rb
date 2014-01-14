@@ -79,7 +79,7 @@ module MeetingAgendasHelper
   end
 
   def can_send_invites?(agenda)
-    (meeting_manager? && author?(agenda) || admin?) &&
+    (admin? || (meeting_manager? && author?(agenda))) &&
       agenda.meet_on.present? && (
         (agenda.meet_on > Date.today) || (
           (agenda.meet_on == Date.today) && (agenda.start_time.seconds_since_midnight > Time.now.seconds_since_midnight)
