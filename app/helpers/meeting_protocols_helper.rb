@@ -43,6 +43,19 @@ module MeetingProtocolsHelper
     item.watcher_ids.include?(User.current.id)
   end
 
+  def asserter?(item)
+    (item.asserter_id == User.current.id) && !item.asserter_id_is_contact?
+  end
+
+  def approved?(item)
+    item.meeting_approvers.reject(&:deleted).all?(&:approved?)
+  end
+
+  def asserted?(item)
+    (item.asserted? ||
+      (item.asserter_id_is_contact? && approved?(item)))
+  end
+
   def link_to_agenda(item)
     if can_show_agenda?(item)
       link_to "#{t(:label_meeting_agenda)} ##{item.meeting_agenda_id}", controller: 'meeting_agendas', action: 'show', id: item.meeting_agenda_id
@@ -120,9 +133,11 @@ module MeetingProtocolsHelper
 
   def can_send_notices?(protocol)
     (admin? || meeting_manager? && author?(protocol)) &&
-      (protocol.meeting_agenda.meet_on < Date.today) ||
-      (protocol.meeting_agenda.meet_on == Date.today) &&
-      (protocol.meeting_agenda.start_time.seconds_since_midnight < Time.now.seconds_since_midnight)
+      ((protocol.meet_on < Date.today) ||
+        ((protocol.meet_on == Date.today) &&
+          (protocol.start_time.seconds_since_midnight < Time.now.seconds_since_midnight))) &&
+      !protocol.is_deleted? &&
+      asserted?(protocol)
   end
 
   def can_show_agenda?(protocol)
@@ -134,7 +149,8 @@ module MeetingProtocolsHelper
     (admin? || meeting_manager?) && item.meet_on && (
       (item.meet_on < Date.today) ||
       (item.meet_on == Date.today) && (item.start_time.seconds_since_midnight < Time.now.seconds_since_midnight)
-    )
+    ) &&
+    asserted?(item)
   end
 
   def can_show_protocol?(protocol)
@@ -145,7 +161,8 @@ module MeetingProtocolsHelper
     (admin? ||
       (meeting_manager? &&
         (author?(protocol) || approver?(protocol)))) &&
-    !protocol.is_deleted?
+    !protocol.is_deleted? &&
+    !asserted?(protocol)
   end
 
   def can_destroy_protocol?(protocol)
@@ -175,4 +192,8 @@ module MeetingProtocolsHelper
 #  def can_destroy_issue?(answer)
 #    admin? || meeting_manager? && author?(answer.meeting_protocol)
 #  end
+
+  def can_assert?(agenda)
+    asserter?(agenda) && !agenda.asserted? && approved?(agenda)
+  end
 end

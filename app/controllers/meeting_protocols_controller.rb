@@ -16,7 +16,7 @@ class MeetingProtocolsController < ApplicationController
   helper :meeting_bind_issues
   include MeetingBindIssuesHelper
 
-  before_filter :find_object, only: [:edit, :show, :destroy, :update, :send_notices, :resend_notices]
+  before_filter :find_object, only: [:edit, :show, :destroy, :update, :send_notices, :resend_notices, :assert]
   before_filter :new_object, only: [:new, :create]
   before_filter :require_meeting_manager, except: [:index, :show]
 
@@ -169,6 +169,11 @@ class MeetingProtocolsController < ApplicationController
       flash[:notice] = l(:notice_successful_delete)
     end
     redirect_to action: 'index'
+  end
+
+  def assert
+    (render_403; return false) unless can_assert?(@object)
+    @object.update_attribute(:asserted, true)
   end
 
 private
