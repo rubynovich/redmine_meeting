@@ -259,4 +259,4 @@ ru:
   label_meeting_agenda_is_deleted: "удалена"
   mail_body_meeting_asserter_create_agenda: "Вам необходимо утвердить Повестку совещания"
   mail_body_meeting_asserter_create_protocol: "Вам необходимо утвердить Протокол совещания"
-  message_subject_meeting_asserter_create: "[%{type} #%{type_id}] %{author} запросил(а) Ваше утверждение"
+  message_subject_meeting_asserter_create: "[%{type} #%{type_id}] Необходимо Ваше утверждение"

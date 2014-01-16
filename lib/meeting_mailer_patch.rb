@@ -78,9 +78,8 @@ module MeetingPlugin
       end
 
       def meeting_asserter_invite(container)
-        author = User.current
         user = container.asserter
-        mail_meeting_asserter_invite(author, user, container)
+        mail_meeting_asserter_invite(user, container)
       end
     end
 
@@ -259,12 +258,11 @@ module MeetingPlugin
         mail(to: contact.email, subject: subject)
       end
 
-      def mail_meeting_asserter_invite(author, user, container)
+      def mail_meeting_asserter_invite(user, container)
         @user = user
-        @author = author
         @container = container
         type = {MeetingAgenda => ::I18n.t(:label_meeting_agenda), MeetingProtocol => ::I18n.t(:label_meeting_protocol)}[container.class]
-        subject = ::I18n.t(:message_subject_meeting_asserter_create, author: @author.name, type: type, type_id: container.id)
+        subject = ::I18n.t(:message_subject_meeting_asserter_create, type: type, type_id: container.id)
 
         mail(to: user.mail, subject: subject)
       end
