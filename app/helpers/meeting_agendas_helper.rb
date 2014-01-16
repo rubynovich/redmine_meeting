@@ -109,7 +109,7 @@ module MeetingAgendasHelper
   end
 
   def can_show_agenda?(agenda)
-    admin? || (meeting_manager? && (member?(agenda) || approver?(agenda) || asserter?(agenda)))
+    admin? || (meeting_manager? && (author?(agenda) || member?(agenda) || approver?(agenda) || asserter?(agenda)))
   end
 
   def can_create_agenda?
@@ -140,7 +140,7 @@ module MeetingAgendasHelper
 #  end
 
   def can_show_protocol?(protocol)
-    admin? || (meeting_manager? && (member?(protocol) || approver?(protocol) || watcher?(protocol) || asserter?(protocol)))
+    admin? || (meeting_manager? && (author?(protocol) || member?(protocol) || approver?(protocol) || watcher?(protocol) || asserter?(protocol)))
   end
 
   def can_assert?(agenda)
@@ -148,6 +148,9 @@ module MeetingAgendasHelper
   end
 
   def can_asserter_invite?(item)
-    !item.asserter_id_is_contact? && item.meeting_approvers.open.blank? && (item.asserter_id != User.current.id)
+    (admin? || (meeting_manager? && author?(item))) &&
+      !item.asserter_id_is_contact? &&
+      item.meeting_approvers.open.blank? &&
+      (item.asserter_id != User.current.id))
   end
 end
