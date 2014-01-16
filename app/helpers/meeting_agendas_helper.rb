@@ -146,4 +146,8 @@ module MeetingAgendasHelper
   def can_assert?(agenda)
     asserter?(agenda) && !agenda.asserted? && approved?(agenda)
   end
+
+  def can_asserter_invite?(item)
+    !item.asserter_id_is_contact? && item.meeting_approvers.open.blank? && (item.asserter_id != User.current.id)
+  end
 end
