@@ -141,7 +141,8 @@ module MeetingProtocolsHelper
   end
 
   def can_show_agenda?(protocol)
-    admin? || meeting_manager? || member?(protocol) || approver?(protocol.meeting_agenda)
+    agenda = protocol.meeting_agenda
+    admin? || meeting_manager? || member?(protocol) || approver?(agenda) || asserter?(agenda)
   end
 
   def can_create_protocol?(protocol)
@@ -154,13 +155,13 @@ module MeetingProtocolsHelper
   end
 
   def can_show_protocol?(protocol)
-    admin? || meeting_manager? || member?(protocol) || approver?(protocol) || watcher?(protocol)
+    admin? || (meeting_manager? && (member?(protocol) || approver?(protocol) || watcher?(protocol) || asserter?(protocol)))
   end
 
   def can_update_protocol?(protocol)
     (admin? ||
       (meeting_manager? &&
-        (author?(protocol) || approver?(protocol)))) &&
+        (author?(protocol) || approver?(protocol) || asserter?(protocol)))) &&
     !protocol.is_deleted? &&
     !asserted?(protocol)
   end

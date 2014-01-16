@@ -31,6 +31,10 @@ module MeetingAgendasHelper
     item.author_id == User.current.id
   end
 
+  def member?(item)
+    item.user_ids.include?(User.current.id)
+  end
+
   def approver?(item)
     item.approver_ids.include?(User.current.id)
   end
@@ -101,7 +105,7 @@ module MeetingAgendasHelper
   end
 
   def can_show_agenda?(agenda)
-    admin? || meeting_manager? || agenda.user_ids.include?(User.current.id) || approver?(agenda)
+    admin? || (meeting_manager? && (member?(agenda) || approver?(agenda) || asserter?(agenda)))
   end
 
   def can_create_agenda?
@@ -111,7 +115,7 @@ module MeetingAgendasHelper
   def can_update_agenda?(agenda)
     (admin? ||
       (meeting_manager? &&
-        (author?(agenda) || approver?(agenda)))) &&
+        (author?(agenda) || approver?(agenda) || asserter?(agenda)))) &&
       (agenda.meeting_protocol.blank? ||
         (agenda.meeting_protocol.present? && agenda.meeting_protocol.is_deleted?)) &&
       (agenda.meet_on >= Date.today) &&
@@ -132,11 +136,10 @@ module MeetingAgendasHelper
 #  end
 
   def can_show_protocol?(protocol)
-    meeting_manager? || protocol.user_ids.include?(User.current.id)
+    admin? || (meeting_manager? && (member?(protocol) || approver?(protocol) || watcher?(protocol) || asserter?(protocol)))
   end
 
   def can_assert?(agenda)
-    asserter?(agenda) && !agenda.asserted? &&
-      agenda.meeting_approvers.reject(&:deleted).all?(&:approved?)
+    asserter?(agenda) && !agenda.asserted? && approved?(agenda)
   end
 end
