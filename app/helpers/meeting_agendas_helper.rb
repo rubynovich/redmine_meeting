@@ -53,6 +53,10 @@ module MeetingAgendasHelper
       (agenda.asserter_id_is_contact? && approved?(agenda)))
   end
 
+  def watcher?(item)
+    item.watcher_ids.include?(User.current.id)
+  end
+
   def link_to_copy_agenda(item)
     link_to(t(:button_copy), {controller: 'meeting_agendas', action: 'copy', id: item.id}, class: 'icon icon-copy')
   end
@@ -136,7 +140,7 @@ module MeetingAgendasHelper
 #  end
 
   def can_show_protocol?(protocol)
-    admin? || (meeting_manager? && (member?(protocol) || approver?(protocol) || asserter?(protocol)))
+    admin? || (meeting_manager? && (member?(protocol) || approver?(protocol) || watcher?(protocol) || asserter?(protocol)))
   end
 
   def can_assert?(agenda)
