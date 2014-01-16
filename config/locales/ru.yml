@@ -261,3 +261,4 @@ ru:
   mail_body_meeting_asserter_create_protocol: "Вам необходимо утвердить Протокол совещания"
   message_subject_meeting_asserter_create: "[%{type} #%{type_id}] Необходимо Ваше утверждение"
   label_send_asserter_invite: "Послать приглашение"
+  notice_asserter_invite_sent: "Уведомление утверждающему отправлено"

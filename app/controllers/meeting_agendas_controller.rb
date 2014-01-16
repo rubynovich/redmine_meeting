@@ -223,6 +223,7 @@ class MeetingAgendasController < ApplicationController
 
   def send_asserter_invite
     (render_403; return false) unless can_asserter_invite?(@object)
+    flash[:notice] = l(:notice_asserter_invite_sent)
     Mailer.meeting_asserter_invite(@object).deliver
     redirect_to action: 'show', id: @object.id
   end
