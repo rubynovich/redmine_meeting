@@ -1,7 +1,7 @@
 class MeetingAgendasController < ApplicationController
   unloadable
 
-  before_filter :find_object, only: [:edit, :show, :destroy, :update, :send_invites, :resend_invites, :group, :ungroup, :assert]
+  before_filter :find_object, only: [:edit, :show, :destroy, :update, :send_invites, :resend_invites, :group, :ungroup, :assert, :send_asserter_invite]
   before_filter :new_object, only: [:new, :create]
   before_filter :require_meeting_manager, except: [:index, :show]
 
@@ -219,6 +219,12 @@ class MeetingAgendasController < ApplicationController
   def assert
     (render_403; return false) unless can_assert?(@object)
     @object.update_attribute(:asserted, true)
+  end
+
+  def send_asserter_invite
+    (render_403; return false) unless can_asserter_invite?(@object)
+    Mailer.meeting_asserter_invite(@object).deliver
+    redirect_to action: 'show', id: @object.id
   end
 
 private
