@@ -151,6 +151,6 @@ module MeetingAgendasHelper
     (admin? || (meeting_manager? && author?(item))) &&
       !item.asserter_id_is_contact? &&
       item.meeting_approvers.open.blank? &&
-      (item.asserter_id != User.current.id))
+      (item.asserter_id != User.current.id)
   end
 end
