@@ -257,3 +257,7 @@ ru:
     external_company: "Компания"
   label_meeting_protocol_is_deleted: "удален"
   label_meeting_agenda_is_deleted: "удалена"
+  mail_body_meeting_asserter_create_greating: "%{author} добавил(а) Вас в согласующие."
+  mail_body_meeting_asserter_create_agenda: "Необходимо утвердить Повестку совещания"
+  mail_body_meeting_asserter_create_protocol: "Необходимо утвердить Протокол совещания"
+  message_subject_meeting_asserter_create: "[%{type} #%{type_id}] %{author} запросил(а) Ваше утверждение"

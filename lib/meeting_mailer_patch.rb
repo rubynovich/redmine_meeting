@@ -76,6 +76,12 @@ module MeetingPlugin
       def meeting_contacts_notice(meeting_contact)
         mail_meeting_contacts_notice(meeting_contact)
       end
+
+      def meeting_asserter_invite(container)
+        author = User.current
+        user = container.asserter
+        mail_meeting_asserter_invite(author, user, container)
+      end
     end
 
     module InstanceMethods
@@ -251,6 +257,16 @@ module MeetingPlugin
 
         attachments["Protokol_%04d_#{key_words[:meet_on]}.pdf" % container.id] = MeetingProtocolReport.new.to_pdf(container)
         mail(to: contact.email, subject: subject)
+      end
+
+      def mail_meeting_asserter_invite(author, user, container)
+        @user = user
+        @author = author
+        @container = container
+        type = {MeetingAgenda => ::I18n.t(:label_meeting_agenda), MeetingProtocol => ::I18n.t(:label_meeting_protocol)}[container.class]
+        subject = ::I18n.t(:message_subject_meeting_asserter_create, author: @author.name, type: type, type_id: container.id)
+
+        mail(to: user.mail, subject: subject)
       end
 
 #      def mail_meeting_approver_create(author, user, container)
