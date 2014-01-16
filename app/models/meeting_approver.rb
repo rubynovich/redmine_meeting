@@ -16,7 +16,12 @@ class MeetingApprover < ActiveRecord::Base
   before_update :message_approver_approve, if: -> { self.approved? && !self.class.find(self.id).approved? }
   after_create :message_approver_create
   before_save :message_approver_destroy, if: -> { !self.deleted? && self.id && self.class.find(self.id).deleted? }
-
+  before_update :message_asserter_invite, if: -> {
+    old_object = self.class.find(self.id)
+    self.approved? && !old_object.approved? &&
+    !meeting_container.asserter_id_is_contact? &&
+    (meeting_container.meeting_approvers - [old_object]).reject(&:deleted).all?(&:approved?)
+  }
 
   scope :open, ->(status = true) {
     where("#{self.table_name}.deleted = ?", !status)
@@ -37,6 +42,10 @@ private
 
   def message_approver_destroy
     Mailer.meeting_approver_destroy(self).deliver
+  end
+
+  def message_asserter_invite
+    Mailer.meeting_asserter_invite(self.meeting_container).deliver
   end
 
   def add_approved_on

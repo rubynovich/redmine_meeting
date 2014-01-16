@@ -150,6 +150,10 @@ class MeetingAgenda < ActiveRecord::Base
     (new_contact_ids - self.contact_ids).compact.uniq
   end
 
+  def approved?
+    self.meeting_approvers.reject(&:deleted).all?(&:approved?)
+  end
+
 private
   def add_author_id
     self.author_id = User.current.id
