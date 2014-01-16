@@ -39,10 +39,14 @@ module MeetingAgendasHelper
     (item.asserter_id == User.current.id) && !item.asserter_id_is_contact?
   end
 
+  def approved?(item)
+    approvers = item.meeting_approvers.reject(&:deleted)
+    (approvers.present? && approvers.all?(&:approved?)) || approvers.blank?
+  end
+
   def asserted?(agenda)
     (agenda.asserted? ||
-      (agenda.asserter_id_is_contact? &&
-        agenda.meeting_approvers.reject(&:deleted).all?(&:approved?)))
+      (agenda.asserter_id_is_contact? && approved?(agenda)))
   end
 
   def link_to_copy_agenda(item)

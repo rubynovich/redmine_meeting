@@ -44,16 +44,16 @@ module MeetingProtocolsHelper
   end
 
   def asserter?(item)
-    (item.asserter_id == User.current.id) && !item.asserter_id_is_contact?
+    !item.asserter_id_is_contact? && (item.asserter_id == User.current.id)
   end
 
   def approved?(item)
-    item.meeting_approvers.reject(&:deleted).all?(&:approved?)
+    approvers = item.meeting_approvers.reject(&:deleted)
+    approvers.blank? || (approvers.present? && approvers.all?(&:approved?))
   end
 
   def asserted?(item)
-    (item.asserted? ||
-      (item.asserter_id_is_contact? && approved?(item)))
+    item.asserted? || (item.asserter_id_is_contact? && approved?(item))
   end
 
   def link_to_agenda(item)
@@ -132,7 +132,7 @@ module MeetingProtocolsHelper
   end
 
   def can_send_notices?(protocol)
-    (admin? || meeting_manager? && author?(protocol)) &&
+    (admin? || (meeting_manager? && author?(protocol))) &&
       ((protocol.meet_on < Date.today) ||
         ((protocol.meet_on == Date.today) &&
           (protocol.start_time.seconds_since_midnight < Time.now.seconds_since_midnight))) &&
