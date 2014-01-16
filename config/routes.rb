@@ -14,6 +14,7 @@ resources :meeting_agendas do
     get :resend_invites
     get :copy
     put :assert
+    get :send_asserter_invite
   end
 end
 resources :meeting_members do
@@ -34,6 +35,7 @@ resources :meeting_protocols do
     get :send_notices
     get :resend_notices
     put :assert
+    get :send_asserter_invite
   end
 end
 

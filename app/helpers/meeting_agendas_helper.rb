@@ -136,7 +136,7 @@ module MeetingAgendasHelper
 #  end
 
   def can_show_protocol?(protocol)
-    admin? || (meeting_manager? && (member?(protocol) || approver?(protocol) || watcher?(protocol) || asserter?(protocol)))
+    admin? || (meeting_manager? && (member?(protocol) || approver?(protocol) || asserter?(protocol)))
   end
 
   def can_assert?(agenda)
