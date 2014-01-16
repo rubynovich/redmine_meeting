@@ -26,7 +26,7 @@
             = link_to_user(@object.asserter, class: 'user')
       - if !@object.asserter_id_is_contact? && @object.meeting_approvers.open.blank?
         %li
-          = link_to l(:label_send_asserter_invite), {controller: 'meeting_adendas', action: 'send_asserter_invite', id: @object.id}, class: 'icon icon-user'
+          = link_to l(:label_send_asserter_invite), {controller: 'meeting_agendas', action: 'send_asserter_invite', id: @object.id}, class: 'icon icon-user'
     = render partial: 'meeting_comments/sidebar'
 
 :javascript
