@@ -52,6 +52,7 @@ class MeetingProtocol < ActiveRecord::Base
   validate :end_time_less_than_start_time, if: -> {
     self.start_time && self.end_time && (self.end_time.seconds_since_midnight < self.start_time.seconds_since_midnight)
   }
+  validate :uniqueness_of_meeting_agenda_id
 
   before_create :add_author_id
   after_save :add_new_users_from_answers
@@ -180,6 +181,12 @@ private
 
   def end_time_less_than_start_time
     errors.add(:end_time, :less_than_start_time)
+  end
+
+  def uniqueness_of_meeting_agenda_id
+    if MeetingProtocol.where(meeting_agenda_id: self.meeting_agenda_id, is_deleted: false).present?
+      errors.add(:meeting_agenda_id, :has_already_been_used_to_create_protocol)
+    end
   end
 
   def add_author_id

@@ -10,6 +10,7 @@ class CreateMeetingProtocols < ActiveRecord::Migration
       t.boolean :asserted, default: false
       t.integer :meeting_company_id
       t.integer :author_id
+      t.boolean :is_deleted, default: false
       t.datetime :created_on
     end
     add_index :meeting_protocols, :meeting_agenda_id
