@@ -18,6 +18,7 @@ class CreateMeetingAgendas < ActiveRecord::Migration
       t.time :start_time
       t.time :end_time
       t.integer :author_id
+      t.boolean :is_deleted, default: false
       t.datetime :created_on
     end
     add_index :meeting_agendas, :priority_id
