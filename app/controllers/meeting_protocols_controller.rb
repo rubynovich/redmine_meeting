@@ -185,6 +185,13 @@ class MeetingProtocolsController < ApplicationController
     redirect_to action: 'show', id: @object.id
   end
 
+  def restore
+    (render_403; return false) unless can_restore_protocol?(@object)
+    flash[:notice] = l(:notice_meeting_protocol_successful_restored)
+    @object.update_attribute(:is_deleted, false)
+    redirect_to action: 'show', id: @object.id
+  end
+
 private
   def nested_objects_from_session
     @members = User.active.sorted.find(session[:meeting_participator_ids])

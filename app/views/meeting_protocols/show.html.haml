@@ -31,6 +31,8 @@
   = link_to l(:button_print), {format: 'pdf'}, {class: 'icon icon-duplicate'}
   - if can_destroy_protocol?(@object)
     = link_to l(:button_delete), {action: 'destroy', id: @object.id}, confirm: l(:text_are_you_sure), method: :delete, class: 'icon icon-del'
+  - if can_restore_protocol?(@object)
+    = link_to l(:button_restore), {action: 'restore', id: @object.id}, confirm: l(:text_are_you_sure), method: :put, class: 'icon icon-copy'
 
 = render partial: 'head_for_print'
 

@@ -262,3 +262,6 @@ ru:
   message_subject_meeting_asserter_create: "[%{type} #%{type_id}] Необходимо Ваше утверждение"
   label_send_asserter_invite: "Отправить на утверждение"
   notice_asserter_invite_sent: "Уведомление утверждающему отправлено"
+  button_restore: "Восстановить"
+  notice_meeting_agenda_successful_restored: "Повестка успешно восстановлена"
+  notice_meeting_protocol_successful_restored: "Протокол успешно восстановлен"

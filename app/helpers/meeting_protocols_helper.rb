@@ -209,7 +209,7 @@ module MeetingProtocolsHelper
       (item.asserter_id != User.current.id)
   end
 
-  def can_restore?(item)
+  def can_restore_protocol?(item)
     (admin? || (meeting_manager? && author?(item))) &&
     item.is_deleted? &&
     item.meeting_agenda.meeting_protocol.is_deleted?
