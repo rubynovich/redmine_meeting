@@ -129,7 +129,11 @@ module MeetingAgendasHelper
   end
 
   def can_destroy_agenda?(agenda)
-    (admin? || meeting_manager? && author?(agenda)) && agenda.meeting_protocol.blank? && !agenda.is_deleted?
+    (admin? || (meeting_manager? && author?(agenda))) &&
+    agenda.meeting_protocol.blank? &&
+    !agenda.is_deleted? &&
+    (!asserted?(agenda) ||
+      (agenda.meeting_approvers.open.blank? && agenda.asserter_id_is_contact?))
   end
 
 #  def can_show_comments?(question)
@@ -153,5 +157,10 @@ module MeetingAgendasHelper
       !item.asserter_id_is_contact? &&
       item.meeting_approvers.open.blank? &&
       (item.asserter_id != User.current.id)
+  end
+
+  def can_restore?(item)
+    (admin? || (meeting_manager? && author?(item))) &&
+    item.is_deleted?
   end
 end
