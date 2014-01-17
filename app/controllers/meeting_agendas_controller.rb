@@ -1,7 +1,9 @@
 class MeetingAgendasController < ApplicationController
   unloadable
 
-  before_filter :find_object, only: [:edit, :show, :destroy, :update, :send_invites, :resend_invites, :group, :ungroup, :assert, :send_asserter_invite]
+  before_filter :find_object, only: [:edit, :show, :destroy, :update,
+    :send_invites, :resend_invites, :group, :ungroup, :assert,
+    :send_asserter_invite, :restore]
   before_filter :new_object, only: [:new, :create]
   before_filter :require_meeting_manager, except: [:index, :show]
 
@@ -225,6 +227,13 @@ class MeetingAgendasController < ApplicationController
     (render_403; return false) unless can_asserter_invite?(@object)
     flash[:notice] = l(:notice_asserter_invite_sent)
     Mailer.meeting_asserter_invite(@object).deliver
+    redirect_to action: 'show', id: @object.id
+  end
+
+  def restore
+    (render_403; return false) unless can_restore_agenda?(@object)
+    flash[:notice] = l(:notice_meeting_agenda_successful_restored)
+    @object.update_attribute(:is_deleted, false)
     redirect_to action: 'show', id: @object.id
   end
 
