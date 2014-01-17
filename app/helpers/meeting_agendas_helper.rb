@@ -120,11 +120,12 @@ module MeetingAgendasHelper
     (admin? ||
       (meeting_manager? &&
         (author?(agenda) || approver?(agenda) || asserter?(agenda)))) &&
-      (agenda.meeting_protocol.blank? ||
-        (agenda.meeting_protocol.present? && agenda.meeting_protocol.is_deleted?)) &&
-      (agenda.meet_on >= Date.today) &&
-      !agenda.is_deleted? &&
-      !asserted?(agenda)
+    (agenda.meeting_protocol.blank? ||
+      (agenda.meeting_protocol.present? && agenda.meeting_protocol.is_deleted?)) &&
+    (agenda.meet_on >= Date.today) &&
+    !agenda.is_deleted? &&
+    (!asserted?(agenda) ||
+      (agenda.meeting_approvers.open.blank? && agenda.asserter_id_is_contact?))
   end
 
   def can_destroy_agenda?(agenda)

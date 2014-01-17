@@ -163,7 +163,8 @@ module MeetingProtocolsHelper
       (meeting_manager? &&
         (author?(protocol) || approver?(protocol) || asserter?(protocol)))) &&
     !protocol.is_deleted? &&
-    !asserted?(protocol)
+    (!asserted?(protocol) ||
+      (protocol.meeting_approvers.open.blank? && protocol.asserter_id_is_contact?))
   end
 
   def can_destroy_protocol?(protocol)
