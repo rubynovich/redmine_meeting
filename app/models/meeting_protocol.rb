@@ -52,7 +52,7 @@ class MeetingProtocol < ActiveRecord::Base
   validate :end_time_less_than_start_time, if: -> {
     self.start_time && self.end_time && (self.end_time.seconds_since_midnight < self.start_time.seconds_since_midnight)
   }
-  validate :uniqueness_of_meeting_agenda_id
+  validate :uniqueness_of_meeting_agenda_id, on: :create
 
   before_create :add_author_id
   after_save :add_new_users_from_answers
