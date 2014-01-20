@@ -2,6 +2,7 @@ require_dependency 'custom_field'
 require 'prawn'
 require 'reports/meeting_agenda_report'
 require 'reports/meeting_protocol_report'
+require 'policies/agenda_policy'
 
 Redmine::Plugin.register :redmine_meeting do
   name 'Meeting'

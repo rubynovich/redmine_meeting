@@ -4,9 +4,11 @@ class MeetingAgendasController < ApplicationController
   before_filter :find_object, only: [:edit, :show, :destroy, :update,
     :send_invites, :resend_invites, :group, :ungroup, :assert,
     :send_asserter_invite, :restore]
-  before_filter :new_object, only: [:new, :create]
+  before_filter :new_object, only: [:new, :create, :index]
+  before_filter :create_agenda_policy, only: :index
   before_filter :require_meeting_manager, except: [:index, :show]
-
+  before_filter :authorize, only: [:edit, :destroy, :update, :restore, :assert,
+    :send_invites, :resend_invites, :send_asserter_invite]
   helper :attachments
   include AttachmentsHelper
   helper :meeting_agendas
@@ -41,7 +43,8 @@ class MeetingAgendasController < ApplicationController
   end
 
   def send_invites
-    (render_403; return false) unless can_send_invites?(@object)
+#    (render_403; return false) unless can_send_invites?(@object)
+#    (render_403; return false) unless can.send_invites?
     @object.meeting_members.reject(&:issue).each(&:send_invite)
     @object.meeting_contacts.each do |contact|
       begin
@@ -54,7 +57,8 @@ class MeetingAgendasController < ApplicationController
   end
 
   def resend_invites
-    (render_403; return false) unless can_send_invites?(@object)
+#    (render_403; return false) unless can_send_invites?(@object)
+#    (render_403; return false) unless can.send_invites?
     @object.meeting_members.each(&:resend_invite)
     @object.meeting_contacts.each do |contact|
       begin
@@ -136,7 +140,8 @@ class MeetingAgendasController < ApplicationController
   end
 
   def new
-    (render_403; return false) unless can_create_agenda?
+#    (render_403; return false) unless can_create_agenda?
+#    (render_403; return false) unless can.create?
     @object.priority = IssuePriority.default
     session[:meeting_member_ids] = [User.current.id]
     session[:meeting_contact_ids] = []
@@ -145,7 +150,8 @@ class MeetingAgendasController < ApplicationController
   end
 
   def copy
-    (render_403; return false) unless can_create_agenda?
+#    (render_403; return false) unless can_create_agenda?
+#    (render_403; return false) unless can.create?
     i = -1
     @old_object = model_class.find(params[:id])
     @object = model_class.new(@old_object.attributes)
@@ -160,7 +166,8 @@ class MeetingAgendasController < ApplicationController
   end
 
   def from_protocol
-    (render_403; return false) unless can_create_agenda?
+#    (render_403; return false) unless can_create_agenda?
+#    (render_403; return false) unless can.create?
     i = -1
     @old_object = MeetingProtocol.find(params[:meeting_protocol_id])
     @object = MeetingAgenda.new(@old_object.meeting_agenda.attributes.merge(@old_object.attributes))
@@ -176,7 +183,8 @@ class MeetingAgendasController < ApplicationController
 
 
   def create
-    (render_403; return false) unless can_create_agenda?
+#    (render_403; return false) unless can_create_agenda?
+#    (render_403; return false) unless can.create?
     @object.meeting_members_attributes = session[:meeting_member_ids].map{ |user_id| {user_id: user_id} } if session[:meeting_member_ids].present?
     @object.meeting_contacts_attributes = session[:meeting_contact_ids].map{ |contact_id| {contact_id: contact_id} } if session[:meeting_contact_ids].present?
     @object.meeting_watchers_attributes = session[:meeting_watcher_ids].map{ |user_id| {user_id: user_id} } if session[:meeting_watcher_ids].present?
@@ -192,12 +200,14 @@ class MeetingAgendasController < ApplicationController
   end
 
   def edit
-    (render_403; return false) unless can_update_agenda?(@object)
+#    (render_403; return false) unless can_update_agenda?(@object)
+#    (render_403; return false) unless can.update?
     nested_objects_from_database
   end
 
   def update
-    (render_403; return false) unless can_update_agenda?(@object)
+#    (render_403; return false) unless can_update_agenda?(@object)
+#    (render_403; return false) unless can.update?
     @object.save_attachments(params[:attachments])
     if @object.update_attributes(params[model_sym])
       flash[:notice] = l(:notice_successful_update)
@@ -210,7 +220,8 @@ class MeetingAgendasController < ApplicationController
   end
 
   def destroy
-    (render_403; return false) unless can_destroy_agenda?(@object)
+#    (render_403; return false) unless can_destroy_agenda?(@object)
+#    (render_403; return false) unless can.destroy?
     close_invites
     if @object.update_attribute(:is_deleted, true)
       flash[:notice] = l(:notice_successful_delete)
@@ -219,25 +230,45 @@ class MeetingAgendasController < ApplicationController
   end
 
   def assert
-    (render_403; return false) unless can_assert?(@object)
+#    (render_403; return false) unless can_assert?(@object)
+#    (render_403; return false) unless can.assert?
     @object.update_attribute(:asserted, true)
   end
 
   def send_asserter_invite
-    (render_403; return false) unless can_asserter_invite?(@object)
+#    (render_403; return false) unless can_asserter_invite?(@object)
+#    (render_403; return false) unless can.send_asserter_invite?
     flash[:notice] = l(:notice_asserter_invite_sent)
     Mailer.meeting_asserter_invite(@object).deliver
     redirect_to action: 'show', id: @object.id
   end
 
   def restore
-    (render_403; return false) unless can_restore_agenda?(@object)
+#    (render_403; return false) unless can_restore_agenda?(@object)
+#    (render_403; return false) unless can.restore?
     flash[:notice] = l(:notice_meeting_agenda_successful_restored)
     @object.update_attribute(:is_deleted, false)
     redirect_to action: 'show', id: @object.id
   end
 
 private
+
+  def authorize
+    (render_403; return false) unless can.send("#{params[:action]}?")
+  end
+
+  def create_agenda_policy(agenda=nil)
+    @agenda_policy = AgendaPolicy.new(User.current, agenda)
+  end
+
+  helper_method :can
+
+  def can(object=@object)
+    if object.kind_of?(MeetingAgenda)
+      @agenda_policy
+    end
+  end
+
   def close_invites
     issues = @object.invites
     issues.each do |invite|
@@ -275,10 +306,12 @@ private
 
   def find_object
     @object = model_class.find(params[:id])
+    create_agenda_policy(@object)
   end
 
   def new_object
     @object = model_class.new(params[model_sym])
+    create_agenda_policy(@object)
   end
 
   def require_meeting_manager
