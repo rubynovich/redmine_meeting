@@ -55,8 +55,8 @@ class MeetingProtocol < ActiveRecord::Base
   validate :uniqueness_of_meeting_agenda_id, on: :create
 
   before_create :add_author_id
-  after_save :add_new_users_from_answers
-  after_save :add_new_contacts_from_answers
+  after_create :add_new_users_from_answers
+  after_create :add_new_contacts_from_answers
   after_save :add_time_entry_to_invites
 
   scope :active, -> {
