@@ -1,29 +1,29 @@
 AgendaPolicy = Struct.new(:user, :agenda) do
   def create_protocol?
     (meeting_manager? || admin?) &&
-      agenda.meet_on && (
-        (agenda.meet_on < Date.today) ||
-        (agenda.meet_on == Date.today) && (agenda.start_time.seconds_since_midnight < Time.now.seconds_since_midnight)
-      ) &&
-      !agenda.is_deleted? &&
-      asserted?
+    agenda_is_running? &&
+    !agenda.is_deleted? &&
+    asserted?
   end
 
   def send_invites?
     (admin? || (meeting_manager? && author?)) &&
-      agenda.meet_on.present? && (
-        (agenda.meet_on > Date.today) || (
-          (agenda.meet_on == Date.today) && (agenda.start_time.seconds_since_midnight > Time.now.seconds_since_midnight)
-        )
-      ) &&
-      !agenda.is_deleted? &&
-      asserted?
+    agenda_is_running? &&
+    !agenda.is_deleted? &&
+    asserted?
   end
 
   alias :resend_invites? :send_invites?
 
   def show?
-    admin? || (meeting_manager? && (author? || member? || approver? || asserter?))
+    admin? || (
+      meeting_manager? && (
+        author? ||
+        member? ||
+        approver? ||
+        asserter?
+      )
+    )
   end
 
   def create?
@@ -62,9 +62,10 @@ AgendaPolicy = Struct.new(:user, :agenda) do
 
   def send_asserter_invite?
     (admin? || (meeting_manager? && author?)) &&
-      !agenda.asserter_id_is_contact? &&
-      approvable? &&
-      (agenda.asserter_id != user.id)
+    !agenda.asserter_id_is_contact? &&
+    agenda.asserter.present? &&
+    approvable? &&
+    (agenda.asserter_id != user.id)
   end
 
   def restore?
@@ -98,7 +99,7 @@ private
   end
 
   def approver?
-    agenda.approver_ids.include?(agenda.id)
+    agenda.approver_ids.include?(user.id)
   end
 
   def asserter?
@@ -125,5 +126,14 @@ private
 
   def watcher?
     agenda.watcher_ids.include?(user.id)
+  end
+
+  def agenda_is_running?
+    agenda.meet_on.present? && (
+      (agenda.meet_on > Date.today) || (
+        (agenda.meet_on == Date.today) &&
+        (agenda.start_time.seconds_since_midnight > Time.now.seconds_since_midnight)
+      )
+    )
   end
 end
