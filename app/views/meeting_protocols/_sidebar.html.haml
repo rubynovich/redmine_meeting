@@ -19,7 +19,7 @@
           = avatar(@object.asserter, size: 16)
           = link_to_user(@object.asserter, class: 'user')
   - if can_asserter_invite?(@object)
-    = link_to l(:label_send_asserter_invite), {controller: 'meeting_agendas', action: 'send_asserter_invite', id: @object.id}, class: 'icon icon-user'
+    = link_to l(:label_send_asserter_invite), {controller: 'meeting_protocols', action: 'send_asserter_invite', id: @object.id}, class: 'icon icon-user'
 
 = render partial: 'meeting_watchers/sidebar'
 = render partial: 'meeting_comments/sidebar'
