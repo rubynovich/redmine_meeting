@@ -157,6 +157,7 @@ module MeetingAgendasHelper
   def can_asserter_invite?(item)
     (admin? || (meeting_manager? && author?(item))) &&
       !item.asserter_id_is_contact? &&
+      item.asserter.present? &&
       item.meeting_approvers.open.blank? &&
       (item.asserter_id != User.current.id)
   end
