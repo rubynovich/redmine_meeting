@@ -1,0 +1,38 @@
+:css
+  #meeting_asserter ul {margin: 0;  padding: 0;}
+  #meeting_asserter li {list-style-type:none;margin: 0px 2px 0px 0px; padding: 0px 0px 0px 0px;}
+  #meeting_asserter img.gravatar {margin: 0 4px 2px 0;}
+
+= render partial: 'meeting_approvers/sidebar'
+= render partial: 'meeting_external_approvers/sidebar'
+%h3=l(:field_asserter)
+#meeting_asserter
+  %ul
+    %li
+      - if @object.asserter_id_is_contact?
+        = avatar(@object.external_asserter, size: 16)
+        = link_to_contact(@object.external_asserter, class: 'user')
+      - elsif @object.asserter.present?
+        = check_box_tag :asserted, "1", @object.asserted?, disabled: !can_assert?(@object), onclick: "assert_container(this,'#{url_for({controller: 'meeting_protocols', action: 'assert', id: @object.id})}','#{@object.id}')"
+        = label_tag :asserted, h(@object.asserter)
+        -#
+          = avatar(@object.asserter, size: 16)
+          = link_to_user(@object.asserter, class: 'user')
+  - if can_asserter_invite?(@object)
+    = link_to l(:label_send_asserter_invite), {controller: 'meeting_agendas', action: 'send_asserter_invite', id: @object.id}, class: 'icon icon-user'
+
+= render partial: 'meeting_watchers/sidebar'
+= render partial: 'meeting_comments/sidebar'
+
+:javascript
+  function assert_container(elem,url,id){
+      $.ajax({url: url,
+          type: 'PUT',
+          dataType: 'script',
+          data: 'meeting_protocols_' + id})
+      var checkbox = $(elem)
+      if (checkbox.is(':checked'))
+          checkbox.removeAttr('checked')
+      else
+          checkbox.attr('checked', true)
+  }
