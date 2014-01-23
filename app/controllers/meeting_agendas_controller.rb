@@ -22,9 +22,12 @@ class MeetingAgendasController < ApplicationController
   # include ContactsHelper
 
   include ApplicationHelper
+  helper :meeting_watchers
+  include MeetingWatchersHelper
 
   def show
 #    (render_403; return false) unless can_show_agenda?(@object)
+    @watchers = @object.watchers
     respond_to do |format|
       format.pdf {
         filename = ("Povestka_%04d" % [@object.id]) + @object.meet_on.strftime("_%Y-%m-%d.pdf")
