@@ -18,6 +18,9 @@ class MeetingProtocolsController < ApplicationController
   helper :meeting_bind_issues
   include MeetingBindIssuesHelper
 
+  helper :contacts
+  # include ContactsHelper
+
   before_filter :find_object, only: [:edit, :show, :destroy, :update,
     :send_notices, :resend_notices, :assert, :send_asserter_invite, :restore]
   before_filter :new_object, only: [:new, :create]
