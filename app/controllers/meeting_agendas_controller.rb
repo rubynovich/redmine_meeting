@@ -38,12 +38,14 @@ class MeetingAgendasController < ApplicationController
   end
 
   def group
+    @watchers = @object.watchers
     session[:meeting_agenda_ungrouped] = nil
 
     render action: 'ungroup'
   end
 
   def ungroup
+    @watchers = @object.watchers
     session[:meeting_agenda_ungrouped] = "true"
   end
 
