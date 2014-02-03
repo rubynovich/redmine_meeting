@@ -195,8 +195,8 @@ class MeetingProtocolsController < ApplicationController
 
 private
   def nested_objects_from_session
-    @members = User.active.sorted.find(session[:meeting_participator_ids])
-    @contacts = Contact.order_by_name.find(session[:meeting_contact_ids])
+    @members = User.active.sorted.where(id: session[:meeting_participator_ids])
+    @contacts = Contact.order_by_name.where(id: session[:meeting_contact_ids])
 #    @watchers = User.active.sorted.find(session[:meeting_watcher_ids])
   end
 
