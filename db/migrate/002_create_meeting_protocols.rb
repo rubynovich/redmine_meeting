@@ -8,6 +8,7 @@ class CreateMeetingProtocols < ActiveRecord::Migration
       t.integer :external_asserter_id
       t.boolean :asserter_id_is_contact
       t.boolean :asserted, default: false
+      t.datetime :asserter_invite_on
       t.integer :meeting_company_id
       t.integer :author_id
       t.boolean :is_deleted, default: false
