@@ -44,7 +44,7 @@ module MeetingProtocolsHelper
   end
 
   def asserter?(item)
-    !item.asserter_id_is_contact? && (item.asserter_id == User.current.id)
+    (item.asserter_id == User.current.id)
   end
 
   def approved?(item)
@@ -123,12 +123,16 @@ module MeetingProtocolsHelper
 #    admin? || meeting_manager? && author?(answer.meeting_protocol)
 #  end
 
-  def can_assert?(agenda)
-    asserter?(agenda) && assertable?(agenda)
+  def can_assert?(item)
+    asserter?(item) &&
+    assertable?(item)
   end
 
-  def assertable?(agenda)
-    !agenda.asserted? && approved?(agenda)
+  def assertable?(item)
+    !item.asserted? &&
+    approved?(item) &&
+    !item.asserter_id_is_contact? &&
+    item.asserter.present?
   end
 
   def can_asserter_invite?(item)
@@ -205,6 +209,12 @@ module MeetingProtocolsHelper
     else
       t(:label_meeting_notice_extra)
     end
+  end
+
+  def link_to_address(address, company = nil)
+    url = "http://maps.google.com/maps?f=q&ie=UTF8&om=1&q=#{h address.gsub("\r\n"," ").gsub("\n"," ")}"
+    url += "+(#{h company.to_s.gsub(/["']+/,"")})" if company.present?
+    link_to address, url
   end
 
   def member_status(member)

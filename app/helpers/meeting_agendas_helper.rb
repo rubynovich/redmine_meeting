@@ -40,7 +40,7 @@ module MeetingAgendasHelper
   end
 
   def asserter?(item)
-    (item.asserter_id == User.current.id) && !item.asserter_id_is_contact?
+    (item.asserter_id == User.current.id)
   end
 
   def approved?(item)
@@ -118,12 +118,16 @@ module MeetingAgendasHelper
     admin? || (meeting_manager? && (author?(protocol) || member?(protocol) || approver?(protocol) || watcher?(protocol) || asserter?(protocol)))
   end
 
-  def can_assert?(agenda)
-    asserter?(agenda) && assertable?(agenda)
+  def can_assert?(item)
+    asserter?(item) &&
+    assertable?(item)
   end
 
-  def assertable?(agenda)
-    !agenda.asserted? && approved?(agenda)
+  def assertable?(item)
+    !item.asserted? &&
+    approved?(item) &&
+    !item.asserter_id_is_contact? &&
+    item.asserter.present?
   end
 
   def can_asserter_invite?(item)
@@ -179,5 +183,11 @@ module MeetingAgendasHelper
           controller: 'meeting_protocols', action: 'new', meeting_protocol: {meeting_agenda_id: item.id}},
           {class: 'icon icon-add'})
     end
+  end
+
+  def link_to_address(address, company = nil)
+    url = "http://maps.google.com/maps?f=q&ie=UTF8&om=1&q=#{h address.gsub("\r\n"," ").gsub("\n"," ")}"
+    url += "+(#{h company.to_s.gsub(/["']+/,"")})" if company.present?
+    link_to address, url
   end
 end

@@ -70,11 +70,13 @@
     %tr
       - if @object.is_external?
         %th=l(:field_address)+":"
-        %td{colspan: 3}
-          =link_to @object.address, "http://maps.google.com/maps?f=q&ie=UTF8&om=1&q=#{h @object.address.gsub("\r\n"," ").gsub("\n"," ")}+(#{h @object.external_company.to_s.gsub(/["']+/,"")})"
+        %td{colspan: 3}=link_to_address @object.address, @object.external_company
       - else
         %th=l(:field_place)+":"
-        %td{colspan: 3}=h @object.place
+        %td{colspan: 3}
+          - if @object.meeting_company.present? && @object.meeting_company.fact_address.present?
+            = link_to_address(@object.meeting_company.fact_address) + ","
+          =h @object.place
     %tr
       %th= l(:field_meet_on)+":"
       %td= format_date(@object.meet_on)
