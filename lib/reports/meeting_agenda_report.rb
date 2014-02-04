@@ -107,16 +107,25 @@ private
   end
 
   def print_approval_list(approvers, asserter)
+    approvers_label = if approvers.present?
+      {content: "«#{l(:label_meeting_protocol_head_agreed)}»"}
+    else
+      nil
+    end
+
     approval_list = [[
-      {content: "«#{l(:label_meeting_protocol_head_agreed)}»"},
+      approvers_label,
       nil,
       {content: "«#{l(:label_meeting_protocol_head_approved)}»"}
     ]]
 
     default_field = "_________________"
-    agreed_list = (approvers.present? ? approvers : [default_field]).map{ |o| "#{o}/________/"}
+    agreed_list = if approvers.present?
+      approvers.map{ |o| "#{o}/________/"}
+    else
+      [""]
+    end
     approved_list = (asserter.present? ? [asserter] : [default_field]).map{ |o| "#{o}/________/"}
-
     approval_list += agreed_list.zip([], approved_list)
 
     table approval_list do |t|
@@ -137,17 +146,25 @@ private
     end
   end
 
-  def print_agenda_fields(agenda)
-#    text((agenda.is_external? ? l(:label_external_meeting_agenda) : l(:label_meeting_agenda)) + " №#{agenda.id}", style: :bold, size: 22, align: :center)
-    text(l(:label_meeting_agenda) + " №#{agenda.id}", style: :bold, size: 22, align: :center)
+  def print_agenda_fields(object)
+#    text((object.is_external? ? l(:label_external_meeting_agenda) : l(:label_meeting_agenda)) + " №#{object.id}", style: :bold, size: 22, align: :center)
+    text(l(:label_meeting_agenda) + " №#{object.id}", style: :bold, size: 22, align: :center)
 #    move_down 10
 
-    text("<b>#{l(:field_subject)}:</b> <i>#{agenda.subject}</i>", size: 10, inline_format: true)
-    text("<b>#{l(:field_external_company)}:</b> <i>#{agenda.external_company}</i>", size: 10, inline_format: true) if agenda.is_external?
-    text("<b>#{agenda.is_external? ? l(:field_address) : l(:field_place)}:</b> <i>#{agenda.place}</i>", size: 10, inline_format: true)
-    text("<b>#{l(:field_meet_on)}:</b> <i>#{format_date(agenda.meet_on)}</i>", size: 10, inline_format: true)
-    text("<b>#{l(:label_meeting_agenda_time)}:</b> <i>#{format_time(agenda.start_time, false)} - #{format_time(agenda.end_time, false)}</i>", size: 10, inline_format: true)
-    text("<b>#{l(:field_author)}:</b> <i>#{agenda.author}</i>", size: 10, inline_format: true)
+    text("<b>#{l(:field_subject)}:</b> <i>#{object.subject}</i>", size: 10, inline_format: true)
+    if object.is_external?
+      text("<b>#{l(:field_external_company)}:</b> <i>#{object.external_company}</i>", size: 10, inline_format: true)
+      text("<b>#{l(:field_address)}:</b> <i>#{object.place}</i>", size: 10, inline_format: true)
+    elsif object.meeting_company.present? && object.meeting_company.fact_address.present?
+      text("<b>#{l(:field_place)}:</b> <i>#{object.meeting_company.fact_address}, #{object.place}</i>", size: 10, inline_format: true)
+    else
+      text("<b>#{l(:field_place)}:</b> <i>#{object.place}</i>", size: 10, inline_format: true)
+    end
+
+    text("<b>#{object.is_external? ? l(:field_address) : l(:field_place)}:</b> <i>#{object.place}</i>", size: 10, inline_format: true)
+    text("<b>#{l(:field_meet_on)}:</b> <i>#{format_date(object.meet_on)}</i>", size: 10, inline_format: true)
+    text("<b>#{l(:label_meeting_agenda_time)}:</b> <i>#{format_time(object.start_time, false)} - #{format_time(object.end_time, false)}</i>", size: 10, inline_format: true)
+    text("<b>#{l(:field_author)}:</b> <i>#{object.author}</i>", size: 10, inline_format: true)
   end
 
   def print_meeting_questions(questions)
