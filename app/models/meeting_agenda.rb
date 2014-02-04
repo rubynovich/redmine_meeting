@@ -66,7 +66,10 @@ class MeetingAgenda < ActiveRecord::Base
   validate :presence_of_meeting_questions, if: -> { self.meeting_questions.blank? }
   validate :presence_of_meeting_members, if: -> { self.meeting_members.blank? }
   validate :meeting_room_reserve_validation, if: -> { MeetingRoom.where("LOWER(name) = LOWER(?)", self.place).present? && !self.is_external? }
-  validate :meeting_question_title_uniq, if: -> { mq = self.meeting_questions.map(&:title); mq.size != mq.uniq.size }
+  validate :meeting_question_title_uniq, if: -> {
+    mq = self.meeting_questions.map{ |q| [q.title, (q.issue && q.issue.project) || q.project ] }
+    mq.size != mq.uniq.size
+  }
 
   before_create :add_author_id
   after_save :add_new_users_from_questions
