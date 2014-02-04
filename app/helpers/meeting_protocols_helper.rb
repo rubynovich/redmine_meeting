@@ -124,12 +124,17 @@ module MeetingProtocolsHelper
 #  end
 
   def can_assert?(agenda)
-    asserter?(agenda) && !agenda.asserted? && approved?(agenda)
+    asserter?(agenda) && assertable?(agenda)
+  end
+
+  def assertable?(agenda)
+    !agenda.asserted? && approved?(agenda)
   end
 
   def can_asserter_invite?(item)
-    (admin? || (meeting_manager? && author?(item))) &&
-    can_assert?(item) &&
+    (admin? ||
+      (meeting_manager? && author?(item))) &&
+    assertable?(item) &&
     (item.asserter_id != User.current.id)
   end
 
