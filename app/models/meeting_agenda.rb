@@ -43,6 +43,7 @@ class MeetingAgenda < ActiveRecord::Base
   attr_accessible :is_external, :asserter_id, :meeting_company_id
   attr_accessible :asserter_id_is_contact, :external_asserter_id, :address
   attr_accessible :external_place_type
+  attr_accessible :asserter_invite_on
 
   validates_uniqueness_of :subject, scope: :meet_on
   validates_presence_of :subject, :meet_on, :start_time, :end_time, :priority_id

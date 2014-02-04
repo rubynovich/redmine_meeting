@@ -48,87 +48,12 @@ module MeetingProtocolsHelper
   end
 
   def approved?(item)
-    approvers = item.meeting_approvers.reject(&:deleted)
-    approvers.blank? || (approvers.present? && approvers.all?(&:approved?))
+    approvers = item.meeting_approvers.deleted(false)
+    approvers.blank? || (approvers.present? && approvers.approved.all?)
   end
 
   def asserted?(item)
     item.asserted? || (item.asserter_id_is_contact? && approved?(item))
-  end
-
-  def link_to_agenda(item)
-    if can_show_agenda?(item)
-      link_to "#{t(:label_meeting_agenda)} ##{item.meeting_agenda_id}", controller: 'meeting_agendas', action: 'show', id: item.meeting_agenda_id
-    else
-      "#{t(:label_meeting_agenda)} ##{item.meeting_agenda_id}"
-    end
-  end
-
-  def link_to_question_issue(answer)
-    if answer.question_issue.present?
-      link_to_issue(answer.question_issue, project: false, tracker: false, subject: false) +
-        if can_bind_issue?(answer)
-          link_to("", {controller: 'meeting_bind_issues', action: 'new', meeting_answer_type: answer.class, meeting_answer_id: answer.id}, remote: true, class: 'icon icon-edit hide-when-print')
-        else
-          ""
-        end
-    else
-      if can_bind_issue?(answer)
-        link_to(t(:button_add), {controller: 'meeting_bind_issues', action: 'new', meeting_answer_type: answer.class, meeting_answer_id: answer.id}, remote: true, class: 'icon icon-add hide-when-print')
-      else
-        ""
-      end
-    end
-  end
-
-
-  def link_to_reporter(answer)
-    if answer.reporter_id_is_contact?
-      link_to_contact answer.external_reporter if answer.external_reporter.present?
-    else
-      link_to_user answer.reporter if answer.reporter.present?
-    end
-  end
-
-  def link_to_assigned_to(answer)
-    if answer.user_id_is_contact?
-      link_to_contact answer.external_user if answer.external_user.present?
-    else
-      link_to_user answer.user if answer.user.present?
-    end
-  end
-
-  def link_to_meeting_notice(user)
-    item = @object.meeting_participators.select{ |m| m.user == user }.first
-    if item.try(:issue).present?
-      if item.status == IssueStatus.default
-        link_to t(:label_meeting_notice_blank), controller: 'issues', action: 'show', id: item.issue_id
-      else
-        link_to t(:label_meeting_notice_present), controller: 'issues', action: 'show', id: item.issue_id
-      end
-    else
-      t(:label_meeting_notice_extra)
-    end
-  end
-
-  def member_status(member)
-    if member.meeting_participator.try(:user) == member.user
-      t(:label_meeting_member_present)
-    else
-      t(:label_meeting_member_blank)
-    end
-  end
-
-  def protocol_status(item)
-    if item.meeting_answers.all?(&:issue)
-      if item.issues.all?(&:closed?)
-        t(:label_meeting_project_is_done)
-      else
-        t(:label_meeting_project_not_completed)
-      end
-    else
-      t(:label_meeting_project_is_not_full)
-    end
   end
 
   def can_send_notices?(protocol)
@@ -204,15 +129,96 @@ module MeetingProtocolsHelper
 
   def can_asserter_invite?(item)
     (admin? || (meeting_manager? && author?(item))) &&
-      !item.asserter_id_is_contact? &&
-      item.asserter.present? &&
-      item.meeting_approvers.open.blank? &&
-      (item.asserter_id != User.current.id)
+    can_assert?(item) &&
+    (item.asserter_id != User.current.id)
   end
 
   def can_restore_protocol?(item)
     (admin? || (meeting_manager? && author?(item))) &&
     item.is_deleted? &&
     item.meeting_agenda.meeting_protocol.is_deleted?
+  end
+
+  def link_to_asserter_invite(object)
+    label = if object.asserter_invite_on.blank?
+      l(:label_send_asserter_invite)
+    else
+      l(:label_resend_asserter_invite)
+    end
+    link_to label, {action: 'send_asserter_invite', id: object.id}, class: 'icon icon-user'
+  end
+
+  def link_to_agenda(item)
+    if can_show_agenda?(item)
+      link_to "#{t(:label_meeting_agenda)} ##{item.meeting_agenda_id}", controller: 'meeting_agendas', action: 'show', id: item.meeting_agenda_id
+    else
+      "#{t(:label_meeting_agenda)} ##{item.meeting_agenda_id}"
+    end
+  end
+
+  def link_to_question_issue(answer)
+    if answer.question_issue.present?
+      link_to_issue(answer.question_issue, project: false, tracker: false, subject: false) +
+        if can_bind_issue?(answer)
+          link_to("", {controller: 'meeting_bind_issues', action: 'new', meeting_answer_type: answer.class, meeting_answer_id: answer.id}, remote: true, class: 'icon icon-edit hide-when-print')
+        else
+          ""
+        end
+    else
+      if can_bind_issue?(answer)
+        link_to(t(:button_add), {controller: 'meeting_bind_issues', action: 'new', meeting_answer_type: answer.class, meeting_answer_id: answer.id}, remote: true, class: 'icon icon-add hide-when-print')
+      else
+        ""
+      end
+    end
+  end
+
+  def link_to_reporter(answer)
+    if answer.reporter_id_is_contact?
+      link_to_contact answer.external_reporter if answer.external_reporter.present?
+    else
+      link_to_user answer.reporter if answer.reporter.present?
+    end
+  end
+
+  def link_to_assigned_to(answer)
+    if answer.user_id_is_contact?
+      link_to_contact answer.external_user if answer.external_user.present?
+    else
+      link_to_user answer.user if answer.user.present?
+    end
+  end
+
+  def link_to_meeting_notice(user)
+    item = @object.meeting_participators.select{ |m| m.user == user }.first
+    if item.try(:issue).present?
+      if item.status == IssueStatus.default
+        link_to t(:label_meeting_notice_blank), controller: 'issues', action: 'show', id: item.issue_id
+      else
+        link_to t(:label_meeting_notice_present), controller: 'issues', action: 'show', id: item.issue_id
+      end
+    else
+      t(:label_meeting_notice_extra)
+    end
+  end
+
+  def member_status(member)
+    if member.meeting_participator.try(:user) == member.user
+      t(:label_meeting_member_present)
+    else
+      t(:label_meeting_member_blank)
+    end
+  end
+
+  def protocol_status(item)
+    if item.meeting_answers.all?(&:issue)
+      if item.issues.all?(&:closed?)
+        t(:label_meeting_project_is_done)
+      else
+        t(:label_meeting_project_not_completed)
+      end
+    else
+      t(:label_meeting_project_is_not_full)
+    end
   end
 end

@@ -40,6 +40,7 @@ class MeetingProtocol < ActiveRecord::Base
   attr_accessible :meeting_watchers_attributes
   attr_accessible :meeting_agenda_id, :start_time, :end_time, :asserter_id, :meeting_company_id
   attr_accessible :external_asserter_id, :asserter_id_is_contact
+  attr_accessible :asserter_invite_on
 
 #  validates_uniqueness_of :meeting_agenda_id, message: :has_already_been_used_to_create_protocol
   validates_presence_of :meeting_agenda_id, :meeting_company_id

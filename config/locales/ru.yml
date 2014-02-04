@@ -265,3 +265,4 @@ ru:
   button_restore: "Восстановить"
   notice_meeting_agenda_successful_restored: "Повестка успешно восстановлена"
   notice_meeting_protocol_successful_restored: "Протокол успешно восстановлен"
+  label_resend_asserter_invite: "Повторно отправить на утверждение"

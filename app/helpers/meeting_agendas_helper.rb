@@ -44,8 +44,8 @@ module MeetingAgendasHelper
   end
 
   def approved?(item)
-    approvers = item.meeting_approvers.reject(&:deleted)
-    (approvers.present? && approvers.all?(&:approved?)) || approvers.blank?
+    approvers = item.meeting_approvers.deleted(false)
+    (approvers.present? && approvers.approved.all?) || approvers.blank?
   end
 
   def asserted?(agenda)
@@ -55,38 +55,6 @@ module MeetingAgendasHelper
 
   def watcher?(item)
     item.watcher_ids.include?(User.current.id)
-  end
-
-  def link_to_copy_agenda(item)
-    link_to(t(:button_copy),
-      {controller: 'meeting_agendas', action: 'copy', id: item.id},
-      {class: 'icon icon-copy'})
-  end
-
-  def link_to_protocol(item)
-    if item.meeting_protocol.present? && !item.meeting_protocol.is_deleted?
-#      if item.meeting_protocol.is_deleted?
-#        t(:label_meeting_protocol_is_deleted)
-#      else
-      if can_show_protocol?(item.meeting_protocol)
-        link_to("#{t(:label_meeting_protocol)} ##{item.meeting_protocol.id}",
-          {controller: 'meeting_protocols', action: 'show', id: item.meeting_protocol.id})
-      else
-        "#{t(:label_meeting_protocol)} ##{item.meeting_protocol.id}"
-      end
-#      end
-    elsif can_create_protocol?(item)
-      if item.meeting_protocol.present? && item.meeting_protocol.is_deleted?
-        link_to(t(:label_meeting_protocol_is_deleted),
-          {controller: 'meeting_protocols', action: 'show', id: item.meeting_protocol.id},
-          {class: 'is_deleted'})
-      else
-        ""
-      end.html_safe +
-        link_to(t(:button_add), {
-          controller: 'meeting_protocols', action: 'new', meeting_protocol: {meeting_agenda_id: item.id}},
-          {class: 'icon icon-add'})
-    end
   end
 
   def can_create_protocol?(agenda)
@@ -155,15 +123,57 @@ module MeetingAgendasHelper
   end
 
   def can_asserter_invite?(item)
-    (admin? || (meeting_manager? && author?(item))) &&
-      !item.asserter_id_is_contact? &&
-      item.asserter.present? &&
-      item.meeting_approvers.open.blank? &&
-      (item.asserter_id != User.current.id)
+    (admin? ||
+      (meeting_manager? && author?(item))) &&
+    can_assert?(item) &&
+    (item.asserter_id != User.current.id)
   end
 
   def can_restore_agenda?(item)
     (admin? || (meeting_manager? && author?(item))) &&
     item.is_deleted?
+  end
+
+  def link_to_asserter_invite(object)
+    label = if object.asserter_invite_on.blank?
+      l(:label_send_asserter_invite)
+    else
+      l(:label_resend_asserter_invite)
+    end
+    link_to label, {action: 'send_asserter_invite', id: object.id}, class: 'icon icon-user'
+  end
+
+  def link_to_send_invite(object)
+    if object.meeting_members.all?(&:issue)
+      link_to l(:label_resend_invites), {action: 'resend_invites', id: object.id}, class: 'icon icon-issue'
+    else
+      link_to l(:label_send_invites), {action: 'send_invites', id: object.id}, class: 'icon icon-issue'
+    end
+  end
+
+  def link_to_copy_agenda(item)
+    link_to l(:button_copy), {action: 'copy', id: item.id}, class: 'icon icon-copy'
+  end
+
+  def link_to_protocol(item)
+    if item.meeting_protocol.present? && !item.meeting_protocol.is_deleted?
+      if can_show_protocol?(item.meeting_protocol)
+        link_to("#{t(:label_meeting_protocol)} ##{item.meeting_protocol.id}",
+          {controller: 'meeting_protocols', action: 'show', id: item.meeting_protocol.id})
+      else
+        "#{t(:label_meeting_protocol)} ##{item.meeting_protocol.id}"
+      end
+    elsif can_create_protocol?(item)
+      if item.meeting_protocol.present? && item.meeting_protocol.is_deleted?
+        link_to(t(:label_meeting_protocol_is_deleted),
+          {controller: 'meeting_protocols', action: 'show', id: item.meeting_protocol.id},
+          {class: 'is_deleted'})
+      else
+        ""
+      end.html_safe +
+        link_to(t(:button_add), {
+          controller: 'meeting_protocols', action: 'new', meeting_protocol: {meeting_agenda_id: item.id}},
+          {class: 'icon icon-add'})
+    end
   end
 end

@@ -186,6 +186,7 @@ class MeetingProtocolsController < ApplicationController
     (render_403; return false) unless can_asserter_invite?(@object)
     flash[:notice] = l(:notice_asserter_invite_sent)
     Mailer.meeting_asserter_invite(@object).deliver
+    @object.update_attributes(asserter_invite_on: Time.now)
     redirect_to action: 'show', id: @object.id
   end
 

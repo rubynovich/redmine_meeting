@@ -25,10 +25,7 @@
   - if can_create_agenda?
     = link_to_copy_agenda(@object)
   - if can_send_invites?(@object)
-    - if @object.meeting_members.all?(&:issue)
-      = link_to l(:label_resend_invites), {action: 'resend_invites', id: @object.id}, class: 'icon icon-issue'
-    - else
-      = link_to l(:label_send_invites), {action: 'send_invites', id: @object.id}, class: 'icon icon-issue'
+    = link_to_send_invite(@object)
   = link_to l(:button_print), {format: 'pdf'}, { class: 'icon icon-duplicate' }
   - if can_destroy_agenda?(@object)
     = link_to l(:button_delete), {action: 'destroy', id: @object.id}, confirm: l(:text_are_you_sure), method: 'delete', class: 'icon icon-del'

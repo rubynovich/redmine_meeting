@@ -21,22 +21,17 @@ module MeetingPlugin
         begin
           principal = Principal.find(Setting.plugin_redmine_meeting[:principal_id])
           self.is_or_belongs_to?(principal)
-#          if principal.is_a?(Group)
-#            principal.users.include?(self)
-#          elsif principal.is_a?(User)
-#            principal == self
-#          end
         rescue
           nil
         end
       end
 
       def meeting_member?
-        MeetingMember.where(user_id: self.id).count.nonzero? || meeting_manager?
+        MeetingMember.where(user_id: self.id).present? || meeting_manager?
       end
 
       def meeting_participator?
-        MeetingParticipator.where(user_id: self.id).count.nonzero? || meeting_manager?
+        MeetingParticipator.where(user_id: self.id).present? || meeting_manager?
       end
     end
   end

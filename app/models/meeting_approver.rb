@@ -27,6 +27,14 @@ class MeetingApprover < ActiveRecord::Base
     where("#{self.table_name}.deleted = ?", !status)
   }
 
+  scope :deleted, ->(status = true) {
+    where("#{self.table_name}.deleted = ?", status)
+  }
+
+  scope :approved, ->(status = true) {
+    where("#{self.table_name}.approved = ?", status)
+  }
+
   def to_s
     user.to_s
   end
