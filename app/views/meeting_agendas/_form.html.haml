@@ -36,12 +36,13 @@
     %p.user_id
       = f.label :asserter, class: 'necessary'
       = f.collection_select :asserter_id, User.active.sorted, :id, :name, prompt: t(:prompt_please_select)
-    %p.contact_id
-      = f.label :external_asserter, t(:field_asserter), class: 'necessary'
-      = f.collection_select :external_asserter_id, Contact.visible.people.order_by_name, :id, :name, prompt: t(:prompt_please_select)
-      - project = Project.find(Setting[:plugin_redmine_contacts][:project_id]) rescue nil
-      = link_to l(:label_contact_new), {controller: 'contacts', action: 'new', project_id: project}, class: 'icon icon-add'
     -#
+      %p.contact_id
+        = f.label :external_asserter, t(:field_asserter), class: 'necessary'
+        = f.collection_select :external_asserter_id, Contact.visible.people.order_by_name, :id, :name, prompt: t(:prompt_please_select)
+        - project = Project.find(Setting[:plugin_redmine_contacts][:project_id]) rescue nil
+        = link_to l(:label_contact_new), {controller: 'contacts', action: 'new', project_id: project}, class: 'icon icon-add'
+
       %p
         = f.label :asserter_id_is_contact, t(:label_meeting_agenda_asserter_is_contact)
         = f.check_box :asserter_id_is_contact, class: 'user_id_is_contact', onclick: 'toggleReporterType(this);'

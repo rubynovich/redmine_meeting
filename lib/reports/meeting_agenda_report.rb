@@ -15,7 +15,8 @@ class MeetingAgendaReport < Prawn::Document
 
     # Информация с согласующими и утверждающим
     asserter = object.asserter_id_is_contact? ? object.external_asserter : object.asserter
-    print_approval_list(object.meeting_approvers.open.map(&:person)+object.external_approvers, asserter)
+#    print_approval_list(object.meeting_approvers.open.map(&:person)+object.external_approvers, asserter)
+    print_approval_list(object.meeting_approvers.deleted(false), asserter, object.asserted_on)
     move_down 5
 
     # Информация о совещании (номер) и повестке (дата, время, место, адрес и тд)
@@ -106,7 +107,7 @@ private
     end
   end
 
-  def print_approval_list(approvers, asserter)
+  def print_approval_list(approvers, asserter, asserted_on)
     approvers_label = if approvers.present?
       {content: "«#{l(:label_meeting_protocol_head_agreed)}»"}
     else
@@ -121,11 +122,12 @@ private
 
     default_field = "_________________"
     agreed_list = if approvers.present?
-      approvers.map{ |o| "#{o}/________/"}
+      approvers.map{ |o| "#{o.person}/________/#{format_date(o.approved_on)}"}
     else
       [""]
     end
-    approved_list = (asserter.present? ? [asserter] : [default_field]).map{ |o| "#{o}/________/"}
+    approved_list = (asserter.present? ? [asserter] : [default_field]).
+      map{ |o| "#{o}/________/#{format_date(asserted_on)}"}
     approval_list += agreed_list.zip([], approved_list)
 
     table approval_list do |t|
