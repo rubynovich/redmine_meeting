@@ -10,7 +10,7 @@
   - else
     = link_to l(:label_meeting_questions_ungroup), controller: 'meeting_agendas', action: 'ungroup', id: @object.id, remote: true
   = render partial: 'meeting_approvers/sidebar'
-  = render partial: 'meeting_external_approvers/sidebar'
+  =# render partial: 'meeting_external_approvers/sidebar'
   %h3=l(:field_asserter)
   #meeting_asserter
     %ul
