@@ -230,6 +230,7 @@ class MeetingAgendasController < ApplicationController
   def assert
     (render_403; return false) unless can_assert?(@object)
     @object.update_attribute(:asserted, true)
+    @object.update_attribute(:asserted_on, Time.now)
   end
 
   def send_asserter_invite
