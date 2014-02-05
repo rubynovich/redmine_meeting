@@ -49,7 +49,7 @@ module MeetingProtocolsHelper
 
   def approved?(item)
     approvers = item.meeting_approvers.deleted(false)
-    approvers.blank? || (approvers.present? && approvers.approved.all?)
+    approvers.blank? || (approvers.present? && approvers.all?(&:approved?))
   end
 
   def asserted?(item)
