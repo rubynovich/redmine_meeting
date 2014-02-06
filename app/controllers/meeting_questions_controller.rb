@@ -3,7 +3,7 @@ class MeetingQuestionsController < ApplicationController
 
   helper :meeting_comments
   include MeetingCommentsHelper
-  before_filter require_meeting_manager
+  before_filter :require_meeting_manager
 
   def update
     @question = MeetingQuestion.find(params[:id])
