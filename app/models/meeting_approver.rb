@@ -10,26 +10,31 @@ class MeetingApprover < ActiveRecord::Base
   belongs_to :author, foreign_key: 'author_id', class_name: 'User'
   belongs_to :meeting_container, polymorphic: true
 
-  before_validation :add_approved_on, if: -> { self.approved? && self.id && !self.class.find(self.id).approved? }
+  before_validation :add_approved_on, if: -> do
+    self.approved? && self.id && !self.class.find(self.id).approved?
+  end
   before_create :add_author_id
-
-  before_update :message_approver_approve, if: -> { self.approved? && !self.class.find(self.id).approved? }
   after_create :message_approver_create
-  before_save :message_approver_destroy, if: -> { !self.deleted? && self.id && self.class.find(self.id).deleted? }
-  before_update :message_asserter_invite, if: -> {
+  before_update :message_approver_destroy, if: -> do
+    self.deleted? && !self.class.find(self.id).deleted?
+  end
+  before_update :message_approver_approve, if: -> do
+    self.approved? && !self.class.find(self.id).approved?
+  end
+  before_update :message_asserter_invite, if: -> do
     old_object = self.class.find(self.id)
     self.approved? && !old_object.approved? &&
     !meeting_container.asserter_id_is_contact? &&
     (meeting_container.meeting_approvers - [old_object]).reject(&:deleted).all?(&:approved?)
-  }
+  end
 
-  scope :open, ->(status = true) {
+  scope :open, ->(status = true) do
     where("#{self.table_name}.deleted = ?", !status)
-  }
+  end
 
-  scope :deleted, ->(status = true) {
+  scope :deleted, ->(status = true) do
     where("#{self.table_name}.deleted = ?", status)
-  }
+  end
 
   def to_s
     user.to_s

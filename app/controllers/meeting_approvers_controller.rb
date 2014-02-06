@@ -38,7 +38,7 @@ class MeetingApproversController < ApplicationController
 
   def destroy
     if item = MeetingApprover.find(params[:id])
-      item.update_attribute(:deleted, true)
+      item.update_attributes(deleted: true)
     end
 
     @users = meeting_approver_users
