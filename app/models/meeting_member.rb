@@ -18,7 +18,11 @@ class MeetingMember < ActiveRecord::Base
 
   validates_uniqueness_of :user_id, scope: :meeting_agenda_id
   validates_presence_of :user_id
-  validate :validate_meeting_agenda, if: -> {self.meeting_agenda.present? && !self.meeting_agenda.valid?}
+  validate :validate_meeting_agenda,
+    if: -> {self.meeting_agenda.present? && !self.meeting_agenda.valid?}
+
+  before_destroy :cancel_issue_for_destroyed_member,
+    if: -> {self.issue.present?}
 
   def to_s
     self.user.try(:name) || ''
@@ -40,6 +44,24 @@ class MeetingMember < ActiveRecord::Base
       self.send_invite
     end
   rescue
+  end
+
+  def cancel_issue(cancel_message = ::I18n.t(:message_meeting_canceled))
+    issue = self.issue
+    cancel_status = IssueStatus.find(Setting.plugin_redmine_meeting[:cancel_issue_status])
+    if issue.present?
+      issue.init_journal(User.current, cancel_message)
+      issue.status = cancel_status
+      issue.save
+    end
+  end
+
+  def cancel_issue_for_destroyed_member
+    cancel_issue(::I18n.t(:message_meeting_member_destroyed))
+  end
+
+  def cancel_issue_for_destroyed_agenda
+    cancel_issue(::I18n.t(:message_meeting_canceled))
   end
 
 private

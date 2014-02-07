@@ -171,7 +171,8 @@ class MeetingProtocolsController < ApplicationController
 
   def destroy
     (render_403; return false) unless can_destroy_protocol?(@object)
-    if @object.update_attribute(:is_deleted, true)
+    @object.is_deleted = true
+    if @object.save
       flash[:notice] = l(:notice_successful_delete)
     end
     redirect_to action: 'index'
@@ -179,22 +180,32 @@ class MeetingProtocolsController < ApplicationController
 
   def assert
     (render_403; return false) unless can_assert?(@object)
-    @object.update_attribute(:asserted, true)
-    @object.update_attribute(:asserted_on, Time.now)
+    @object.asserted = true
+    @object.asserted_on = Time.now
+    if @object.save
+      flash[:notice] = l(:notice_successful_update)
+      #TODO move to model
+      Mailer.meeting_protocol_asserted(@object).deliver
+    end
   end
 
   def send_asserter_invite
     (render_403; return false) unless can_asserter_invite?(@object)
-    flash[:notice] = l(:notice_asserter_invite_sent)
-    Mailer.meeting_asserter_invite(@object).deliver
-    @object.update_attributes(asserter_invite_on: Time.now)
+    @object.asserter_invite_on = Time.now
+    if @object.save
+      flash[:notice] = l(:notice_asserter_invite_sent)
+      #TODO move to model
+      Mailer.meeting_asserter_invite(@object).deliver
+    end
     redirect_to action: 'show', id: @object.id
   end
 
   def restore
     (render_403; return false) unless can_restore_protocol?(@object)
-    flash[:notice] = l(:notice_meeting_protocol_successful_restored)
-    @object.update_attribute(:is_deleted, false)
+    @object.is_deleted = false
+    if @object.save
+      flash[:notice] = l(:notice_meeting_protocol_successful_restored)
+    end
     redirect_to action: 'show', id: @object.id
   end
 

@@ -81,6 +81,14 @@ module MeetingPlugin
         user = container.asserter
         mail_meeting_asserter_invite(user, container)
       end
+
+      def meeting_agenda_asserted(container)
+        mail_meeting_agenda_asserted(container)
+      end
+
+      def meeting_protocol_asserted(container)
+        mail_meeting_protocol_asserted(container)
+      end
     end
 
     module InstanceMethods
@@ -287,7 +295,21 @@ module MeetingPlugin
 #        mail(to: user.mail, subject: @subject)
 
 #      end
+      def mail_meeting_agenda_asserted(container)
+        @user = container.asserter
+        author = container.author
+        subject = ::I18n.t(:mail_subject_meeting_agenda_assert, id: container.id)
 
+        mail(to: author.email, subject: subject)
+      end
+
+      def mail_meeting_protocol_asserted(container)
+        @user = container.asserter
+        author = container.author
+        subject = ::I18n.t(:mail_subject_meeting_protocol_assert, id: container.id)
+
+        mail(to: author.email, subject: subject)
+      end
     end
   end
 end
