@@ -1,0 +1,19 @@
+- if contacts.any?
+  %h3= l(:field_meeting_contacts)+":"
+  .autoscroll
+    %table.list.issues
+      %tr
+        %th=l(:field_company)
+        %th=l(:field_job_title)
+        %th=l(:field_contact)
+        %th=l(:field_contact_mobile_phone)
+        %th=l(:field_email)
+        -#%th=l(:field_contact_fax)
+      - contacts.each do |contact|
+        %tr.issue
+          %td{style: "white-space: pre-line; width: 20%"}= h contact.company
+          %td{style: "white-space: pre-line; width: 20%"}= h contact.job_title
+          %td{style: "white-space: pre-line; width: 25%"}= link_to_contact(contact)
+          %td{style: "white-space: pre-line; width: 20%"}= h contact.mobile_phone
+          %td{style: "white-space: pre-line; width: 20%"}= mail_to(h contact.email)
+          -#%td{style: "white-space: pre-line; width: 20%"}= h contact.fax

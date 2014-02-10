@@ -1,0 +1,19 @@
+%h3= l(:field_meeting_members)+":"
+.autoscroll
+  %table.list.issues
+    %tr
+      %th=l(:field_company)
+      %th=l(:field_job_title)
+      %th=l(:field_member)
+      %th.hide-when-print=l(:field_status)
+    - users.each do |user|
+      %tr.issue
+        %td= h user.company rescue ""
+        %td{style: "white-space: pre-line; width: 33%"}= h user.job_title rescue ""
+        %td= link_to_user(user)
+        %td.hide-when-print
+          - member = @object.meeting_members.where(user_id: user.id).first
+          - if member.present? && member.issue.present?
+            = link_to(member.issue.try(:status), controller: 'issues', action: 'show', id: member.issue_id)
+          - else
+            = h l(:label_meeting_member_was_not_invite)

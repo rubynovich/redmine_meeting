@@ -33,9 +33,9 @@
       = link_to l(:label_send_notices), {action: 'send_notices', id: @object.id}, class: 'icon icon-issue'
   = link_to l(:button_print), {format: 'pdf'}, {class: 'icon icon-duplicate'}
   - if can_destroy_protocol?(@object)
-    = link_to l(:button_delete), {action: 'destroy', id: @object.id}, confirm: l(:text_are_you_sure), method: :delete, class: 'icon icon-del'
+    = link_to l(:button_delete), {action: 'destroy', id: @object.id}, confirm: l(:text_are_you_sure), method: 'delete', class: 'icon icon-del'
   - if can_restore_protocol?(@object)
-    = link_to l(:button_restore), {action: 'restore', id: @object.id}, confirm: l(:text_are_you_sure), method: :put, class: 'icon icon-copy'
+    = link_to l(:button_restore), {action: 'restore', id: @object.id}, confirm: l(:text_are_you_sure), method: 'put', class: 'icon icon-copy'
 
 = render partial: 'head_for_print'
 
@@ -58,156 +58,11 @@
     = l(:label_meeting_protocol)
   ="№#{h @object.id}"
 
-.autoscroll.issue.details
-  %table.attributes
-    %tr
-      %th=l(:field_subject)+":"
-      %td{colspan: 3}=h @object.subject
-    - if @object.is_external?
-      %tr
-        %th=l(:field_external_company)+":"
-        %td{colspan: 3}=link_to_contact @object.external_company
-    %tr
-      - if @object.is_external?
-        %th=l(:field_address)+":"
-        %td{colspan: 3}=link_to_address @object.address, @object.external_company
-      - else
-        %th=l(:field_place)+":"
-        %td{colspan: 3}
-          - if @object.meeting_company.present? && @object.meeting_company.fact_address.present?
-            = link_to_address(@object.meeting_company.fact_address) + ","
-          =h @object.place
-    %tr
-      %th= l(:field_meet_on)+":"
-      %td= format_date(@object.meet_on)
-      %th= l(:label_meeting_protocol_start_time)+":"
-      %td= format_time(@object.start_time, false)
-    %tr
-      %th= l(:field_created_on)+":"
-      %td= format_time(@object.created_on)
-      %th= l(:label_meeting_protocol_end_time)+":"
-      %td= format_time(@object.end_time, false)
-    %tr
-      %th= l(:label_meeting_agenda)+":"
-      %td= link_to_agenda(@object)
-      %th= l(:field_author)+":"
-      %td= link_to_user @object.author
+= render partial: 'meeting_protocol_attributes', locals: {object: @object}
+= render partial: 'meeting_participators', locals: {agenda_users: @object.meeting_agenda.users, protocol_users: @object.users}
+= render partial: 'meeting_contacts', locals: {agenda_contacts: @object.meeting_agenda.contacts, protocol_contacts: @object.contacts}
+= render partial: 'meeting_answers', locals: {meeting_answers: @object.all_meeting_answers}
 
-%h3= l(:field_meeting_participators)+":"
-.autoscroll
-  %table.list.issues
-    %tr
-      %th=l(:field_company)
-      %th=l(:field_job_title)
-      %th=l(:field_member)
-      %th=l(:label_meeting_invite_status)
-      %th=l(:label_meeting_notice_status)
-      %th.hide-when-print=l(:field_status)
-    - agenda_users = @object.meeting_agenda.users
-    - protocol_users = @object.users
-    - (agenda_users|protocol_users).compact.sort_by(&:name).each do |user|
-      %tr.issue
-        %td{style: "white-space: pre-line; width: 33%"}= h user.company rescue ""
-        %td{style: "white-space: pre-line; width: 33%"}= h user.job_title rescue ""
-        %td= link_to_user(user)
-        %td
-          - member = agenda_users.include?(user)
-          - participator = protocol_users.include?(user)
-          - if member && participator
-            = t(:label_meeting_member_present)
-          - elsif member
-            = t(:label_meeting_member_blank)
-          - elsif participator
-            = t(:label_meeting_member_present)
-        %td
-          = link_to_meeting_notice(user)
-        %td.hide-when-print
-          - member = @object.meeting_participators.where(user_id: user.id).first
-          - if member.present? && member.issue.present?
-            = link_to(member.issue.try(:status), controller: 'issues', action: 'show', id: member.issue_id)
-          - else
-            = h l(:label_meeting_member_was_not_invite)
-
-- agenda_contacts = @object.meeting_agenda.contacts
-- protocol_contacts = @object.contacts
-- if (agenda_contacts|protocol_contacts).any?
-  %h3= l(:field_meeting_contacts)+":"
-  .autoscroll
-    %table.list.issues
-      %tr
-        %th{style: "white-space: pre-line; width: 25%"}=l(:field_company)
-        %th{style: "white-space: pre-line; width: 25%"}=l(:field_job_title)
-        %th=l(:field_contact)
-        %th=l(:field_contact_mobile_phone)
-        %th=l(:field_email)
-        %th=l(:field_contact_fax)
-        %th=l(:label_meeting_invite_status)
-      - (agenda_contacts|protocol_contacts).compact.sort_by(&:name).each do |contact|
-        %tr.issue
-          %td= h contact.company
-          %td= h contact.job_title
-          %td= link_to_contact(contact)
-          %td= h contact.mobile_phone
-          %td= mail_to(h contact.email)
-          %td= h contact.fax
-
-          %td
-            - member = agenda_contacts.include?(contact)
-            - participator = protocol_contacts.include?(contact)
-            - if member && participator
-              = t(:label_meeting_member_present)
-            - elsif member
-              = t(:label_meeting_member_blank)
-            - elsif participator
-              = t(:label_meeting_member_present)
-
-%br
-%h3=l(:label_meeting_answer_plural)+":"
-- @object.all_meeting_answers.group_by(&:project).sort_by{ |project, answers| project.to_s }.each do |project, answers|
-  %h4{align: 'center'}
-    - if project.present?
-      = link_to_project project
-    - else
-      = t(:label_without_project)
-  - answers.each do |answer|
-    .autoscroll.issue.details
-      %table.attributes
-        %tr
-          %th= t(:label_meeting_question)+":"
-          %td= h answer.meeting_question
-          %th= t(:label_meeting_question_issue)+":"
-          %td= render partial: 'meeting_bind_issues/show', locals: {answer: answer}
-        %tr
-          %th= t(:label_meeting_question_user)+":"
-          %td= link_to_reporter(answer)
-          %th= t(:field_start_date)+":"
-          %td= format_date(answer.start_date)
-        %tr
-          %th= t(:label_meeting_answer_user)+":"
-          %td= link_to_assigned_to(answer)
-          %th= t(:field_due_date)+":"
-          %td= format_date(answer.due_date)
-      %p
-        %strong=t(:label_meeting_answer)+":"
-        %br
-        %div{style: 'margin-left: 40px;'}
-          =textilizable(answer, :description)
-      - unless answer.user_id_is_contact?
-        - if answer.issue_id.present?
-          .show-when-print
-            %p
-              %strong=t(:label_meeting_answer_issue)+":"
-              %br
-              %div{style: 'margin-left: 40px;'}
-                = link_to answer.issue, project: false
-                = "(#{t(answer.issue_type || 'new', scope: :label_meeting_issue_type_statuses)})"
-        .hide-when-print
-          = render partial: 'meeting_issues/show', locals: {answer: answer}
-
-      .hide-when-print
-        - if can_show_comments?(@object)
-          %h4= l(:label_meeting_answer_comment_plural)+":"
-          = render partial: 'meeting_comments/history', locals: {meeting_container: answer}
 .hide-when-print
   = link_to_attachments @object, thumbnails: true
 

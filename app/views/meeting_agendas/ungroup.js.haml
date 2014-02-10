@@ -1,2 +1,2 @@
-$('#meeting_questions').html('#{ escape_javascript(render partial: 'meeting_agendas/meeting_questions') }');
+$('#meeting_questions').html('#{ escape_javascript(render partial: 'meeting_agendas/meeting_questions', locals: {meeting_questions: @object.meeting_questions}) }');
 $('#meeting_agendas_sidebar').html('#{ escape_javascript(render partial: 'meeting_agendas/sidebar') }');

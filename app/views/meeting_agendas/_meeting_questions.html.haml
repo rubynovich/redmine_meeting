@@ -1,4 +1,8 @@
 #meeting_questions
+  %br
+
+  %h3=l(:label_meeting_question_plural)+":"
+
   .autoscroll
     %table.list.issues
       %thead
@@ -13,9 +17,9 @@
           %th=l(:field_assigned_to)
       %tbody
         - if session[:meeting_agenda_ungrouped].present?
-          = render partial: 'meeting_agendas/questions_list', locals: {questions: @object.meeting_questions}
+          = render partial: 'meeting_agendas/questions_list', locals: {questions: meeting_questions}
         - else
-          - @object.meeting_questions.group_by(&:project).sort_by{ |project, questions| project.to_s }.each do |project, questions|
+          - meeting_questions.group_by(&:project).sort_by{ |project, questions| project.to_s }.each do |project, questions|
             %tr.head
               %th{colspan: 8}
                 %h4{align: 'center'}
