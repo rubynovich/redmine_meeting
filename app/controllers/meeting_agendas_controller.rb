@@ -17,7 +17,8 @@ class MeetingAgendasController < ApplicationController
   include MeetingApproversHelper
   helper :meeting_external_approvers
   include MeetingExternalApproversHelper
-
+  helper :meeting_members
+#  include MeetingMembersHelper
   helper :contacts
   # include ContactsHelper
 
@@ -234,7 +235,7 @@ class MeetingAgendasController < ApplicationController
     @object.asserted = true
     @object.asserted_on = Time.now
     if @object.save
-      flash[:notice] = l(:notice_successful_update)
+      flash[:notice] = l(:notice_successful_assert)
       #TODO move to model
       Mailer.meeting_agenda_asserted(@object).deliver
     end

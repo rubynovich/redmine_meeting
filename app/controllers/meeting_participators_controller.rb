@@ -4,6 +4,8 @@ class MeetingParticipatorsController < ApplicationController
   before_filter :find_object, :only => [:new, :create, :destroy, :autocomplete_for_user]
   before_filter :require_meeting_manager
 
+  include MeetingParticipatorsHelper
+
   def new
     @no_members = User.active.order(:lastname, :firstname)
     @members = []
@@ -57,6 +59,19 @@ class MeetingParticipatorsController < ApplicationController
     @no_members = User.active.like(params[:q]).sorted - @members
 
     render :layout => false
+  end
+
+  def accept
+    @member = MeetingParticipator.find(params[:id])
+    (render_403; return false) unless can_accept?(@member)
+    solved_status_id = Setting.plugin_redmine_meeting[:solved_issue_status]
+    issue = @member.issue
+    issue.status_id = solved_status_id
+    if issue.save
+      flash[:notice] = l(:notice_successful_notice_accept)
+    else
+      flash[:error] = l(:error_notice_accept_failed)
+    end
   end
 
 private

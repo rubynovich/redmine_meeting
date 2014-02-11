@@ -22,10 +22,18 @@ resources :meeting_members do
   collection do
     get :autocomplete_for_user
   end
+
+  member do
+    get :accept
+  end
 end
 resources :meeting_participators do
   collection do
     get :autocomplete_for_user
+  end
+
+  member do
+    get :accept
   end
 end
 

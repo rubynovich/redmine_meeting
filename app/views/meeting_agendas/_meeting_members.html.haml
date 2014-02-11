@@ -13,7 +13,4 @@
         %td= link_to_user(user)
         %td.hide-when-print
           - member = @object.meeting_members.where(user_id: user.id).first
-          - if member.present? && member.issue.present?
-            = link_to(member.issue.try(:status), controller: 'issues', action: 'show', id: member.issue_id)
-          - else
-            = h l(:label_meeting_member_was_not_invite)
+          = link_to_invite(member)

@@ -57,25 +57,27 @@ module MeetingAgendasHelper
     item.watcher_ids.include?(User.current.id)
   end
 
+  def meeting_expected?(agenda)
+    (agenda.meet_on < Date.today) ||
+    ((agenda.meet_on == Date.today) &&
+      (agenda.start_time.seconds_since_midnight > Time.now.seconds_since_midnight))
+  end
+
   def can_create_protocol?(agenda)
     (meeting_manager? || admin?) &&
-      agenda.meet_on && (
-        (agenda.meet_on < Date.today) ||
-        (agenda.meet_on == Date.today) && (agenda.start_time.seconds_since_midnight < Time.now.seconds_since_midnight)
-      ) &&
-      !agenda.is_deleted? &&
-      asserted?(agenda)
+    agenda.meet_on &&
+    !meeting_expected?(agenda) &&
+    !agenda.is_deleted? &&
+    asserted?(agenda)
   end
 
   def can_send_invites?(agenda)
-    (admin? || (meeting_manager? && author?(agenda))) &&
-      agenda.meet_on.present? && (
-        (agenda.meet_on > Date.today) || (
-          (agenda.meet_on == Date.today) && (agenda.start_time.seconds_since_midnight > Time.now.seconds_since_midnight)
-        )
-      ) &&
-      !agenda.is_deleted? &&
-      asserted?(agenda)
+    (admin? ||
+      (meeting_manager? && author?(agenda))) &&
+    agenda.meet_on &&
+    meeting_expected?(agenda) &&
+    !agenda.is_deleted? &&
+    asserted?(agenda)
   end
 
   def can_show_agenda?(agenda)

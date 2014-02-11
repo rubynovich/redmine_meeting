@@ -15,7 +15,7 @@ Redmine::Plugin.register :redmine_meeting do
 #  requires_redmine_plugin :redmine_planning, version_or_higher: '0.1.0'
 #  requires_redmine_plugin :redmine_meeting_rooms, version_or_higher: '0.1.0'
 
-  settings partial: 'meeting_members/settings', default: {
+  settings partial: 'plugin_redmine_meeting/settings', default: {
     issue_priority: IssuePriority.default.id,
     principal_id: User.where(admin: true).first.try(:id),
     subject: "%subject% %place% %meet_on% %start_time% %end_time%",

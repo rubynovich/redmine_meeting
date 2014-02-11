@@ -297,18 +297,18 @@ module MeetingPlugin
 #      end
       def mail_meeting_agenda_asserted(container)
         @user = container.asserter
-        author = container.author
+        @author = container.author
         subject = ::I18n.t(:mail_subject_meeting_agenda_assert, id: container.id)
 
-        mail(to: author.email, subject: subject)
+        mail(to: @author.email, subject: subject)
       end
 
       def mail_meeting_protocol_asserted(container)
         @user = container.asserter
-        author = container.author
+        @author = container.author
         subject = ::I18n.t(:mail_subject_meeting_protocol_assert, id: container.id)
 
-        mail(to: author.email, subject: subject)
+        mail(to: @author.email, subject: subject)
       end
     end
   end

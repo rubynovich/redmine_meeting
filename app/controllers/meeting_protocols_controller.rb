@@ -17,7 +17,8 @@ class MeetingProtocolsController < ApplicationController
   include MeetingWatchersHelper
   helper :meeting_bind_issues
   include MeetingBindIssuesHelper
-
+  helper :meeting_participators
+  #include MeetingPatricipatorsHelper
   helper :contacts
   # include ContactsHelper
 
@@ -183,7 +184,7 @@ class MeetingProtocolsController < ApplicationController
     @object.asserted = true
     @object.asserted_on = Time.now
     if @object.save
-      flash[:notice] = l(:notice_successful_update)
+      flash[:notice] = l(:notice_successful_assert)
       #TODO move to model
       Mailer.meeting_protocol_asserted(@object).deliver
     end
