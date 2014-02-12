@@ -15,6 +15,9 @@ class MeetingApprover < ActiveRecord::Base
   end
   before_create :add_author_id
   after_create :message_approver_create
+  before_update :message_approver_create, if: -> do
+    !self.deleted? && self.class.find(self.id).deleted?
+  end
   before_update :message_approver_destroy, if: -> do
     self.deleted? && !self.class.find(self.id).deleted?
   end

@@ -15,7 +15,7 @@ class MeetingApproversController < ApplicationController
       User.find(params[:meeting_approver][:user_ids]).each do |user|
         data = {user_id: user.id, meeting_container_type: params[:meeting_container_type], meeting_container_id: params[:meeting_container_id]}
         if MeetingApprover.where(data.merge({deleted: true})).present?
-          MeetingApprover.where(data.merge({deleted: true})).first.update_attribute(:deleted, false)
+          MeetingApprover.where(data.merge({deleted: true})).first.update_attributes(deleted: false)
         else
           MeetingApprover.create(data)
         end
