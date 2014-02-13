@@ -27,10 +27,7 @@
   - if can_create_agenda?
     = link_to l(:button_create_agenda), {controller: 'meeting_agendas', action: 'from_protocol', meeting_protocol_id: @object.id}, class: 'icon icon-copy'
   - if can_send_notices?(@object)
-    - if @object.meeting_participators.all?(&:issue)
-      = link_to l(:label_resend_notices), {action: 'resend_notices', id: @object.id}, class: 'icon icon-issue'
-    - else
-      = link_to l(:label_send_notices), {action: 'send_notices', id: @object.id}, class: 'icon icon-issue'
+    = link_to_send_notices(@object)
   = link_to l(:button_print), {format: 'pdf'}, {class: 'icon icon-duplicate'}
   - if can_destroy_protocol?(@object)
     = link_to l(:button_delete), {action: 'destroy', id: @object.id}, confirm: l(:text_are_you_sure), method: 'delete', class: 'icon icon-del'

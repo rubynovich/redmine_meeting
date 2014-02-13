@@ -27,6 +27,9 @@ class MeetingProtocol < ActiveRecord::Base
   has_many :watchers, through: :meeting_watchers, order: [:lastname, :firstname], uniq: true
   has_many :meeting_comments, as: :meeting_container, order: ["created_on DESC"], dependent: :delete_all, uniq: true
 
+  delegate :meet_on, :subject, :place, :address, :is_external, :is_external?,
+    :to_s, to: :meeting_agenda, allow_nil: true
+
   accepts_nested_attributes_for :meeting_answers, allow_destroy: true
   accepts_nested_attributes_for :meeting_extra_answers, allow_destroy: true
   accepts_nested_attributes_for :meeting_participators, allow_destroy: true
@@ -105,33 +108,33 @@ class MeetingProtocol < ActiveRecord::Base
     self.meeting_answers + self.meeting_extra_answers
   end
 
-  def to_s
-    self.meeting_agenda.to_s
-  end
+#  def to_s
+#    self.meeting_agenda.to_s
+#  end
 
-  def meet_on
-    self.meeting_agenda.meet_on
-  end
+#  def meet_on
+#    self.meeting_agenda.meet_on
+#  end
 
-  def subject
-    self.meeting_agenda.subject
-  end
+#  def subject
+#    self.meeting_agenda.subject
+#  end
 
-  def place
-    self.meeting_agenda.place
-  end
+#  def place
+#    self.meeting_agenda.place
+#  end
 
-  def address
-    self.meeting_agenda.address
-  end
+#  def address
+#    self.meeting_agenda.address
+#  end
 
-  def is_external?
-    self.meeting_agenda.is_external?
-  end
+#  def is_external?
+#    self.meeting_agenda.is_external?
+#  end
 
-  def is_external
-    self.meeting_agenda.is_external
-  end
+#  def is_external
+#    self.meeting_agenda.is_external
+#  end
 
   def new_user_ids_from_answers
     new_user_ids = self.all_meeting_answers.reject(&:reporter_id_is_contact).map(&:reporter_id)
@@ -144,7 +147,51 @@ class MeetingProtocol < ActiveRecord::Base
     (new_contact_ids - self.contact_ids).compact.uniq
   end
 
+  def send_notices
+    begin
+      self.meeting_participators.all?(&:send_notice)
+      self.meeting_contacts.all?(&:send_notice)
+      execute_pending_issues
+      self.send_notices_on = Time.now
+      self.save
+    rescue
+      false
+    end
+  end
+
+  def assert
+    begin
+      Mailer.meeting_protocol_asserted(self).deliver
+      self.asserted = true
+      self.asserted_on = Time.now
+      self.save
+    rescue
+      false
+    end
+  end
+
+  def send_asserter_invite
+    begin
+      Mailer.meeting_asserter_invite(self).deliver
+      self.asserter_invite_on = Time.now
+      self.save
+    rescue
+      false
+    end
+  end
+
+  def restore
+    self.is_deleted = false
+    self.save
+  end
+
+  def mark_as_deleted
+    self.is_deleted = true
+    self.save
+  end
+
 private
+
   def add_time_entry_to_invites
     self.meeting_members.select(&:meeting_participator).select(&:issue).each do |member|
       if member.time_entry
@@ -204,5 +251,10 @@ private
     new_contact_ids_from_answers.each do |contact_id|
       MeetingContact.create(meeting_container_type: self.class.to_s, meeting_container_id: self.id, contact_id: contact_id)
     end
+  end
+
+  def execute_pending_issues
+    (self.meeting_answers + self.meeting_extra_answers).
+      select(&:pending_issue).map(&:pending_issue).map(&:execute)
   end
 end

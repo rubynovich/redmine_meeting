@@ -9,6 +9,14 @@ class MeetingContact < ActiveRecord::Base
   validates_presence_of :contact_id
   validates_uniqueness_of :contact_id,  scope: [:meeting_container_id, :meeting_container_type]
 
+  def send_notice
+    begin
+      Mailer.meeting_contacts_notice(self).deliver
+    rescue
+      nil
+    end
+  end
+
 private
 
   def add_author_id

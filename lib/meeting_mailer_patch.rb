@@ -89,6 +89,10 @@ module MeetingPlugin
       def meeting_protocol_asserted(container)
         mail_meeting_protocol_asserted(container)
       end
+
+      def meeting_participators_notice(participator)
+        mail_meeting_participators_notice(participator)
+      end
     end
 
     module InstanceMethods
@@ -309,6 +313,18 @@ module MeetingPlugin
         subject = ::I18n.t(:mail_subject_meeting_protocol_assert, id: container.id)
 
         mail(to: @author.email, subject: subject)
+      end
+
+      def mail_meeting_participators_notice(participator)
+        @container = participator.meeting_protocol
+        @user = participator.user
+        @url = {controller: 'meeting_protocols', action: 'snow', id: @container.id, only_path: false}
+        @body = t(:mail_body_meeting_participators_notice,
+          id: @container.id, meet_on: format_time(@ontainer.meet_on), subject: @container.subject)
+
+        subject = ::I18n.t(:mail_subject_meeting_participators_notice, id: container.id)
+
+        mail(to: @user.email, subject: subject)
       end
     end
   end

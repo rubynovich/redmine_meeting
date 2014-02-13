@@ -279,3 +279,7 @@ ru:
   notice_successful_notice_accept: "Ваше ознакомление с Протоколом совещания подтверждено"
   error_notice_accept_failed: "Не удалось подтвердить ознакомление с Протоколом совещания"
   notice_successful_assert: "Успешно утверждено"
+  notice_successful_send_notices: "Протокол совещания успешно разослан участникам"
+  error_send_notices_failed: "Возникла ошибка при рассылке Протокола совещания"
+  mail_subject_meeting_participators_notice: "[Протокол #%{id}] Просьба ознакомиться"
+  mail_body_meeting_participators_notice: "Для ознакомления с Протоколом совещания #%{id} «%{subject}» от %{meet_on}, пройдите по ссылке"  

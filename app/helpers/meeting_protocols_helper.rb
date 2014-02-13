@@ -157,6 +157,15 @@ module MeetingProtocolsHelper
     link_to label, {action: 'send_asserter_invite', id: object.id}, class: 'icon icon-user'
   end
 
+  def link_to_send_notices(object)
+    label = if object.send_notices_on.blank?
+      l(:label_send_notices)
+    else
+      l(:label_resend_notices)
+    end
+    link_to label, {action: 'send_notices', id: object.id}, class: 'icon icon-issue'
+  end
+
   def link_to_agenda(item)
     if can_show_agenda?(item)
       link_to "#{t(:label_meeting_agenda)} ##{item.meeting_agenda_id}", controller: 'meeting_agendas', action: 'show', id: item.meeting_agenda_id
@@ -199,12 +208,12 @@ module MeetingProtocolsHelper
   end
 
   def link_to_meeting_notice(user)
-    item = @object.meeting_participators.select{ |m| m.user == user }.first
-    if item.try(:issue).present?
-      if item.status == IssueStatus.default
-        link_to t(:label_meeting_notice_blank), controller: 'issues', action: 'show', id: item.issue_id
+    item = @object.meeting_participators.where(user_id: user.id).first
+    if @object.send_notices_on.present?
+      if item.saw_protocol_on.present?
+        t(:label_meeting_notice_present)
       else
-        link_to t(:label_meeting_notice_present), controller: 'issues', action: 'show', id: item.issue_id
+        t(:label_meeting_notice_blank)
       end
     else
       t(:label_meeting_notice_extra)

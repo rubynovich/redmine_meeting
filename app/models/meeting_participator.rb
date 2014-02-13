@@ -37,6 +37,14 @@ class MeetingParticipator < ActiveRecord::Base
     cancel_issue(::I18n.t(:message_meeting_patricipator_destroyed))
   end
 
+  def send_notice
+    begin
+      Mailer.meeting_participators_notice(self).deliver
+    rescue
+      nil
+    end
+  end
+
 private
   def add_meeting_member
     self.meeting_member = MeetingMember.where(user_id: self.user_id, meeting_agenda_id: self.meeting_agenda.id).first
