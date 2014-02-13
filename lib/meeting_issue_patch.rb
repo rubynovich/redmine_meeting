@@ -20,6 +20,7 @@ module MeetingPlugin
           (self.status == IssueStatus.find(Setting[:plugin_redmine_meeting][:cancel_issue_status])) &&
           (Issue.find(self.id).status != IssueStatus.find(Setting[:plugin_redmine_meeting][:cancel_issue_status]))
         }
+        has_one :meeting_participator
       end
     end
 

@@ -46,6 +46,7 @@ Rails.configuration.to_prepare do
   require 'time_period_scope'
   require 'meeting_user_patch'
   require 'meeting_issue_patch'
+  require 'meeting_issue_observer_patch'
   require 'meeting_mailer_patch'
   require 'meeting_prawn_table_cell_patch'
 
@@ -53,6 +54,7 @@ Rails.configuration.to_prepare do
    [MeetingAgenda, TimePeriodScope],
    [MeetingProtocol, TimePeriodScope],
    [Issue, MeetingPlugin::IssuePatch],
+   [IssueObserver, MeetingPlugin::IssueObserverPatch],
    [User, MeetingPlugin::UserPatch],
    [Mailer, MeetingPlugin::MailerPatch],
    [Prawn::Table::Cell, MeetingPlugin::PrawnTableCellPatch]
