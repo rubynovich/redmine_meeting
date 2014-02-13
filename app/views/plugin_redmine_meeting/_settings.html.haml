@@ -34,23 +34,24 @@
   %p
     %label= l(:label_meeting_issue_update_note)
     = text_area_tag("settings[note]", @settings[:note], cols: 60, rows: 5, class: 'wiki-edit')
-%fieldset
-  %legend=l(:label_meeting_notice)
-  %p
-    %label= l(:label_project)
-    = select_tag("settings[notice_project_id]", project_tree_options_for_select(Project.active, selected: Project.find_by_id(@settings[:notice_project_id])), prompt: t(:prompt_please_select))
-  %p
-    %label= l(:field_tracker)
-    = select_tag("settings[notice_issue_tracker]", options_from_collection_for_select(Tracker.all, :id, :name, @settings[:notice_issue_tracker].try(:to_i)), prompt: t(:prompt_please_select))
-  %p
-    %label= l(:label_meeting_notice_duration)
-    = text_field_tag("settings[notice_duration]", @settings[:notice_duration], size: 5)
-  %p
-    %label= l(:field_subject)
-    = text_field_tag("settings[notice_subject]", @settings[:notice_subject], size: 80, maxlength: 255)
-  %p
-    %label= l(:field_description)
-    = text_area_tag("settings[notice_description]", @settings[:notice_description], cols: 60, rows: 5, class: 'wiki-edit')
+-#
+  %fieldset
+    %legend=l(:label_meeting_notice)
+    %p
+      %label= l(:label_project)
+      = select_tag("settings[notice_project_id]", project_tree_options_for_select(Project.active, selected: Project.find_by_id(@settings[:notice_project_id])), prompt: t(:prompt_please_select))
+    %p
+      %label= l(:field_tracker)
+      = select_tag("settings[notice_issue_tracker]", options_from_collection_for_select(Tracker.all, :id, :name, @settings[:notice_issue_tracker].try(:to_i)), prompt: t(:prompt_please_select))
+    %p
+      %label= l(:label_meeting_notice_duration)
+      = text_field_tag("settings[notice_duration]", @settings[:notice_duration], size: 5)
+    %p
+      %label= l(:field_subject)
+      = text_field_tag("settings[notice_subject]", @settings[:notice_subject], size: 80, maxlength: 255)
+    %p
+      %label= l(:field_description)
+      = text_area_tag("settings[notice_description]", @settings[:notice_description], cols: 60, rows: 5, class: 'wiki-edit')
 %fieldset
   %legend=l(:label_meeting_contacts_agenda)
   %p
