@@ -11,13 +11,7 @@ module MeetingMembersHelper
 
   def link_to_invite(member)
     if member.present? && member.issue.present?
-      if can_accept?(member)
-        url = {controller: 'meeting_members', action: 'accept', id: member.id,
-          remote: true}
-        link_to(l(:label_meeting_invite_accept), url, class: 'icon icon-edit')
-      else
-        link_to(member.issue.status, controller: 'issues', action: 'show', id: member.issue_id)
-      end
+      link_to(member.issue.status, controller: 'issues', action: 'show', id: member.issue_id)
     else
       l(:label_meeting_member_was_not_invite)
     end
