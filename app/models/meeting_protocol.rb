@@ -154,7 +154,7 @@ class MeetingProtocol < ActiveRecord::Base
       execute_pending_issues
       self.send_notices_on = Time.now
       self.save
-#    rescue
+    rescue
       false
     end
   end
@@ -165,7 +165,7 @@ class MeetingProtocol < ActiveRecord::Base
       self.asserted = true
       self.asserted_on = Time.now
       self.save
-#    rescue
+    rescue
       false
     end
   end
@@ -175,7 +175,7 @@ class MeetingProtocol < ActiveRecord::Base
       Mailer.meeting_asserter_invite(self).deliver
       self.asserter_invite_on = Time.now
       self.save
-#    rescue
+    rescue
       false
     end
   end
