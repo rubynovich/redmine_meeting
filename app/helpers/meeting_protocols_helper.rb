@@ -159,9 +159,9 @@ module MeetingProtocolsHelper
 
   def link_to_send_notices(object)
     label = if object.meeting_participators.all?(&:sended_notice_on)
-      l(:label_send_notices)
-    else
       l(:label_resend_notices)
+    else
+      l(:label_send_notices)
     end
     link_to label, {action: 'send_notices', id: object.id}, class: 'icon icon-issue'
   end
