@@ -330,7 +330,7 @@ module MeetingPlugin
       end
 
       def issue_add_with_meeting_members_invite(issue)
-        if issue.meeting_member.blank?
+        if issue.project_id != Setting.plugin_redmine_meeting[:project_id]
           issue_add_without_meeting_members_invite(issue)
         end
       end

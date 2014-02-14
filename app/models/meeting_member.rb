@@ -30,7 +30,6 @@ class MeetingMember < ActiveRecord::Base
 
   def send_invite
     self.build_issue(issue_attributes)
-#    self.update_attribute(:issue_id, created_issue_id)
     if self.save
       estimated_time_create(self.issue_id)
     end
@@ -38,11 +37,11 @@ class MeetingMember < ActiveRecord::Base
   end
 
   def resend_invite
-    cancel_status_id = IssueStatus.find(Setting[:plugin_redmine_meeting][:cancel_issue_status]).id
+    cancel_status_id = IssueStatus.find(Setting.plugin_redmine_meeting[:cancel_issue_status]).id
     if self.issue.present? && !self.issue.closed?
       self.issue.update_attribute(:status_id, cancel_status_id)
       EstimatedTime.where(plan_on: self.meeting_agenda.meet_on, issue_id: self.issue_id, user_id: self.user_id).delete_all
-      self.update_attribute(:issue_id, nil)
+      self.issue_id = nil
       self.send_invite
     end
 #  rescue
@@ -105,6 +104,7 @@ private
 
   def issue_attributes
     settings = Setting[:plugin_redmine_meeting]
+#    Issue.create!(
     {status: IssueStatus.default,
     tracker: Tracker.find(settings[:issue_tracker]),
     subject: issue_subject,

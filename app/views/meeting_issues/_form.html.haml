@@ -9,7 +9,7 @@
   = f.hidden_field :status_id
   = f.hidden_field :priority_id
   %p
-    = f.select :project_id, project_tree_options_for_select(Project.active.visible, selected: (@object.meeting_question.issue.project rescue nil)), prompt: t(:prompt_please_select), required: true
+    = f.select :project_id, project_tree_options_for_select(Project.active.visible.where('id <> ?', Setting.plugin_redmine_meeting[:project_id]), selected: @object.project), prompt: t(:prompt_please_select), required: true
   %p
     = f.text_field :subject, size: 80, maxlength: 255, required: true, style: "width: 95%"
   %p
