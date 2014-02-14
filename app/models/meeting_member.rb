@@ -32,7 +32,7 @@ class MeetingMember < ActiveRecord::Base
     created_issue_id = create_issue.try(:id)
     self.update_attribute(:issue_id, created_issue_id)
     estimated_time_create(created_issue_id)
-  rescue
+#  rescue
   end
 
   def resend_invite
@@ -43,7 +43,7 @@ class MeetingMember < ActiveRecord::Base
       self.update_attribute(:issue_id, nil)
       self.send_invite
     end
-  rescue
+#  rescue
   end
 
   def cancel_issue(cancel_message = ::I18n.t(:message_meeting_canceled))

@@ -17,6 +17,14 @@ class MeetingContact < ActiveRecord::Base
     end
   end
 
+  def send_invite
+    begin
+      Mailer.meeting_contacts_invite(self).deliver
+    rescue
+      nil
+    end
+  end
+
 private
 
   def add_author_id

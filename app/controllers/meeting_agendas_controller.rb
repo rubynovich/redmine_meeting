@@ -52,28 +52,18 @@ class MeetingAgendasController < ApplicationController
 
   def send_invites
     (render_403; return false) unless can_send_invites?(@object)
-    @object.meeting_members.reject(&:issue).each(&:send_invite)
-    @object.meeting_contacts.each do |contact|
-      begin
-        Mailer.meeting_contacts_invite(contact).deliver
-      rescue
-        nil
-      end
-    end
-    redirect_to controller: 'meeting_agendas', action: 'show', id: @object.id
+    @object.meeting_members.reject(&:issue).all?(&:send_invite)
+    @object.meeting_contacts.all?(&:send_invite)
+
+    redirect_to action: 'show', id: @object.id
   end
 
   def resend_invites
     (render_403; return false) unless can_send_invites?(@object)
-    @object.meeting_members.each(&:resend_invite)
-    @object.meeting_contacts.each do |contact|
-      begin
-        Mailer.meeting_contacts_invite(contact).deliver
-      rescue
-        nil
-      end
-    end
-    redirect_to controller: 'meeting_agendas', action: 'show', id: @object.id
+    @object.meeting_members.all?(&:resend_invite)
+    @object.meeting_contacts.all?(&:send_invite)
+
+    redirect_to action: 'show', id: @object.id
   end
 
   def autocomplete_for_issue
