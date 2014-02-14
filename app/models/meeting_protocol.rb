@@ -149,10 +149,13 @@ class MeetingProtocol < ActiveRecord::Base
 
   def send_notices
     begin
-      self.meeting_participators.all?(&:send_notice)
+      if self.meeting_participators.all?(&:sended_notice_on)
+        self.meeting_participators.all?(&:send_notice)
+      else
+        self.meeting_participators.reject(&:sended_notice_on).all?(&:send_notice)
+      end
       self.meeting_contacts.all?(&:send_notice)
       execute_pending_issues
-      self.send_notices_on = Time.now
       self.save
 #    rescue
 #      false

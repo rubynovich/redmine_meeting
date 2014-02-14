@@ -40,6 +40,8 @@ class MeetingParticipator < ActiveRecord::Base
   def send_notice
     begin
       Mailer.meeting_participators_notice(self).deliver
+      self.sended_notice_on = Time.now
+      self.save
 #    rescue
 #      nil
     end

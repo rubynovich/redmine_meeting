@@ -198,7 +198,7 @@ private
 
   def mark_as_visited(user = User.current)
     participator = @object.meeting_participators.where(user_id: user.id).first
-    if participator.present? && participator.saw_protocol_on.blank? && @object.send_notices_on.present?
+    if participator.present? && participator.sended_notice_on.present? && participator.saw_protocol_on.blank?
       participator.saw_protocol_on = Time.now
       participator.save
     end

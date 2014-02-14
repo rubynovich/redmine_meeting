@@ -158,7 +158,7 @@ module MeetingProtocolsHelper
   end
 
   def link_to_send_notices(object)
-    label = if object.send_notices_on.blank?
+    label = if object.meeting_participators.all?(&:sended_notice_on)
       l(:label_send_notices)
     else
       l(:label_resend_notices)
@@ -209,7 +209,7 @@ module MeetingProtocolsHelper
 
   def link_to_meeting_notice(user)
     item = @object.meeting_participators.where(user_id: user.id).first
-    if @object.send_notices_on.present?
+    if item.sended_notice_on.present?
       if item.saw_protocol_on.present?
         t(:label_meeting_notice_present)
       else
