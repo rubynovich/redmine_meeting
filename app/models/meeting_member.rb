@@ -29,9 +29,11 @@ class MeetingMember < ActiveRecord::Base
   end
 
   def send_invite
-    created_issue_id = create_issue.try(:id)
-    self.update_attribute(:issue_id, created_issue_id)
-    estimated_time_create(created_issue_id)
+    self.build_issue(issue_attributes)
+#    self.update_attribute(:issue_id, created_issue_id)
+    if self.save
+      estimated_time_create(self.issue_id)
+    end
 #  rescue
   end
 
@@ -101,19 +103,18 @@ private
     put_key_words(Setting[:plugin_redmine_meeting][:description])
   end
 
-  def create_issue
+  def issue_attributes
     settings = Setting[:plugin_redmine_meeting]
-    Issue.create!(
-      status: IssueStatus.default,
-      tracker: Tracker.find(settings[:issue_tracker]),
-      subject: issue_subject,
-      project: Project.find(settings[:project_id]),
-      description: issue_description,
-      author: User.current,
-      start_date: Date.today,
-      due_date: self.meeting_agenda.meet_on,
-      priority: self.meeting_agenda.priority || IssuePriority.default,
-      assigned_to: self.user)
+    {status: IssueStatus.default,
+    tracker: Tracker.find(settings[:issue_tracker]),
+    subject: issue_subject,
+    project: Project.find(settings[:project_id]),
+    description: issue_description,
+    author: User.current,
+    start_date: Date.today,
+    due_date: self.meeting_agenda.meet_on,
+    priority: self.meeting_agenda.priority || IssuePriority.default,
+    assigned_to: self.user}
   end
 
   def validate_meeting_agenda
