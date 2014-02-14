@@ -276,7 +276,7 @@ module MeetingPlugin
         type = {MeetingAgenda => ::I18n.t(:label_meeting_agenda), MeetingProtocol => ::I18n.t(:label_meeting_protocol)}[container.class]
         subject = ::I18n.t(:message_subject_meeting_asserter_create, type: type, type_id: container.id)
 
-        mail(to: user.email, subject: subject)
+        mail(to: user.mail, subject: subject)
       end
 
 #      def mail_meeting_approver_create(author, user, container)
@@ -304,7 +304,7 @@ module MeetingPlugin
         @author = container.author
         subject = ::I18n.t(:mail_subject_meeting_agenda_assert, id: container.id)
 
-        mail(to: @author.email, subject: subject)
+        mail(to: @author.mail, subject: subject)
       end
 
       def mail_meeting_protocol_asserted(container)
@@ -312,7 +312,7 @@ module MeetingPlugin
         @author = container.author
         subject = ::I18n.t(:mail_subject_meeting_protocol_assert, id: container.id)
 
-        mail(to: @author.email, subject: subject)
+        mail(to: @author.mail, subject: subject)
       end
 
       def mail_meeting_participators_notice(participator)
@@ -324,7 +324,7 @@ module MeetingPlugin
 
         subject = ::I18n.t(:mail_subject_meeting_participators_notice, id: @container.id)
 
-        mail(to: @user.email, subject: subject)
+        mail(to: @user.mail, subject: subject)
       end
     end
   end
