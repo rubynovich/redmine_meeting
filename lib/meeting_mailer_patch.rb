@@ -318,7 +318,7 @@ module MeetingPlugin
       def mail_meeting_participators_notice(participator)
         @container = participator.meeting_protocol
         @user = participator.user
-        @url = {controller: 'meeting_protocols', action: 'snow', id: @container.id, only_path: false}
+        @url = {controller: 'meeting_protocols', action: 'show', id: @container.id, only_path: false}
         @body = t(:mail_body_meeting_participators_notice,
           id: @container.id, meet_on: format_date(@container.meet_on), subject: @container.subject)
 

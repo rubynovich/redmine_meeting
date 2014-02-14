@@ -36,7 +36,7 @@ class MeetingProtocolsController < ApplicationController
       flash[:error] = l(:error_send_notices_failed)
     end
 
-    redirect_to controller: 'meeting_protocols', action: 'show', id: @object.id
+    redirect_to action: 'show', id: @object.id
   end
 
   def show
