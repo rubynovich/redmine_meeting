@@ -8,5 +8,5 @@
 
   .strip_ul
     %ul
-      %li= link_to l(:label_meeting_member_accept), {controller: 'meeting_members', action: 'accept', id: member.id}, class: 'icon icon-add'
-      %li= link_to l(:label_meeting_member_reject), {controller: 'meeting_members', action: 'reject', id: member.id}, class: 'icon icon-cancel'
+      %li= link_to l(:label_meeting_member_accept), {controller: 'meeting_members', action: 'accept', id: member.id, remote: true}, class: 'icon icon-add'
+      %li= link_to l(:label_meeting_member_reject), {controller: 'meeting_members', action: 'reject', id: member.id, remote: true}, class: 'icon icon-cancel'
