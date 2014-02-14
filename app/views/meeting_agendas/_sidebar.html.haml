@@ -4,6 +4,7 @@
   #meeting_asserter img.gravatar {margin: 0 4px 2px 0;}
 
 #meeting_agendas_sidebar
+  = render partial: 'meeting_members/reject_or_accept'
   %h3=l(:label_grouping)
   - if session[:meeting_agenda_ungrouped].present?
     = link_to l(:label_meeting_questions_group), controller: 'meeting_agendas', action: 'group', id: @object.id, remote: true

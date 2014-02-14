@@ -25,6 +25,7 @@ resources :meeting_members do
 
   member do
     get :accept
+    get :reject
   end
 end
 resources :meeting_participators do
@@ -32,9 +33,9 @@ resources :meeting_participators do
     get :autocomplete_for_user
   end
 
-  member do
-    get :accept
-  end
+#  member do
+#    get :accept
+#  end
 end
 
 resources :meeting_comments

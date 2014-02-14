@@ -65,13 +65,26 @@ class MeetingMembersController < ApplicationController
   def accept
     @member = MeetingMember.find(params[:id])
     (render_403; return false) unless can_accept?(@member)
-    solved_status_id = Setting.plugin_redmine_meeting[:solved_issue_status]
+    status_id = Setting.plugin_redmine_meeting[:solved_issue_status]
     issue = @member.issue
-    issue.status_id = solved_status_id
+    issue.status_id = status_id
     if issue.save
       flash[:notice] = l(:notice_successful_invite_accept)
     else
       flash[:error] = l(:error_invite_accept_failed)
+    end
+  end
+
+  def reject
+    @member = MeetingMember.find(params[:id])
+    (render_403; return false) unless can_accept?(@member)
+    status_id = Setting.plugin_redmine_meeting[:reject_issue_status]
+    issue = @member.issue
+    issue.status_id = status_id
+    if issue.save
+      flash[:notice] = l(:notice_successful_invite_reject)
+    else
+      flash[:error] = l(:error_invite_reject_failed)
     end
   end
 

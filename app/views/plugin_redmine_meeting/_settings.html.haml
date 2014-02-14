@@ -5,16 +5,19 @@
   %legend=l(:label_issue_status_plural)
   %p
     %label= l(:label_meeting_onwork_issue_status)
-    = select_tag("settings[onwork_issue_status]", options_from_collection_for_select(IssueStatus.all, :id, :name, @settings[:onwork_issue_status].try(:to_i)), :prompt => t(:prompt_please_select))
+    = select_tag("settings[onwork_issue_status]", options_from_collection_for_select(IssueStatus.all, :id, :name, @settings[:onwork_issue_status].try(:to_i)), prompt: t(:prompt_please_select))
   %p
     %label= l(:label_meeting_solved_issue_status)
-    = select_tag("settings[solved_issue_status]", options_from_collection_for_select(IssueStatus.all, :id, :name, @settings[:solved_issue_status].try(:to_i)), :prompt => t(:prompt_please_select))
+    = select_tag("settings[solved_issue_status]", options_from_collection_for_select(IssueStatus.all, :id, :name, @settings[:solved_issue_status].try(:to_i)), prompt: t(:prompt_please_select))
+  %p
+    %label= l(:label_meeting_reject_issue_status)
+    = select_tag("settings[reject_issue_status]", options_from_collection_for_select(IssueStatus.all, :id, :name, @settings[:reject_issue_status].try(:to_i)), prompt: t(:prompt_please_select))
   %p
     %label= l(:label_meeting_cancel_issue_status)
-    = select_tag("settings[cancel_issue_status]", options_from_collection_for_select(IssueStatus.all, :id, :name, @settings[:cancel_issue_status].try(:to_i)), :prompt => t(:prompt_please_select))
+    = select_tag("settings[cancel_issue_status]", options_from_collection_for_select(IssueStatus.all, :id, :name, @settings[:cancel_issue_status].try(:to_i)), prompt: t(:prompt_please_select))
   %p
     %label= l(:label_meeting_close_issue_status)
-    = select_tag("settings[close_issue_status]", options_from_collection_for_select(IssueStatus.where(is_closed: true), :id, :name, @settings[:close_issue_status].try(:to_i)), :prompt => t(:prompt_please_select))
+    = select_tag("settings[close_issue_status]", options_from_collection_for_select(IssueStatus.where(is_closed: true), :id, :name, @settings[:close_issue_status].try(:to_i)), prompt: t(:prompt_please_select))
 %fieldset
   %legend=l(:label_meeting_invite)
   %p
