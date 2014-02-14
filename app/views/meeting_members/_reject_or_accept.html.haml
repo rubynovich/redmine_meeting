@@ -1,5 +1,5 @@
 - member = @object.meeting_members.where(user_id: User.current.id).first
-- if member.present? && member.issue.present? && (member.issue.status == IssueStatus.default))
+- if member.present? && member.issue.present? && (member.issue.status == IssueStatus.default)
   :css
     .strip_ul ul {margin: 0;  padding: 0;}
     .strip_ul li {list-style-type:none;margin: 0px 2px 0px 0px; padding: 0px 0px 0px 0px;}
