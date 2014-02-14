@@ -8,6 +8,8 @@ module MeetingPlugin
 
       base.class_eval do
         include Rails.application.routes.url_helpers
+
+        alias_method_chain :issue_add, :meeting_members_invite
       end
 
     end
@@ -325,6 +327,12 @@ module MeetingPlugin
         subject = ::I18n.t(:mail_subject_meeting_participators_notice, id: @container.id)
 
         mail(to: @user.mail, subject: subject)
+      end
+
+      def issue_add_with_meeting_members_invite(issue)
+        if issue.meeting_member.blank?
+          issue_add_without_meeting_members_invite(issue)
+        end
       end
     end
   end
