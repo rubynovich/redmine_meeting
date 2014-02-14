@@ -154,8 +154,8 @@ class MeetingProtocol < ActiveRecord::Base
       execute_pending_issues
       self.send_notices_on = Time.now
       self.save
-    rescue
-      false
+#    rescue
+#      false
     end
   end
 

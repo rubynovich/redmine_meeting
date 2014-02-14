@@ -40,8 +40,8 @@ class MeetingParticipator < ActiveRecord::Base
   def send_notice
     begin
       Mailer.meeting_participators_notice(self).deliver
-    rescue
-      nil
+#    rescue
+#      nil
     end
   end
 
