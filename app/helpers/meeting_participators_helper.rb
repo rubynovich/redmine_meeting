@@ -9,15 +9,9 @@ module MeetingParticipatorsHelper
     accepter?(member)
   end
 
-  def link_to_notice(member)
-    if member.present? && member.issue.present?
-      if can_accept?(member)
-        url = {controller: 'meeting_participators', action: 'accept', id: member.id,
-          remote: true}
-        link_to(l(:label_meeting_notice_accept), url, class: 'icon icon-edit')
-      else
-        link_to(member.issue.status, controller: 'issues', action: 'show', id: member.issue_id)
-      end
+  def link_to_notice_status(member)
+    if member.present? && member.sended_notice_on.present?
+      l(:label_meeting_member_invited)
     else
       l(:label_meeting_member_was_not_invite)
     end

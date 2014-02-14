@@ -26,4 +26,4 @@
           = link_to_meeting_notice(user)
         %td.hide-when-print
           - member = @object.meeting_participators.where(user_id: user.id).first
-          = link_to_notice(member)
+          = link_to_notice_status(member)

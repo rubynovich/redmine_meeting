@@ -282,4 +282,5 @@ ru:
   notice_successful_send_notices: "Протокол совещания успешно разослан участникам"
   error_send_notices_failed: "Возникла ошибка при рассылке Протокола совещания"
   mail_subject_meeting_participators_notice: "[Протокол #%{id}] Ознакомление с Протоколом совещания"
-  mail_body_meeting_participators_notice: "Для ознакомления с Протоколом совещания #%{id} «%{subject}» от %{meet_on}, пройдите по ссылке"  
+  mail_body_meeting_participators_notice: "Для ознакомления с Протоколом совещания #%{id} «%{subject}» от %{meet_on}, пройдите по ссылке"
+  label_meeting_member_invited: "Отправлено"
