@@ -1,7 +1,12 @@
 - member = @object.meeting_members.where(user_id: User.current.id).first
 - if member.present? && member.issue.present? && (member.issue.status == IssueStatus.default)
+  :css
+    .strip_ul ul {margin: 0;  padding: 0;}
+    .strip_ul li {list-style-type:none;margin: 0px 2px 0px 0px; padding: 0px 0px 0px 0px;}
+
   %h3= l(:label_meeting_member_accept_question)
 
-  %ul
-    %li= link_to l(:label_meeting_member_accept), controller: 'meeting_members', action: 'accept', id: member.id
-    %li= link_to l(:label_meeting_member_reject), controller: 'meeting_members', action: 'reject', id: member.id
+  .strip_ul
+    %ul
+      %li= link_to l(:label_meeting_member_accept), {controller: 'meeting_members', action: 'accept', id: member.id}, class: 'icon icon-add'
+      %li= link_to l(:label_meeting_member_reject), {controller: 'meeting_members', action: 'reject', id: member.id}, class: 'icon icon-cancel'
