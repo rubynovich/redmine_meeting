@@ -284,3 +284,7 @@ ru:
   mail_subject_meeting_participators_notice: "[Протокол #%{id}] Ознакомление с Протоколом совещания"
   mail_body_meeting_participators_notice: "Для ознакомления с Протоколом совещания #%{id} «%{subject}» от %{meet_on}, пройдите по ссылке"
   label_meeting_member_invited: "Отправлено"
+  mail_subject_meeting_members_invite: "[Повестка #%{id}] Приглашение на совещание %{meet_on} %{start_time}-%{end_time}"
+  label_meeting_subject: "Тема совещания"
+  mail_body_link_to_issue: "Задача по принятию участия в совещании"
+  mail_body_link_to_agenda: "Принять или отклонить приглашение можно, пройдя по ссылке"

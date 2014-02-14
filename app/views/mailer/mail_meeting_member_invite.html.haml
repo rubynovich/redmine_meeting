@@ -1,0 +1,10 @@
+%p
+  = l(:label_meeting_subject) + ": «#{@container.subject}»"
+%p
+  = l(:field_place) + ": #{@container.place}"
+%p
+  = l(:mail_body_link_to_agenda) + ": "
+  = link_to(t(:label_meeting_agenda)+" ##{@container.id}", @agenda_url)
+%p
+  = l(:mail_body_link_to_issue) + ": "
+  = link_to("##{@issue.id}", @issue_url)

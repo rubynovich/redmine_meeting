@@ -95,6 +95,11 @@ module MeetingPlugin
       def meeting_participators_notice(participator)
         mail_meeting_participators_notice(participator)
       end
+
+      def meeting_members_invite(member)
+        mail_meeting_members_invite(member)
+      end
+
     end
 
     module InstanceMethods
@@ -333,6 +338,18 @@ module MeetingPlugin
         if issue.project_id != Setting.plugin_redmine_meeting[:project_id].to_i
           issue_add_without_meeting_members_invite(issue)
         end
+      end
+
+      def mail_meeting_members_invite(member)
+        @container = member.meeting_agenda
+        @agenda_url = {controller: 'meeting_agendas', action: 'show', id: @container.id, only_path: false}
+        @issue = member.issue
+        @issue_url = {controller: 'issues', action: 'show', id: @issue.id, only_path: false}
+        @user = member.user
+
+        subject = ::I18n.t(:mail_subject_meeting_members_invite, id: @container.id, meet_on: format_date(@container.meet_on), start_time: format_time(@container.start_time, false), end_time: format_time(@container.end_time, false))
+
+        mail(to: @user.mail, subject: subject)
       end
     end
   end

@@ -1,3 +1,3 @@
 = l(:mail_body_greeting, lastname: @user.lastname, firstname: @user.firstname)
 
-= @body + ": " + link_to(t(:label_meeting_protocol)+" ##{@container.id}", @url)
+= @body + ": " + url_for(@url)
