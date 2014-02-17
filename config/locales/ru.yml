@@ -88,7 +88,7 @@ ru:
   label_meeting_protocol_end_time: "Фактическое время окончания"
   label_meeting_close_issue_status: "Закрытая задача"
   label_meeting_onwork_issue_status: "Задача в работе"
-  label_meeting_solved_issue_status: "Статус принятого приглашения"
+  label_meeting_solved_issue_status: "Решенная задача"
   label_meeting_cancel_issue_status: "Отмененная задача"
   label_meeting_extra_answer_plural: "Вопросы рассмотренные вне повестки"
   field_meeting_contacts: "Внешние участники"

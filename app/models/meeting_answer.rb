@@ -36,15 +36,15 @@ class MeetingAnswer < ActiveRecord::Base
 #    end
 #  end
 
-#  def project
-#    if self.issue.present?
-#      super
-#    elsif self.pending_issue.present?
-#      self.pending_issue.project
-#    elsif self.meeting_question.present?
-#      self.meeting_question.project
-#    end
-#  end
+  def project
+    if self.issue.present?
+      super
+    elsif self.pending_issue.present?
+      self.pending_issue.project
+    elsif self.meeting_question.present?
+      self.meeting_question.project
+    end
+  end
 
   def question_issue
     super.present? ? super : meeting_question.try(:issue)

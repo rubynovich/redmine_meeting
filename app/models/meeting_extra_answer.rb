@@ -44,6 +44,14 @@ class MeetingExtraAnswer < ActiveRecord::Base
     end
   end
 
+  def project
+    if self.issue.present?
+      super
+    elsif self.pending_issue.present?
+      self.pending_issue.project
+    end
+  end
+
 private
 
   def validate_due_date
