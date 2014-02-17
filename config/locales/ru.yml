@@ -294,3 +294,5 @@ ru:
   label_meeting_member_accept_question: "Подтвердите участие в совещании"
   label_meeting_member_accept: "Да, приму участие в совещании"
   label_meeting_member_reject: "Нет, не буду участвовать"
+  label_meeting_participators_accept_question: "Подтвердите ознакомление с Протоколом"
+  label_meeting_participators_accept: "Да, я ознакомился с Протоколом"

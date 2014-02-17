@@ -41,7 +41,6 @@ class MeetingProtocolsController < ApplicationController
 
   def show
 #    (render_403; return false) unless can_show_protocol?(@object)
-    mark_as_visited
     @watchers = @object.watchers
     respond_to do |format|
       format.pdf {
@@ -194,14 +193,6 @@ private
 
   def new_object
     @object = model_class.new(params[model_sym])
-  end
-
-  def mark_as_visited(user = User.current)
-    participator = @object.meeting_participators.where(user_id: user.id).first
-    if participator.present? && participator.sended_notice_on.present? && participator.saw_protocol_on.blank?
-      participator.saw_protocol_on = Time.now
-      participator.save
-    end
   end
 
   def require_meeting_manager

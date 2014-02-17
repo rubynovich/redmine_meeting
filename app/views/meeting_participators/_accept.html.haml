@@ -1,0 +1,11 @@
+- member = @object.meeting_participators.where(user_id: User.current.id).first
+- if can_accept?(member)
+  :css
+    .strip_ul ul {margin: 0;  padding: 0;}
+    .strip_ul li {list-style-type:none;margin: 0px 2px 0px 0px; padding: 0px 0px 0px 0px;}
+
+  %h3= l(:label_meeting_participators_accept_question)
+
+  .strip_ul
+    %ul
+      %li= link_to l(:label_meeting_participators_accept), {controller: 'meeting_participators', action: 'accept', id: member.id, remote: true}, class: 'icon icon-add'

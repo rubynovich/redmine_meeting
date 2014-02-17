@@ -4,8 +4,8 @@ module MeetingParticipatorsHelper
   end
 
   def can_accept?(member)
-    member.issue.present? &&
-    (member.issue.status == IssueStatus.default) &&
+    member.sended_notice_on.present? &&
+    member.saw_protocol_on.blank? &&
     accepter?(member)
   end
 
