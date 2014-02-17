@@ -163,7 +163,9 @@ module MeetingProtocolsHelper
     else
       l(:label_send_notices)
     end
-    link_to label, {action: 'send_notices', id: object.id}, class: 'icon icon-issue'
+    unless object.meeting_participators.all?(&:saw_protocol_on)
+      link_to label, {action: 'send_notices', id: object.id}, class: 'icon icon-issue'
+    end
   end
 
   def link_to_agenda(item)
