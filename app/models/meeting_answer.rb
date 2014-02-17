@@ -39,6 +39,8 @@ class MeetingAnswer < ActiveRecord::Base
   def project
     if self.issue.present?
       self.issue.project
+    elsif self.question_issue.present?
+      self.question_issue.project
     elsif self.meeting_question.present?
       self.meeting_question.project
     end
