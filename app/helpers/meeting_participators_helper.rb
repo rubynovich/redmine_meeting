@@ -1,9 +1,11 @@
 module MeetingParticipatorsHelper
   def accepter?(member)
-    member.user_id == User.current.id
+    member.present? &&
+    (member.user_id == User.current.id)
   end
 
   def can_accept?(member)
+    member.present? &&
     member.sended_notice_on.present? &&
     member.saw_protocol_on.blank? &&
     accepter?(member)
