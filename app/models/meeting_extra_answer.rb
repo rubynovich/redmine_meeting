@@ -11,7 +11,7 @@ class MeetingExtraAnswer < ActiveRecord::Base
   belongs_to :issue
   has_one :pending_issue, class_name: "MeetingPendingIssue", as: :meeting_container
   has_one :status, through: :issue
-  has_one :project, through: :issue
+#  has_one :project, through: :issue
   has_one :meeting_agenda, through: :meeting_protocol
   has_one :author, through: :meeting_protocol
   has_many :meeting_answers, through: :meeting_protocol, uniq: true
@@ -46,9 +46,7 @@ class MeetingExtraAnswer < ActiveRecord::Base
 
   def project
     if self.issue.present?
-      super
-    elsif self.pending_issue.present?
-      self.pending_issue.project
+      self.issue.project
     end
   end
 
