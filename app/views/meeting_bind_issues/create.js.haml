@@ -1,5 +1,5 @@
--#location.reload();
-
-$("#meeting_bind_issue_for_#{@answer.class.to_s.underscore}_#{@answer.id}").html('#{ escape_javascript(render partial: 'meeting_bind_issues/show', locals: {answer: @answer}) }');
-- if @answer.is_a?(MeetingAnswer)
-  $("#meeting_issue_for_#{@answer.class.to_s.underscore}_#{@answer.id}").html('#{ escape_javascript(render partial: 'meeting_issues/show', locals: {answer: @answer}) }');
+location.reload();
+-#
+  $("#meeting_bind_issue_for_#{@answer.class.to_s.underscore}_#{@answer.id}").html('#{ escape_javascript(render partial: 'meeting_bind_issues/show', locals: {answer: @answer}) }');
+  - if @answer.is_a?(MeetingAnswer)
+    $("#meeting_issue_for_#{@answer.class.to_s.underscore}_#{@answer.id}").html('#{ escape_javascript(render partial: 'meeting_issues/show', locals: {answer: @answer}) }');
