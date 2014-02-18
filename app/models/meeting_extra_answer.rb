@@ -45,8 +45,8 @@ class MeetingExtraAnswer < ActiveRecord::Base
   end
 
   def project
-    (self.meeting_question.present? &&
-      self.meeting_question.project) ||
+    (self.question_issue.present? &&
+      self.question_issue.project) ||
     (self.issue.present? &&
       self.issue.project)
   end
