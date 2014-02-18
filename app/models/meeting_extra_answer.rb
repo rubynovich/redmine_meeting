@@ -45,7 +45,9 @@ class MeetingExtraAnswer < ActiveRecord::Base
   end
 
   def project
-    if self.issue.present?
+    if self.meeting_question.present?
+      self.meeting_question.project
+    elsif self.issue.present?
       self.issue.project
     end
   end
