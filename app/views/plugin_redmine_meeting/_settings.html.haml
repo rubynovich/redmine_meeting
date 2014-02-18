@@ -71,22 +71,23 @@
   %p
     %label= l(:field_description)
     = text_area_tag("settings[contacts_protocol_description]", @settings[:contacts_protocol_description], cols: 60, rows: 5, class: 'wiki-edit')
-%fieldset
-  %legend=l(:label_meeting_external_approvers_agenda)
-  %p
-    %label= l(:field_subject)
-    = text_field_tag("settings[external_approvers_agenda_subject]", @settings[:external_approvers_agenda_subject], size: 80, maxlength: 255)
-  %p
-    %label= l(:field_description)
-    = text_area_tag("settings[external_approvers_agenda_description]", @settings[:external_approvers_agenda_description], cols: 60, rows: 5, class: 'wiki-edit')
-%fieldset
-  %legend=l(:label_meeting_external_approvers_protocol)
-  %p
-    %label= l(:field_subject)
-    = text_field_tag("settings[external_approvers_protocol_subject]", @settings[:external_approvers_protocol_subject], size: 80, maxlength: 255)
-  %p
-    %label= l(:field_description)
-    = text_area_tag("settings[external_approvers_protocol_description]", @settings[:external_approvers_protocol_description], cols: 60, rows: 5, class: 'wiki-edit')
+-#
+  %fieldset
+    %legend=l(:label_meeting_external_approvers_agenda)
+    %p
+      %label= l(:field_subject)
+      = text_field_tag("settings[external_approvers_agenda_subject]", @settings[:external_approvers_agenda_subject], size: 80, maxlength: 255)
+    %p
+      %label= l(:field_description)
+      = text_area_tag("settings[external_approvers_agenda_description]", @settings[:external_approvers_agenda_description], cols: 60, rows: 5, class: 'wiki-edit')
+  %fieldset
+    %legend=l(:label_meeting_external_approvers_protocol)
+    %p
+      %label= l(:field_subject)
+      = text_field_tag("settings[external_approvers_protocol_subject]", @settings[:external_approvers_protocol_subject], size: 80, maxlength: 255)
+    %p
+      %label= l(:field_description)
+      = text_area_tag("settings[external_approvers_protocol_description]", @settings[:external_approvers_protocol_description], cols: 60, rows: 5, class: 'wiki-edit')
 
 = wikitoolbar_for('settings_description')
 = wikitoolbar_for('settings_notice_description')
