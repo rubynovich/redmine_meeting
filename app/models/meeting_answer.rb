@@ -37,13 +37,12 @@ class MeetingAnswer < ActiveRecord::Base
 #  end
 
   def project
-    if self.question_issue.present?
-      self.question_issue.project
-    elsif self.meeting_question.present?
-      self.meeting_question.project
-    elsif self.issue.present?
-      self.issue.project
-    end
+    (self.question_issue.present? &&
+      self.question_issue.project) ||
+    (self.meeting_question.present? &&
+      self.meeting_question.project) ||
+    (self.issue.present? &&
+      self.issue.project)
   end
 
   def question_issue

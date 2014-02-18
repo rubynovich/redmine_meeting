@@ -45,11 +45,10 @@ class MeetingExtraAnswer < ActiveRecord::Base
   end
 
   def project
-    if self.meeting_question.present?
-      self.meeting_question.project
-    elsif self.issue.present?
-      self.issue.project
-    end
+    (self.meeting_question.present? &&
+      self.meeting_question.project) ||
+    (self.issue.present? &&
+      self.issue.project)
   end
 
 private
