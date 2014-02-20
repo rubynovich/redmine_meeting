@@ -351,6 +351,8 @@ module MeetingPlugin
           @user = member.user
           subject = ::I18n.t(:mail_subject_meeting_members_invite, id: @container.id, meet_on: format_date(@container.meet_on), start_time: format_time(@container.start_time, false), end_time: format_time(@container.end_time, false))
           mail(to: @user.mail, subject: subject)
+        else
+          Rails.logger.info "ERROR CREATE ISSUE FOR MEMBER #{member.inspect} #{member.user} AGENDA #{member.meeting_agenda}  #{@issue.inspect} #{@issue.errors.inspect}"
         end
       end
     end
