@@ -341,8 +341,9 @@ module MeetingPlugin
       end
 
       def mail_meeting_members_invite(member)
+        @issue = member.issue
 
-        if @issue = member.issue
+        if @issue.try(:id)
           @container = member.meeting_agenda
           @agenda_url = {controller: 'meeting_agendas', action: 'show', id: @container.id, only_path: false}
 
