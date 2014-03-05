@@ -6,7 +6,7 @@
     - if object.is_external?
       %tr
         %th=l(:field_external_company)+":"
-        %td{colspan: 3}=link_to_contact object.external_company
+        %td{colspan: 3}=link_to_contact(object.external_company) rescue nil
     %tr
       - if object.is_external?
         %th=l(:field_address)+":"
