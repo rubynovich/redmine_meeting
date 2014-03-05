@@ -32,3 +32,4 @@
       %td= link_to_agenda(object)
       %th= l(:field_author)+":"
       %td= link_to_user object.author
+    = render partial: "online_meetings/add_attributes_table", locals: {item: object.meeting_agenda} rescue nil #FIXME
