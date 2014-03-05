@@ -101,7 +101,7 @@ class MeetingProtocol < ActiveRecord::Base
   end
 
   def attachments_deletable?(user=User.current)
-    user == self.author || user == self.asserter || self.meeting_approvers.map{|a| a.user}.include?(user) || user.admin?
+    false
   end
 
   def all_meeting_answers
