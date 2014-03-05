@@ -355,6 +355,37 @@ module MeetingPlugin
           Rails.logger.info "ERROR CREATE ISSUE FOR MEMBER #{member.inspect} #{member.user} AGENDA #{member.meeting_agenda}  #{@issue.inspect} #{@issue.errors.inspect}"
         end
       end
+
+      def you_are_meeting_watcher(user, issue)
+        set_language_if_valid user.language
+        @issue = issue
+        mail :to => user.mail, :subject => l(:subject_you_are_watcher, scope: 'watchers_journal', issue: "##{issue.id} \"#{@issue.subject}\"")
+      end
+
+      def you_are_not_meeting_watcher(user, issue)
+        set_language_if_valid user.language
+        @issue = issue
+        mail :to => user.mail, :subject => l(:subject_you_are_not_watcher, scope: 'watchers_journal', issue: "##{issue.id} \"#{@issue.subject}\"")
+      end
+
+      def meeting_watchers_added(user, issue, watchers)
+        set_language_if_valid user.language
+        @user = user
+        @issue = issue
+        @issue_title = "##{issue.id} \"#{@issue.subject}\""
+        @watchers = watchers
+        mail :to => user.mail, :subject => l(:subject_watchers_added, scope: 'watchers_journal', issue: @issue_title)
+      end
+
+      def meeting_watcher_deleted(user, issue, watcher)
+        set_language_if_valid user.language
+        @user = user
+        @issue = issue
+        @issue_title = "##{@issue.id} \"#{@issue.subject}\""
+        @watcher = watcher
+        mail :to => user.mail, :subject => l(:subject_watcher_deleted, scope: 'watchers_journal', issue: @issue_title)
+      end
+
     end
   end
 end
