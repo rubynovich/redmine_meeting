@@ -15,10 +15,11 @@ class MeetingWatchersController < ApplicationController
   end
 
   def create
-    new_watchers = (params[:meeting_container].present? ? params[:meeting_container][:user_ids] : [])
+    new_watchers_ids = (params[:meeting_container].present? ? params[:meeting_container][:user_ids] : [])
+    new_watchers = new_watchers_ids.map{ |user_id| MeetingWatcher.new(user_id: user_id) }.compact
 
     @watchers = if @object.id.present?
-      @object.meeting_watchers << new_watchers.map{ |user_id| MeetingWatcher.new(user_id: user_id) }.compact
+      @object.meeting_watchers << new_watchers
       @object.save
       @object.watchers
     else

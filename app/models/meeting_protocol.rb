@@ -193,6 +193,14 @@ class MeetingProtocol < ActiveRecord::Base
     self.save
   end
 
+  def model_class
+    MeetingProtocol
+  end
+
+  def model_sym
+    :meeting_protocol
+  end
+
 private
 
   def add_time_entry_to_invites

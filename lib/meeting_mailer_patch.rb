@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 module MeetingPlugin
   module MailerPatch
     def self.included(base)
@@ -356,34 +357,32 @@ module MeetingPlugin
         end
       end
 
-      def you_are_meeting_watcher(user, issue)
+      def mail_you_are_meeting_watcher(user, container)
         set_language_if_valid user.language
-        @issue = issue
-        mail :to => user.mail, :subject => l(:subject_you_are_watcher, scope: 'watchers_journal', issue: "##{issue.id} \"#{@issue.subject}\"")
-      end
 
-      def you_are_not_meeting_watcher(user, issue)
-        set_language_if_valid user.language
-        @issue = issue
-        mail :to => user.mail, :subject => l(:subject_you_are_not_watcher, scope: 'watchers_journal', issue: "##{issue.id} \"#{@issue.subject}\"")
-      end
+        Rails.logger.error("mailer".red)
 
-      def meeting_watchers_added(user, issue, watchers)
-        set_language_if_valid user.language
         @user = user
-        @issue = issue
-        @issue_title = "##{issue.id} \"#{@issue.subject}\""
-        @watchers = watchers
-        mail :to => user.mail, :subject => l(:subject_watchers_added, scope: 'watchers_journal', issue: @issue_title)
+        @container_name_accusative = l('label_' + container.model_sym.to_s.downcase + '_accusative', scope: 'meeting')
+        @title = '#' + container.id.to_s + ' ' + container.to_s
+        @subject = l(:subject_you_are_watcher, scope: 'meeting', container: @container_name_accusative, title: @title)
+        @container = container
+
+        mail to: user.mail, subject: @subject
+
       end
 
-      def meeting_watcher_deleted(user, issue, watcher)
+      def mail_you_are_not_meeting_watcher(user, container)
         set_language_if_valid user.language
+
         @user = user
-        @issue = issue
-        @issue_title = "##{@issue.id} \"#{@issue.subject}\""
-        @watcher = watcher
-        mail :to => user.mail, :subject => l(:subject_watcher_deleted, scope: 'watchers_journal', issue: @issue_title)
+        @container_name_genetive = l('label_' + container.model_sym.to_s.downcase + '_genetive', scope: 'meeting')
+        @title = '#' + container.id.to_s + ' ' + container.to_s
+        @subject = l(:subject_you_are_not_watcher, scope: 'meeting', container: @container_name_genetive, title: @title)
+        @container = container
+
+        mail to: user.mail, subject: @subject
+
       end
 
     end

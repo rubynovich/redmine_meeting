@@ -299,14 +299,13 @@ ru:
 
   meeting:
 
-    subject_you_are_watcher: "Вы добавлены как наблюдатель в задачу %{issue}"
-    body_you_are_watcher: "Вы добавлены как наблюдатель в задачу"
+    label_meeting_agenda_accusative: "повестку совещания"
+    label_meeting_agenda_genetive: "повестки совещания"
+    label_meeting_protocol_accusative: "протокол совещания"
+    label_meeting_protocol_genetive: "протокола совещания"
 
-    subject_you_are_not_watcher: "Вы удалены из наблюдателей в задаче %{issue}"
-    body_you_are_not_watcher: "Вы удалены из наблюдателей в задаче"
+    subject_you_are_watcher: "Вы добавлены как наблюдатель в %{container} %{title}"
+    body_you_are_watcher: "Вы добавлены как наблюдатель в %{container}."
 
-    subject_watchers_added: "Добавлены наблюдатели - %{issue}" 
-    body_watcher_added: "В список наблюдателей были добавлены пользователи"
-
-    subject_watcher_deleted: "Удален наблюдатель - %{issue}"
-    body_watcher_deleted: "Из наблюдателей был удален пользователь %{watcher}."
+    subject_you_are_not_watcher: "Вы удалены из наблюдателей из %{container} %{title}"
+    body_you_are_not_watcher: "Вы удалены из наблюдателей из %{container}."
