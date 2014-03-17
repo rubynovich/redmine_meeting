@@ -1,3 +1,4 @@
+# coding: utf-8
 class MeetingProtocol < ActiveRecord::Base
   unloadable
 
@@ -101,7 +102,7 @@ class MeetingProtocol < ActiveRecord::Base
   end
 
   def attachments_deletable?(user=User.current)
-    false
+    user == self.author || user == self.asserter || self.meeting_approvers.map{|a| a.user}.include?(user) || user.admin?
   end
 
   def all_meeting_answers
@@ -192,7 +193,14 @@ class MeetingProtocol < ActiveRecord::Base
     self.is_deleted = true
     self.save
   end
-
+  
+  # Это допил для работы вложений. При удалении вложения
+  # AttachmnetsController#destroy считает, что вложение обязательно
+  # должно быть привязано к проекту.
+  def project
+    Project.find(Setting[:plugin_redmine_meeting][:project_id].to_i)
+  end
+  
 private
 
   def add_time_entry_to_invites

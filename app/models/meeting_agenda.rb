@@ -1,3 +1,4 @@
+# coding: utf-8
 class MeetingAgenda < ActiveRecord::Base
   unloadable
 
@@ -128,7 +129,7 @@ class MeetingAgenda < ActiveRecord::Base
   end
 
   def attachments_deletable?(user=User.current)
-    false
+    user == self.author || user == self.asserter || self.meeting_approvers.map{|a| a.user}.include?(user) || user.admin?
   end
 
   def to_s
@@ -158,6 +159,13 @@ class MeetingAgenda < ActiveRecord::Base
     self.meeting_approvers.reject(&:deleted).all?(&:approved?)
   end
 
+  # Это допил для работы вложений. При удалении вложения
+  # AttachmnetsController#destroy считает, что вложение обязательно
+  # должно быть привязано к проекту.
+  def project
+    Project.find(Setting[:plugin_redmine_meeting][:project_id].to_i)
+  end
+  
 private
   def add_author_id
     self.author_id = User.current.id
