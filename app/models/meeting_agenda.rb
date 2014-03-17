@@ -129,7 +129,8 @@ class MeetingAgenda < ActiveRecord::Base
   end
 
   def attachments_deletable?(user=User.current)
-    user == self.author || user == self.asserter || self.meeting_approvers.map{|a| a.user}.include?(user) || user.admin?
+    # сравнение идет по id из-за того, что методы возвращают то объекты класса User, то объекты класса Person
+    user.id == self.author.id || user.id == self.asserter.id || self.meeting_approvers.map{|a| a.user.id}.include?(user.id) || user.admin?
   end
 
   def to_s
