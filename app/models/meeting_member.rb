@@ -28,6 +28,16 @@ class MeetingMember < ActiveRecord::Base
     self.user.try(:name) || ''
   end
 
+  def send_notice
+    begin
+      Mailer.meeting_participators_notice(self).deliver
+      self.sended_notice_on = Time.now
+      self.save
+#    rescue
+#      nil
+    end
+  end
+  
   def send_invite
     self.build_issue(issue_attributes)
     if self.save
