@@ -206,7 +206,15 @@ class MeetingProtocol < ActiveRecord::Base
   def project
     Project.find(Setting[:plugin_redmine_meeting][:project_id].to_i)
   end
-  
+
+  def model_class
+    MeetingProtocol
+  end
+
+  def model_sym
+    :meeting_protocol
+  end
+
 private
 
   def add_time_entry_to_invites

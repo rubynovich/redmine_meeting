@@ -1,0 +1,4 @@
+%h1
+  = link_to @title, send(@container.model_sym.to_s + '_path', @container, :only_path => false)
+%p
+  = l(:body_you_are_not_watcher, scope: 'meeting', container: @container_name_genetive)

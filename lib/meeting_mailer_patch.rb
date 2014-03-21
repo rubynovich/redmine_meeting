@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 module MeetingPlugin
   module MailerPatch
     def self.included(base)
@@ -355,6 +356,35 @@ module MeetingPlugin
           Rails.logger.info "ERROR CREATE ISSUE FOR MEMBER #{member.inspect} #{member.user} AGENDA #{member.meeting_agenda}  #{@issue.inspect} #{@issue.errors.inspect}"
         end
       end
+
+      def mail_you_are_meeting_watcher(user, container)
+        set_language_if_valid user.language
+
+        Rails.logger.error("mailer".red)
+
+        @user = user
+        @container_name_accusative = l('label_' + container.model_sym.to_s.downcase + '_accusative', scope: 'meeting')
+        @title = '#' + container.id.to_s + ' ' + container.to_s
+        @subject = l(:subject_you_are_watcher, scope: 'meeting', container: @container_name_accusative, title: @title)
+        @container = container
+
+        mail to: user.mail, subject: @subject
+
+      end
+
+      def mail_you_are_not_meeting_watcher(user, container)
+        set_language_if_valid user.language
+
+        @user = user
+        @container_name_genetive = l('label_' + container.model_sym.to_s.downcase + '_genetive', scope: 'meeting')
+        @title = '#' + container.id.to_s + ' ' + container.to_s
+        @subject = l(:subject_you_are_not_watcher, scope: 'meeting', container: @container_name_genetive, title: @title)
+        @container = container
+
+        mail to: user.mail, subject: @subject
+
+      end
+
     end
   end
 end
