@@ -327,8 +327,7 @@ module MeetingPlugin
         @container = participator.meeting_protocol
         @user = participator.user
         @url = {controller: 'meeting_protocols', action: 'show', id: @container.id, only_path: false}
-        @body = t(:mail_body_meeting_participators_notice,
-          id: @container.id, meet_on: format_date(@container.meet_on), subject: @container.subject)
+        @body = t(:mail_body_meeting_participators_notice, id: @container.id, meet_on: format_date(@container.meet_on), subject: @container.subject)
 
         subject = ::I18n.t(:mail_subject_meeting_participators_notice, id: @container.id)
 
@@ -341,6 +340,17 @@ module MeetingPlugin
         end
       end
 
+      def mail_meeting_member_notice(member)
+        @container = participator.meeting_agenda.meeting_protocol
+        @user = member.user
+        @url = {controller: 'meeting_protocol', action: 'show', id: @container.id, only_path: false}
+        @body = t(:mail_body_meeting_participators_notice, id: @container.id, meet_on: format_date(@container.meet_on), subject: @container.subject)
+
+        subject = ::I18n.t(:mail_subject_meeting_participators_notice, id: @container.id)
+
+        mail(to: @user.mail, subject: subject, template: 'mail_meeting_participators_notice')
+      end
+      
       def mail_meeting_members_invite(member)
         @issue = member.issue
 

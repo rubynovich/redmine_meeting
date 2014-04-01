@@ -1,3 +1,4 @@
+# coding: utf-8
 class MeetingMember < ActiveRecord::Base
   unloadable
 
@@ -29,13 +30,7 @@ class MeetingMember < ActiveRecord::Base
   end
 
   def send_notice
-    begin
-      Mailer.meeting_participators_notice(self).deliver
-      self.sended_notice_on = Time.now
-      self.save
-#    rescue
-#      nil
-    end
+    Mailer.mail_meeting_member_notice(self).deliver
   end
   
   def send_invite
