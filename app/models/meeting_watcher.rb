@@ -13,7 +13,6 @@ class MeetingWatcher < ActiveRecord::Base
   validates_uniqueness_of :user_id,  scope: [:meeting_container_id, :meeting_container_type]
 
   def send_mail_you_are_meeting_watcher
-    Rails.logger.error("callback".red)
     Mailer.mail_you_are_meeting_watcher(self.watcher, self.meeting_container).deliver
   end
 
