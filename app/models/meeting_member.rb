@@ -1,3 +1,4 @@
+# coding: utf-8
 class MeetingMember < ActiveRecord::Base
   unloadable
 
@@ -28,6 +29,10 @@ class MeetingMember < ActiveRecord::Base
     self.user.try(:name) || ''
   end
 
+  def send_notice
+    Mailer.mail_meeting_member_notice(self).deliver
+  end
+  
   def send_invite
     self.build_issue(issue_attributes)
     if self.save
