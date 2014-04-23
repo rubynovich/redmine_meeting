@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 module MeetingPlugin
   module MailerPatch
     def self.included(base)
@@ -245,7 +246,11 @@ module MeetingPlugin
       end
 
       def mail_meeting_contacts_notice(meeting_contact)
-        container = meeting_contact.meeting_container
+        container = if meeting_contact.meeting_container.kind_of? MeetingAgenda
+                      meeting_contact.meeting_container.meeting_protocol
+                    else
+                      meeting_contact.meeting_container
+                    end
         author = container.author
         contact = meeting_contact.contact
         address = container.is_external? ? container.address : container.meeting_company.fact_address
@@ -272,7 +277,7 @@ module MeetingPlugin
         subject = key_words.inject(Setting.plugin_redmine_meeting[:contacts_protocol_subject]){ |result, item|
           result.gsub("%#{item.first}%", "#{item.last}".strip)
         }
-
+        
         attachments["Protokol_%04d_#{key_words[:meet_on]}.pdf" % container.id] = MeetingProtocolReport.new.to_pdf(container)
         mail(to: contact.email, subject: subject)
       end
@@ -326,12 +331,22 @@ module MeetingPlugin
         @container = participator.meeting_protocol
         @user = participator.user
         @url = {controller: 'meeting_protocols', action: 'show', id: @container.id, only_path: false}
-        @body = t(:mail_body_meeting_participators_notice,
-          id: @container.id, meet_on: format_date(@container.meet_on), subject: @container.subject)
+        @body = t(:mail_body_meeting_participators_notice, id: @container.id, meet_on: format_date(@container.meet_on), subject: @container.subject)
 
         subject = ::I18n.t(:mail_subject_meeting_participators_notice, id: @container.id)
 
         mail(to: @user.mail, subject: subject)
+      end
+
+      def mail_meeting_member_notice(member)
+        @container = member.meeting_agenda.meeting_protocol
+        @user = member.user
+        @url = {controller: 'meeting_protocols', action: 'show', id: @container.id, only_path: false}
+        @body = t(:mail_body_meeting_participators_notice, id: @container.id, meet_on: format_date(@container.meet_on), subject: @container.subject)
+
+        subject = ::I18n.t(:mail_subject_meeting_participators_notice, id: @container.id)
+
+        mail(to: @user.mail, subject: subject, template: 'mail_meeting_participators_notice')
       end
 
       def issue_add_with_meeting_members_invite(issue)
@@ -339,7 +354,7 @@ module MeetingPlugin
           issue_add_without_meeting_members_invite(issue)
         end
       end
-
+      
       def mail_meeting_members_invite(member)
         @issue = member.issue
 
@@ -355,6 +370,33 @@ module MeetingPlugin
           Rails.logger.info "ERROR CREATE ISSUE FOR MEMBER #{member.inspect} #{member.user} AGENDA #{member.meeting_agenda}  #{@issue.inspect} #{@issue.errors.inspect}"
         end
       end
+
+      def mail_you_are_meeting_watcher(user, container)
+        set_language_if_valid user.language
+
+        @user = user
+        @container_name_accusative = l('label_' + container.model_sym.to_s.downcase + '_accusative', scope: 'meeting')
+        @title = '#' + container.id.to_s + ' ' + container.to_s
+        @subject = l(:subject_you_are_watcher, scope: 'meeting', container: @container_name_accusative, title: @title)
+        @container = container
+
+        mail to: user.mail, subject: @subject
+
+      end
+
+      def mail_you_are_not_meeting_watcher(user, container)
+        set_language_if_valid user.language
+
+        @user = user
+        @container_name_genetive = l('label_' + container.model_sym.to_s.downcase + '_genetive', scope: 'meeting')
+        @title = '#' + container.id.to_s + ' ' + container.to_s
+        @subject = l(:subject_you_are_not_watcher, scope: 'meeting', container: @container_name_genetive, title: @title)
+        @container = container
+
+        mail to: user.mail, subject: @subject
+
+      end
+
     end
   end
 end

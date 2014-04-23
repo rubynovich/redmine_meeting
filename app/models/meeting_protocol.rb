@@ -155,18 +155,17 @@ class MeetingProtocol < ActiveRecord::Base
   end
 
   def send_notices
-    begin
-      if self.meeting_participators.all?(&:sended_notice_on)
-        self.meeting_participators.all?(&:send_notice)
-      else
-        self.meeting_participators.reject(&:sended_notice_on).all?(&:send_notice)
-      end
-      self.meeting_contacts.all?(&:send_notice)
-      execute_pending_issues
-      self.save
-#    rescue
-#      false
-    end
+    participators = (self.meeting_agenda.meeting_members + self.meeting_participators).uniq{|par| par.user}
+    participators.each{|par| par.send_notice}
+    
+    contacts = (self.meeting_agenda.meeting_contacts + self.meeting_contacts).uniq{|con| con.contact.name}
+    contacts.each{|con| con.send_notice}
+    
+    # Rails.logger.debug('All members: '  + participators.map{|m| m.user.name}.inspect.green + participators.count.to_s)
+    # Rails.logger.debug('All contacts: ' + contacts.map{|m| [m.id, m.contact.name]}.inspect.green + contacts.count.to_s)
+    
+    execute_pending_issues
+    self.save
   end
 
   def assert
@@ -206,7 +205,15 @@ class MeetingProtocol < ActiveRecord::Base
   def project
     Project.find(Setting[:plugin_redmine_meeting][:project_id].to_i)
   end
-  
+
+  def model_class
+    MeetingProtocol
+  end
+
+  def model_sym
+    :meeting_protocol
+  end
+
 private
 
   def add_time_entry_to_invites

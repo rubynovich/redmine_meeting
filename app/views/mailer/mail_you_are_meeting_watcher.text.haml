@@ -1,0 +1,2 @@
+= l(:body_you_are_watcher, scope: 'meeting', container: @container_name_accusative, title: @title)
+= link_to @title, send(@container.model_sym.to_s + '_path', @container, :only_path => false)

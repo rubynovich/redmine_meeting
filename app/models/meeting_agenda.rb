@@ -171,7 +171,15 @@ class MeetingAgenda < ActiveRecord::Base
   def project
     Project.find(Setting[:plugin_redmine_meeting][:project_id].to_i)
   end
-  
+
+  def model_class
+    MeetingAgenda
+  end
+
+  def model_sym
+    :meeting_agenda
+  end
+
 private
   def add_author_id
     self.author_id = User.current.id
@@ -264,4 +272,5 @@ private
       MeetingContact.create(meeting_container_type: self.class.to_s, meeting_container_id: self.id, contact_id: contact_id)
     end
   end
+
 end
