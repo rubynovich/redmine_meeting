@@ -6,7 +6,7 @@ class CreateMeetingExtraAnswers < ActiveRecord::Migration
       t.text     :description
       t.integer  :reporter_id
       t.boolean  :reporter_id_is_contact
-      t.integer  :external_reporter_id
+      #t.integer  :external_reporter_id
       t.integer  :user_id
       t.boolean  :user_id_is_contact
       t.integer  :external_user_id
