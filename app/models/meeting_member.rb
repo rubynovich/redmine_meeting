@@ -74,7 +74,7 @@ private
       hours: (((self.meeting_agenda.end_time.seconds_since_midnight - self.meeting_agenda.start_time.seconds_since_midnight) / 36) / 100.0),
       comments: ::I18n.t(:message_participate_in_the_meeting),
       plan_on: self.meeting_agenda.meet_on,
-    )
+    ) rescue nil
   end
 
   def key_words
