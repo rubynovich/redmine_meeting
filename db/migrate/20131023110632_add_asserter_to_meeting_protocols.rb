@@ -1,5 +1,8 @@
 class AddAsserterToMeetingProtocols < ActiveRecord::Migration
   def change
-    add_column :meeting_protocols, :asserter_id, :integer rescue nil
+    begin
+      add_column :meeting_protocols, :asserter_id, :integer
+    rescue
+    end
   end
 end
