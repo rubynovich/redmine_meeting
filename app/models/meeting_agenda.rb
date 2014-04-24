@@ -75,8 +75,11 @@ class MeetingAgenda < ActiveRecord::Base
   before_create :add_author_id
   after_save :add_new_users_from_questions
   after_save :add_new_contacts_from_questions
-  after_create :new_meeting_room_reserve, if: -> { MeetingRoom.where("LOWER(name) = LOWER(?)", self.place).present? && !self.is_external? }
-  after_update :update_meeting_room_reserve, if: -> { MeetingRoom.where("LOWER(name) = LOWER(?)", self.place).present? && !self.is_external? }
+
+  if defined?(MeetingRoom)
+    after_create :new_meeting_room_reserve, if: -> { MeetingRoom.where("LOWER(name) = LOWER(?)", self.place).present? && !self.is_external? }
+    after_update :update_meeting_room_reserve, if: -> { MeetingRoom.where("LOWER(name) = LOWER(?)", self.place).present? && !self.is_external? }
+  end
 
 
   scope :active, -> {
