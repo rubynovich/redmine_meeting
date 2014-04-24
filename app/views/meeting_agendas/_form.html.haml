@@ -29,7 +29,8 @@
       -#
         :javascript
           observeAutocompleteField('meeting_agenda_place', '#{escape_javascript autocomplete_for_place_meeting_agendas_path}')
-      = link_to l(:label_meeting_room_reserve_new), {controller: 'meeting_room_selectors', action: 'new'}, remote: true, method: 'get', class: 'icon icon-add', id: 'link_to_meeting_room'
+      - if defined?(MeetingRoom)
+        = link_to l(:label_meeting_room_reserve_new), {controller: 'meeting_room_selectors', action: 'new'}, remote: true, method: 'get', class: 'icon icon-add', id: 'link_to_meeting_room'
     %p{id: 'address'}
       = f.label :address
       = f.text_field :address, size: 100, style: 'width: 60%'
