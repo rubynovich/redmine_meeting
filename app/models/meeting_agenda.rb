@@ -66,7 +66,7 @@ class MeetingAgenda < ActiveRecord::Base
   }
   validate :presence_of_meeting_questions, if: -> { self.meeting_questions.blank? }
   validate :presence_of_meeting_members, if: -> { self.meeting_members.blank? }
-  validate :meeting_room_reserve_validation, if: -> { MeetingRoom.where("LOWER(name) = LOWER(?)", self.place).present? && !self.is_external? }
+  validate :meeting_room_reserve_validation, if: -> { defined?(MeetingRoom) && MeetingRoom.where("LOWER(name) = LOWER(?)", self.place).present? && !self.is_external? }
   validate :meeting_question_title_uniq, if: -> {
     mq = self.meeting_questions.map{ |q| [q.title, (q.issue && q.issue.project) || q.project ] }
     mq.size != mq.uniq.size
@@ -76,10 +76,8 @@ class MeetingAgenda < ActiveRecord::Base
   after_save :add_new_users_from_questions
   after_save :add_new_contacts_from_questions
 
-  if defined?(MeetingRoom)
-    after_create :new_meeting_room_reserve, if: -> { MeetingRoom.where("LOWER(name) = LOWER(?)", self.place).present? && !self.is_external? }
-    after_update :update_meeting_room_reserve, if: -> { MeetingRoom.where("LOWER(name) = LOWER(?)", self.place).present? && !self.is_external? }
-  end
+  after_create :new_meeting_room_reserve, if: -> { defined?(MeetingRoom) && MeetingRoom.where("LOWER(name) = LOWER(?)", self.place).present? && !self.is_external? }
+  after_update :update_meeting_room_reserve, if: -> { defined?(MeetingRoom) && MeetingRoom.where("LOWER(name) = LOWER(?)", self.place).present? && !self.is_external? }
 
 
   scope :active, -> {
