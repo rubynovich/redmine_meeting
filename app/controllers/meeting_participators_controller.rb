@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 class MeetingParticipatorsController < ApplicationController
   unloadable
 
@@ -8,12 +9,11 @@ class MeetingParticipatorsController < ApplicationController
 
   def new
     @no_members = User.active.order(:lastname, :firstname)
-    @members = []
-    if @object.present?
-      @members = @object.meeting_participators.where(attended: true).map(&:user)
-    else
-      @members = User.find(session[session_sym].keys)
-    end
+    @members = if @object.present?
+                 @object.meeting_participators.where(attended: true).map(&:user)
+               else
+                 User.find(session[session_sym].class == Hash ? session[session_sym].keys : session[session_sym]) # FIXME в session_sym где-то кладется массив вместо хеша
+               end
     @no_members -= @members
   end
 
@@ -31,9 +31,10 @@ class MeetingParticipatorsController < ApplicationController
       end
       @object.users
     else
-      session[session_sym] = (new_members + session[session_sym].keys).map(&:to_i).uniq
-      User.sorted.find(session[session_sym])
+      session[session_sym] = session[session_sym].merge( Hash[ new_members.map{|nm| [nm.to_i, true] }])
+      User.sorted.find(session[session_sym].keys)
     end
+
 
     respond_to do |format|
       format.js
@@ -49,9 +50,13 @@ class MeetingParticipatorsController < ApplicationController
                else
                  Rails.logger.error('Participator destroy from session.'.red)
                  Rails.logger.error('Before: '.red + session[session_sym].inspect)
-                 participators_from_session = session[session_sym]
-                 participators_from_session[params[:id].to_i] = false
-                 session[session_sym] = participators_from_session
+
+                 if session[:permanent_participators_ids].include?(params[:id].to_i)
+                   session[session_sym][params[:id].to_i] = false
+                 else
+                   session[session_sym].delete(params[:id].to_i)
+                 end
+
                  Rails.logger.error('After: '.red + session[session_sym].inspect)
                  User.sorted.find(session[session_sym].select{|k,v| v}.keys)
                end
@@ -63,10 +68,10 @@ class MeetingParticipatorsController < ApplicationController
 
   def autocomplete_for_user
     @members = if @object.present?
-      @object.meeting_participators.where(attended: true).map(&:user)
-    else
-      User.sorted.find(session[session_sym])
-    end
+                 @object.meeting_participators.where(attended: true).map(&:user)
+               else
+                 User.sorted.find(session[session_sym].select{|k,v| v}.keys)
+               end
 
     @no_members = User.active.like(params[:q]).sorted - @members
 
