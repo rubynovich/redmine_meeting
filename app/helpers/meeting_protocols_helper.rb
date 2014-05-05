@@ -209,16 +209,23 @@ module MeetingProtocolsHelper
     end
   end
 
-  def link_to_meeting_notice(user)
-    item = @object.meeting_participators.where(user_id: user.id).first
-    if item && item.sended_notice_on.present?
-      if item.saw_protocol_on.present?
+  def participator_meeting_notice(participator)
+    if participator && participator.sended_notice_on.present?
+      if participator.saw_protocol_on.present?
         t(:label_meeting_notice_present)
       else
         t(:label_meeting_notice_blank)
       end
     else
       t(:label_meeting_notice_extra)
+    end
+  end
+
+  def participator_attendance(participator)
+    if participator.attended?
+      t(:label_meeting_member_present)
+    else
+      t(:label_meeting_member_blank)
     end
   end
 

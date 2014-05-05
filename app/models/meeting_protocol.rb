@@ -63,6 +63,8 @@ class MeetingProtocol < ActiveRecord::Base
   after_create :add_new_contacts_from_answers
   after_save :add_time_entry_to_invites
 
+  # after_create :copy_members_to_participators
+  
   scope :active, -> {
     where('meeting_protocols.is_deleted' => false)
   }
@@ -148,14 +150,22 @@ class MeetingProtocol < ActiveRecord::Base
   end
 
   def send_notices
-    participators = (self.meeting_agenda.meeting_members + self.meeting_participators).uniq{|par| par.user}
-    participators.each{|par| par.send_notice}
+
+    self.meeting_participators.each{|par| par.send_notice; par.sended_notice_on = Time.now; par.save }
+
+    # participators = (self.meeting_agenda.meeting_members + self.meeting_participators).uniq{|par| par.user}
+    # participators.each{|par| par.send_notice}
+    # self.meeting_participators.each{|par| par.sended_notice_on = Time.now; par.save }
     
     contacts = (self.meeting_agenda.meeting_contacts + self.meeting_contacts).uniq{|con| con.contact.name}
     contacts.each{|con| con.send_notice}
-    
-    # Rails.logger.debug('All members: '  + participators.map{|m| m.user.name}.inspect.green + participators.count.to_s)
-    # Rails.logger.debug('All contacts: ' + contacts.map{|m| [m.id, m.contact.name]}.inspect.green + contacts.count.to_s)
+
+    # Rails.logger.error('Agenda internal members: '   + self.meeting_agenda.meeting_members.map{|m| [m.id, m.user.name]}.inspect.green)
+    # Rails.logger.error('Agenda external members: '   + self.meeting_agenda.meeting_contacts.map{|m| [m.id, m.contact.name]}.inspect.green)
+    # Rails.logger.error('Protocol internal members: ' + self.meeting_participators.map{|m| [m.id, m.user.name]}.inspect.green)
+    # Rails.logger.error('Protocol external members: ' + self.meeting_contacts.map{|m| [m.id, m.contact.name]}.inspect.green)
+    # Rails.logger.error('All members: '  + self.meeting_participators.map{|m| [m.id, m.user.name]}.inspect.green + self.meeting_participators.count.to_s)
+    # Rails.logger.error('All contacts: ' + contacts.map{|m| [m.id, m.contact.name]}.inspect.green + contacts.count.to_s)
     
     execute_pending_issues
     self.save
@@ -253,7 +263,7 @@ private
 
   def add_new_users_from_answers
     new_user_ids_from_answers.each do |user_id|
-      MeetingParticipator.create(user_id: user_id, meeting_protocol_id: self.id)
+      MeetingParticipator.create(user_id: user_id, meeting_protocol_id: self.id, attended: true)
     end
   end
 
@@ -266,5 +276,21 @@ private
   def execute_pending_issues
     (self.meeting_answers + self.meeting_extra_answers).
       select(&:pending_issue).map(&:pending_issue).map(&:execute)
+  end
+
+  def copy_members_to_participators
+    Rails.logger.error("copy_members_to_participators".red)
+    self.meeting_participators.destroy_all
+    agenda = self.meeting_agenda
+    agenda.meeting_members.each do |m|
+      par = MeetingParticipator.new
+      par.user = m.user
+      par.meeting_protocol = self
+      par.attended = true
+      par.save
+      Rails.logger.error(par.inspect.red)
+      Rails.logger.error(par.errors.full_messages.inspect.red)
+    end
+
   end
 end

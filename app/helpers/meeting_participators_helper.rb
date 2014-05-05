@@ -11,8 +11,8 @@ module MeetingParticipatorsHelper
     accepter?(member)
   end
 
-  def link_to_notice_status(member)
-    if member.present? && member.sended_notice_on.present?
+  def participator_notice_status(participator)
+    if participator.present? && participator.sended_notice_on.present?
       l(:label_meeting_member_invited)
     else
       l(:label_meeting_member_was_not_invite)

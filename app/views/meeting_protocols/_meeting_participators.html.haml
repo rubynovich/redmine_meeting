@@ -8,22 +8,12 @@
       %th=l(:label_meeting_invite_status)
       %th=l(:label_meeting_notice_status)
       %th.hide-when-print=l(:field_status)
-    - (agenda_users|protocol_users).compact.sort_by(&:name).each do |user|
+    - @object.meeting_participators.each do |par|
       %tr.issue
         %td{style: "white-space: pre-line; width: 33%"}= h user.company rescue ""
         %td{style: "white-space: pre-line; width: 33%"}= h user.job_title rescue ""
-        %td= link_to_user(user)
-        %td
-          - member = agenda_users.include?(user)
-          - participator = protocol_users.include?(user)
-          - if member && participator
-            = t(:label_meeting_member_present)
-          - elsif member
-            = t(:label_meeting_member_blank)
-          - elsif participator
-            = t(:label_meeting_member_present)
-        %td
-          = link_to_meeting_notice(user)
+        %td= link_to_user(par.user)
+        %td= participator_attendance(par)
+        %td= participator_meeting_notice(par)
         %td.hide-when-print
-          - member = @object.meeting_participators.where(user_id: user.id).first
-          = link_to_notice_status(member)
+          = participator_notice_status(par)

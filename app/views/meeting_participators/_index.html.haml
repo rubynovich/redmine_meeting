@@ -1,7 +1,20 @@
 %ul
-  - @members.each do |user|
-    %li{class: "user-#{user.id}"}
-      = avatar(user, :size => "16")
-      = link_to_user(user, :class => 'user')
-      - url = {controller: 'meeting_participators', action: 'destroy', id: user.id, meeting_protocol_id: @object.try(:id)}
-      = link_to(image_tag('delete.png'), url, remote: true, method: 'delete', class: "delete")
+  - Rails.logger.error(@object.inspect.red)
+  - Rails.logger.error(@members.map(&:name).inspect.red)
+
+  - if !@object || @object.new_record?
+    - @members.each do |user|
+      %li{class: "user-#{user.id}"}
+        = avatar(user, :size => "16")
+        = link_to_user(user, :class => 'user')
+        - url = {controller: 'meeting_participators', action: 'destroy', id: user.id, meeting_protocol_id: @object.try(:id)}
+        = link_to(image_tag('delete.png'), url, remote: true, method: 'delete', class: "delete")
+  - else
+    - @members.each do |user|
+      - par = @object.meeting_participators.where(user_id: user.try(:id)).first 
+      - if par && par.attended
+        %li{class: "user-#{user.id}"}
+          = avatar(user, :size => "16")
+          = link_to_user(user, :class => 'user')
+          - url = {controller: 'meeting_participators', action: 'destroy', id: user.id, meeting_protocol_id: @object.try(:id)}
+          = link_to(image_tag('delete.png'), url, remote: true, method: 'delete', class: "delete")

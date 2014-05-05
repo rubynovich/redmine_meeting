@@ -10,9 +10,9 @@ class MeetingParticipatorsController < ApplicationController
     @no_members = User.active.order(:lastname, :firstname)
     @members = []
     if @object.present?
-      @members = @object.users
+      @members = @object.meeting_participators.where(attended: true).map(&:user)
     else
-      @members = User.where(id: session[session_sym])
+      @members = User.find(session[session_sym].keys)
     end
     @no_members -= @members
   end
@@ -22,11 +22,16 @@ class MeetingParticipatorsController < ApplicationController
 
     @members = if @object.present?
       new_members.each do |user_id|
-        MeetingParticipator.create!(user_id: user_id, meeting_protocol_id: params[:meeting_protocol_id])
+        turned_off_user = MeetingParticipator.where(user_id: user_id, meeting_protocol_id: params[:meeting_protocol_id], attended: false).first
+        if turned_off_user
+          turned_off_user.update_attribute(:attended, true)
+        else 
+          MeetingParticipator.create!(user_id: user_id, meeting_protocol_id: params[:meeting_protocol_id], attended: true)
+        end
       end
       @object.users
     else
-      session[session_sym] = (new_members + session[session_sym]).map(&:to_i).uniq
+      session[session_sym] = (new_members + session[session_sym].keys).map(&:to_i).uniq
       User.sorted.find(session[session_sym])
     end
 
@@ -36,14 +41,21 @@ class MeetingParticipatorsController < ApplicationController
   end
 
   def destroy
-    @members = if @object.present?
-      MeetingParticipator.where(model_sym_id => @object.id, user_id: params[:id]).try(:destroy_all)
-      @object.users
-    else
-      session[session_sym] -= [params[:id].to_i]
-      User.sorted.find(session[session_sym])
-    end
 
+    @members = if @object.present?
+                 # MeetingParticipator.where(model_sym_id => @object.id, user_id: params[:id]).try(:destroy_all)
+                 MeetingParticipator.where(model_sym_id => @object.id, user_id: params[:id]).each{|par| par.update_attribute(:attended, false) }
+                 @object.users
+               else
+                 Rails.logger.error('Participator destroy from session.'.red)
+                 Rails.logger.error('Before: '.red + session[session_sym].inspect)
+                 participators_from_session = session[session_sym]
+                 participators_from_session[params[:id].to_i] = false
+                 session[session_sym] = participators_from_session
+                 Rails.logger.error('After: '.red + session[session_sym].inspect)
+                 User.sorted.find(session[session_sym].select{|k,v| v}.keys)
+               end
+    
     respond_to do |format|
       format.js
     end
@@ -51,7 +63,7 @@ class MeetingParticipatorsController < ApplicationController
 
   def autocomplete_for_user
     @members = if @object.present?
-      @object.users
+      @object.meeting_participators.where(attended: true).map(&:user)
     else
       User.sorted.find(session[session_sym])
     end
