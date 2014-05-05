@@ -38,13 +38,10 @@ class MeetingParticipator < ActiveRecord::Base
   end
 
   def send_notice
-    begin
-      Mailer.meeting_participators_notice(self).deliver
-      self.sended_notice_on = Time.now
-      self.save
-#    rescue
-#      nil
-    end
+    Mailer.meeting_participators_notice(self).deliver
+    self.sended_notice_on = Time.now
+    self.save
+    Rails.logger.error "Participato sended_notice_on #{self.sended_notice_on}".red
   end
 
 private

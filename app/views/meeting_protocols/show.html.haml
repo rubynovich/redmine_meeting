@@ -56,7 +56,7 @@
   ="№#{h @object.id}"
 
 = render partial: 'meeting_protocol_attributes', locals: {object: @object}
-= render partial: 'meeting_participators', locals: {agenda_users: @object.meeting_agenda.users, protocol_users: @object.users}
+= render partial: 'meeting_participators', locals: {agenda_users: @object.meeting_agenda.users, protocol_users: @object.users, object: @object}
 = render partial: 'meeting_contacts', locals: {agenda_contacts: @object.meeting_agenda.contacts, protocol_contacts: @object.contacts}
 = render partial: 'meeting_answers', locals: {meeting_answers: @object.all_meeting_answers}
 

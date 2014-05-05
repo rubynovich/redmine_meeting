@@ -31,6 +31,8 @@ class MeetingMember < ActiveRecord::Base
 
   def send_notice
     Mailer.mail_meeting_member_notice(self).deliver
+    # self.sended_notice_on = Time.now
+    # self.save  
   end
   
   def send_invite

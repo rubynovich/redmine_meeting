@@ -22,7 +22,8 @@ class MeetingMembersController < ApplicationController
 
     @users = if @object.present?
       new_members.each do |user_id|
-        MeetingMember.create!(user_id: user_id, meeting_agenda_id: params[:meeting_agenda_id])
+        member = MeetingMember.create!(user_id: user_id, meeting_agenda_id: params[:meeting_agenda_id])
+        Rails.logger.error(member.errors.full_messages.inspect.red)
       end
       @object.users
     else

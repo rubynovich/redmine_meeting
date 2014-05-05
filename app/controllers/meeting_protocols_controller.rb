@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 class MeetingProtocolsController < ApplicationController
   unloadable
 
@@ -93,7 +94,8 @@ class MeetingProtocolsController < ApplicationController
 
   def new
     (render_403; return false) unless can_create_protocol?(@object)
-    session[:meeting_participator_ids] = @object.meeting_agenda.user_ids
+    session[:meeting_participator_ids] = Hash[ @object.meeting_agenda.user_ids.map{|id| [id, true]} ]
+    Rails.logger.error('Исходный хеш для партицитаторов: '.red + session[:meeting_participator_ids].inspect)
     session[:meeting_contact_ids] = @object.meeting_agenda.contact_ids
     nested_objects_from_session
     @object.meeting_company = @object.meeting_agenda.meeting_company
@@ -105,7 +107,14 @@ class MeetingProtocolsController < ApplicationController
   def create
     (render_403; return false) unless can_create_protocol?(@object)
     @object.save_attachments(params[:attachments] || (params[:issue] && params[:issue][:uploads]))
-    @object.meeting_participators_attributes = session[:meeting_participator_ids].map{ |user_id| {user_id: user_id} } if session[:meeting_participator_ids].present?
+
+    Rails.logger.error('В create пришел хеш: '.red + session[:meeting_participator_ids].inspect)
+    if session[:meeting_participator_ids].present? # конверт сессии
+      pars_attrs = session[:meeting_participator_ids].map{|user_id, attended| {user_id: user_id, attended: attended} } 
+      Rails.logger.error('Из которого сделали атрибуты для связи: '.red + pars_attrs.inspect)
+      @object.meeting_participators_attributes = pars_attrs
+    end
+
     @object.meeting_contacts_attributes = session[:meeting_contact_ids].map{ |contact_id| {contact_id: contact_id} } if session[:meeting_contact_ids].present?
     @object.meeting_watchers_attributes = session[:meeting_watcher_ids].map{ |user_id| {user_id: user_id} } if session[:meeting_watcher_ids].present?
     if @object.save
@@ -170,7 +179,7 @@ class MeetingProtocolsController < ApplicationController
 private
 
   def nested_objects_from_session
-    @members = User.active.sorted.where(id: session[:meeting_participator_ids])
+    @members = User.active.sorted.where(id: session[:meeting_participator_ids].keys)
     @contacts = Contact.order_by_name.where(id: session[:meeting_contact_ids])
   end
 
