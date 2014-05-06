@@ -35,7 +35,7 @@ class MeetingParticipatorsController < ApplicationController
       Rails.logger.error("there is no object working with session".red)
       session[session_sym] = session[session_sym].merge( Hash[ user_ids.map{|user_id| [user_id.to_i, true] }])
       Rails.logger.error("hash in session after modificatipon".red + session[session_sym].inspect)
-      @members = User.sorted.find(session[session_sym].keys)
+      @members = User.sorted.find(session[session_sym].select{|k,v| v}.keys)
     end
 
     respond_to do |format|
