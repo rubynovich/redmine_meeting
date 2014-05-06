@@ -18,10 +18,11 @@ class MeetingParticipatorsController < ApplicationController
   end
 
   def create
-    new_members = (params[model_sym].present? ? params[model_sym][:user_ids] : [])
-
-    @members = if @object.present?
-      new_members.each do |user_id|
+    user_ids = (params[model_sym].present? ? params[model_sym][:user_ids] : [])
+    Rails.logger.error(" in Participator create".red)
+    if @object.present?
+      Rails.logger.error("object present, work with db".red)
+      user_ids.each do |user_id|
         turned_off_user = MeetingParticipator.where(user_id: user_id, meeting_protocol_id: params[:meeting_protocol_id], attended: false).first
         if turned_off_user
           turned_off_user.update_attribute(:attended, true)
@@ -29,12 +30,13 @@ class MeetingParticipatorsController < ApplicationController
           MeetingParticipator.create!(user_id: user_id, meeting_protocol_id: params[:meeting_protocol_id], attended: true)
         end
       end
-      @object.users
+      @members = @object.users
     else
-      session[session_sym] = session[session_sym].merge( Hash[ new_members.map{|nm| [nm.to_i, true] }])
-      User.sorted.find(session[session_sym].keys)
+      Rails.logger.error("there is no object working with session".red)
+      session[session_sym] = session[session_sym].merge( Hash[ user_ids.map{|user_id| [user_id.to_i, true] }])
+      Rails.logger.error("hash in session after modificatipon".red + session[session_sym].inspect)
+      @members = User.sorted.find(session[session_sym].keys)
     end
-
 
     respond_to do |format|
       format.js
