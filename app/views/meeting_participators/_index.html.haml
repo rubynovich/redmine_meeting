@@ -1,6 +1,6 @@
 %ul
-  - Rails.logger.error(@object.inspect.red)
-  - Rails.logger.error(@members.map(&:name).inspect.red)
+  - Rails.logger.error("Partial got object:".red + @object.inspect)
+  - Rails.logger.error("Partial got members:".red + @members.map(&:name).inspect)
 
   - if !@object || @object.new_record?
     - @members.each do |user|
