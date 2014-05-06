@@ -54,7 +54,9 @@ class MeetingParticipatorsController < ApplicationController
                    target.update_attribute(:attended, false)
                  else
                    Rails.logger.debug('Agenda member - destroy completly'.red)
+                   Rails.logger.debug('Target '.red + target.inspect)
                    target.destroy
+
                  end
                  @object.users
                else
