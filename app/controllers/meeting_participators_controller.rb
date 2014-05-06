@@ -48,7 +48,7 @@ class MeetingParticipatorsController < ApplicationController
 
     @members = if @object.present?
                  Rails.logger.debug('Participator destroy from database'.red)
-                 target = MeetingParticipator.where(model_sym_id => @object.id, user_id: target_id)
+                 target = MeetingParticipator.where(model_sym_id => @object.id, user_id: target_id).first
                  if @object.meeting_agenda.user_ids.include?(target_id)
                    Rails.logger.debug('Agenda member -  setting attended to false'.red)
                    target.update_attribute(:attended, false)
@@ -56,7 +56,6 @@ class MeetingParticipatorsController < ApplicationController
                    Rails.logger.debug('Agenda member - destroy completly'.red)
                    Rails.logger.debug('Target '.red + target.inspect)
                    target.destroy
-
                  end
                  @object.users
                else
