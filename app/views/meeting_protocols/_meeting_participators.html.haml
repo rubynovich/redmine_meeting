@@ -10,8 +10,8 @@
       %th.hide-when-print=l(:field_status)
     - @object.meeting_participators.each do |par|
       %tr.issue
-        %td{style: "white-space: pre-line; width: 33%"}= h user.company rescue ""
-        %td{style: "white-space: pre-line; width: 33%"}= h user.job_title rescue ""
+        %td{style: "white-space: pre-line; width: 33%"}= h par.company rescue ""
+        %td{style: "white-space: pre-line; width: 33%"}= h par.job_title rescue ""
         %td= link_to_user(par.user)
         %td= participator_attendance(par)
         %td= participator_meeting_notice(par)
