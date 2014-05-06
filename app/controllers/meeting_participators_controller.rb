@@ -44,19 +44,27 @@ class MeetingParticipatorsController < ApplicationController
   end
 
   def destroy
+    target_id = params[:id].to_i
 
     @members = if @object.present?
-                 # MeetingParticipator.where(model_sym_id => @object.id, user_id: params[:id]).try(:destroy_all)
-                 MeetingParticipator.where(model_sym_id => @object.id, user_id: params[:id]).each{|par| par.update_attribute(:attended, false) }
+                 Rails.logger.debug('Participator destroy from database'.red)
+                 target = MeetingParticipator.where(model_sym_id => @object.id, user_id: target_id)
+                 if @object.meeting_agenda.user_ids.include?(target_id)
+                   Rails.logger.debug('Agenda member -  setting attended to false'.red)
+                   target.update_attribute(:attended, false)
+                 else
+                   Rails.logger.debug('Agenda member - destroy completly'.red)
+                   target.destroy
+                 end
                  @object.users
                else
                  Rails.logger.debug('Participator destroy from session.'.red)
                  Rails.logger.debug('Before: '.red + session[session_sym].inspect)
 
-                 if session[:permanent_participators_ids].include?(params[:id].to_i)
-                   session[session_sym][params[:id].to_i] = false
+                 if session[:permanent_participators_ids].include?(target_id)
+                   session[session_sym][target_id] = false
                  else
-                   session[session_sym].delete(params[:id].to_i)
+                   session[session_sym].delete(target_id)
                  end
 
                  Rails.logger.debug('After: '.red + session[session_sym].inspect)
