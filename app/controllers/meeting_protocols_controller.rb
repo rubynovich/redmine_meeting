@@ -94,12 +94,17 @@ class MeetingProtocolsController < ApplicationController
 
   def new
     (render_403; return false) unless can_create_protocol?(@object)
+
     session[:meeting_participator_ids] = Hash[ @object.meeting_agenda.user_ids.map{|id| [id, true]} ]
-    Rails.logger.error('Исходный хеш для партицитаторов: '.red + session[:meeting_participator_ids].inspect)
+    session[:permanent_participators_ids] = @object.meeting_agenda.user_ids # этих людей нельзя удалить из участников, им можно только заменить attended на false
+
     session[:meeting_contact_ids] = @object.meeting_agenda.contact_ids
+
     nested_objects_from_session
+
     @object.meeting_company = @object.meeting_agenda.meeting_company
     @object.asserter = @object.meeting_agenda.asserter
+
   rescue
     render_403
   end
@@ -179,7 +184,8 @@ class MeetingProtocolsController < ApplicationController
 private
 
   def nested_objects_from_session
-    @members = User.active.sorted.where(id: session[:meeting_participator_ids].keys)
+    Rails.logger.error("nested_objects_from_session ".red + session[:meeting_participator_ids].inspect)
+    @members = User.active.sorted.where(id: session[:meeting_participator_ids].select{|k,v| v}.keys)
     @contacts = Contact.order_by_name.where(id: session[:meeting_contact_ids])
   end
 

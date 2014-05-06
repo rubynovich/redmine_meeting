@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 class MeetingParticipatorsController < ApplicationController
   unloadable
 
@@ -8,20 +9,20 @@ class MeetingParticipatorsController < ApplicationController
 
   def new
     @no_members = User.active.order(:lastname, :firstname)
-    @members = []
-    if @object.present?
-      @members = @object.meeting_participators.where(attended: true).map(&:user)
-    else
-      @members = User.find(session[session_sym].keys)
-    end
+    @members = if @object.present?
+                 @object.meeting_participators.where(attended: true).map(&:user)
+               else
+                 User.find(session[session_sym].class == Hash ? session[session_sym].keys : session[session_sym]) # FIXME в session_sym где-то кладется массив вместо хеша
+               end
     @no_members -= @members
   end
 
   def create
-    new_members = (params[model_sym].present? ? params[model_sym][:user_ids] : [])
-
-    @members = if @object.present?
-      new_members.each do |user_id|
+    user_ids = (params[model_sym].present? ? params[model_sym][:user_ids] : [])
+    Rails.logger.debug(" in Participator create".red)
+    if @object.present?
+      Rails.logger.debug("object present, work with db".red)
+      user_ids.each do |user_id|
         turned_off_user = MeetingParticipator.where(user_id: user_id, meeting_protocol_id: params[:meeting_protocol_id], attended: false).first
         if turned_off_user
           turned_off_user.update_attribute(:attended, true)
@@ -29,10 +30,12 @@ class MeetingParticipatorsController < ApplicationController
           MeetingParticipator.create!(user_id: user_id, meeting_protocol_id: params[:meeting_protocol_id], attended: true)
         end
       end
-      @object.users
+      @members = @object.users
     else
-      session[session_sym] = (new_members + session[session_sym].keys).map(&:to_i).uniq
-      User.sorted.find(session[session_sym])
+      Rails.logger.debug("there is no object working with session".red)
+      session[session_sym] = session[session_sym].merge( Hash[ user_ids.map{|user_id| [user_id.to_i, true] }])
+      Rails.logger.debug("hash in session after modificatipon".red + session[session_sym].inspect)
+      @members = present_participators_from_session
     end
 
     respond_to do |format|
@@ -41,19 +44,32 @@ class MeetingParticipatorsController < ApplicationController
   end
 
   def destroy
+    target_id = params[:id].to_i
 
     @members = if @object.present?
-                 # MeetingParticipator.where(model_sym_id => @object.id, user_id: params[:id]).try(:destroy_all)
-                 MeetingParticipator.where(model_sym_id => @object.id, user_id: params[:id]).each{|par| par.update_attribute(:attended, false) }
+                 Rails.logger.debug('Participator destroy from database'.red)
+                 target = MeetingParticipator.where(model_sym_id => @object.id, user_id: target_id).first
+                 if @object.meeting_agenda.user_ids.include?(target_id)
+                   Rails.logger.debug('Agenda member -  setting attended to false'.red)
+                   target.update_attribute(:attended, false)
+                 else
+                   Rails.logger.debug('Agenda member - destroy completly'.red)
+                   Rails.logger.debug('Target '.red + target.inspect)
+                   target.destroy
+                 end
                  @object.users
                else
-                 Rails.logger.error('Participator destroy from session.'.red)
-                 Rails.logger.error('Before: '.red + session[session_sym].inspect)
-                 participators_from_session = session[session_sym]
-                 participators_from_session[params[:id].to_i] = false
-                 session[session_sym] = participators_from_session
-                 Rails.logger.error('After: '.red + session[session_sym].inspect)
-                 User.sorted.find(session[session_sym].select{|k,v| v}.keys)
+                 Rails.logger.debug('Participator destroy from session.'.red)
+                 Rails.logger.debug('Before: '.red + session[session_sym].inspect)
+
+                 if session[:permanent_participators_ids].include?(target_id)
+                   session[session_sym][target_id] = false
+                 else
+                   session[session_sym].delete(target_id)
+                 end
+
+                 Rails.logger.debug('After: '.red + session[session_sym].inspect)
+                 present_participators_from_session
                end
     
     respond_to do |format|
@@ -63,10 +79,10 @@ class MeetingParticipatorsController < ApplicationController
 
   def autocomplete_for_user
     @members = if @object.present?
-      @object.meeting_participators.where(attended: true).map(&:user)
-    else
-      User.sorted.find(session[session_sym])
-    end
+                 @object.meeting_participators.where(attended: true).map(&:user)
+               else
+                 present_participators_from_session
+               end
 
     @no_members = User.active.like(params[:q]).sorted - @members
 
@@ -74,16 +90,6 @@ class MeetingParticipatorsController < ApplicationController
   end
 
   def accept
-#    @member = MeetingParticipator.find(params[:id])
-#    (render_403; return false) unless can_accept?(@member)
-#    solved_status_id = Setting.plugin_redmine_meeting[:solved_issue_status]
-#    issue = @member.issue
-#    issue.status_id = solved_status_id
-#    if issue.save
-#      flash[:notice] = l(:notice_successful_notice_accept)
-#    else
-#      flash[:error] = l(:error_notice_accept_failed)
-#    end
     @object = MeetingParticipator.find(params[:id])
     if @object.present? && @object.sended_notice_on.present? && @object.saw_protocol_on.blank?
       @object.saw_protocol_on = Time.now
@@ -96,6 +102,10 @@ class MeetingParticipatorsController < ApplicationController
   end
 
 private
+
+  def present_participators_from_session
+    User.sorted.find(session[session_sym].select{|k,v| v}.keys)
+  end
 
   def find_object
     @object = model_class.find(params[model_sym_id]) rescue nil
