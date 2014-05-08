@@ -349,12 +349,20 @@ module MeetingPlugin
         mail(to: @user.mail, subject: subject, template: 'mail_meeting_participators_notice')
       end
 
-      def issue_add_with_meeting_members_invite(issue)
+
+      def issue_add_with_meeting_members_invite(issue, to_users=nil, cc_users=nil)
         if issue.project_id != Setting.plugin_redmine_meeting[:project_id].to_i
-          issue_add_without_meeting_members_invite(issue)
+          if Redmine::VERSION::MAJOR >= 2 && Redmine::VERSION::MINOR >= 5
+            to_users ||= issue.recipients
+            cc_users ||= issue.watcher_recipients - to_users
+            issue_add_without_meeting_members_invite(issue, to_users ,cc_users)
+          else
+            issue_add_without_meeting_members_invite(issue)
+          end
+
         end
       end
-      
+
       def mail_meeting_members_invite(member)
         @issue = member.issue
 
