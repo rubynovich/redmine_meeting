@@ -1,5 +1,5 @@
 - content_for(:header_tags) do
-  = javascript_include_tag :jquery_nested_form, plugin: 'redmine_meeting'
+  = javascript_include_tag :jquery_nested_form, plugin: 'redmine_meeting' unless defined?(RedminePluginAssetPipeline)
 
 = f.hidden_field :meeting_agenda_id
 = error_messages_for @object
