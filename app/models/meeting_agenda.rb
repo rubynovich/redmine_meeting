@@ -213,8 +213,7 @@ private
   end
 
   def meeting_room_reserve_attributes
-    {#user_id: User.current.id,
-    user_id: self.author,
+    {user_id: User.current.id,
     subject: self.subject,
     meeting_room_id: find_meeting_room.id,
     reserve_on: self.meet_on,
