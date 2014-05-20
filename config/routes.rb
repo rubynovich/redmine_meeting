@@ -18,6 +18,7 @@ resources :meeting_agendas do
     put :restore
   end
 end
+
 resources :meeting_members do
   collection do
     get :autocomplete_for_user
