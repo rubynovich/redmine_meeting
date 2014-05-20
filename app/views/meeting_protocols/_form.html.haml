@@ -1,13 +1,13 @@
 - content_for(:header_tags) do
   = javascript_include_tag :jquery_nested_form, plugin: 'redmine_meeting' unless defined?(RedminePluginAssetPipeline)
-  :css
-    .tabular label{
-        margin-left: -205px;
-        width: 200px;
-    }
-    .tabular p {
-        padding-left: 205px;
-    }
+:css
+  .tabular label{
+      margin-left: -205px;
+      width: 200px;
+  }
+  .tabular p {
+      padding-left: 205px;
+  }
 
 = f.hidden_field :meeting_agenda_id
 = error_messages_for @object
