@@ -70,7 +70,8 @@
     }
 
     $(function() {
-      $('.wiki-edit').each( function(index){
+      $('.wiki-edit:not(.jstEditor > .wiki-edit)').each( function(index){
+
         var wikiToolbar = new jsToolBar(this);
         wikiToolbar.setHelpLink('#{escape_javascript Redmine::Utils.relative_url_root+"/help/wiki_syntax.html"}');
         wikiToolbar.draw();
