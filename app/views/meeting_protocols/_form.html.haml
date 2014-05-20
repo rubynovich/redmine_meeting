@@ -2,8 +2,11 @@
   = javascript_include_tag :jquery_nested_form, plugin: 'redmine_meeting' unless defined?(RedminePluginAssetPipeline)
   :css
     .tabular label{
-        margin-left: -180px;
+        margin-left: -195px;
         width: 190px;
+    }
+    .tabular p {
+        padding-left: 195px;
     }
 
 = f.hidden_field :meeting_agenda_id
