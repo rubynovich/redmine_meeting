@@ -35,4 +35,4 @@
     %tr
       %th= l(:label_meeting_protocol)+":"
       %td= link_to_protocol(object)
-      = render partial: "online_meetings/add_attributes_table", locals: {item: object}# rescue nil #FIXME
+      = render partial: "online_meetings/add_attributes_table", locals: {item: object} rescue nil #FIXME
