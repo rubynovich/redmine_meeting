@@ -20,7 +20,7 @@ class MeetingAgenda < ActiveRecord::Base
   has_many :statuses, through: :issues, uniq: true
   has_many :meeting_members, dependent: :delete_all
   has_many :invites, through: :meeting_members, source: :issue
-  has_many :users, through: :meeting_members, order: [:lastname, :firstname], uniq: true
+  has_many :users, through: :meeting_members, order: [:lastname, :firstname], uniq: true, select: "users.lastname, users.firstname"
   has_many :meeting_approvers, as: :meeting_container, dependent: :delete_all
   has_many :approvers, source: :person, through: :meeting_approvers, order: [:lastname, :firstname], uniq: true
   has_many :meeting_contacts, as: :meeting_container, dependent: :delete_all
@@ -152,7 +152,7 @@ class MeetingAgenda < ActiveRecord::Base
   end
 
   def new_user_ids_from_questions
-    new_user_ids = self.meeting_questions.reject(&:user_id_is_contact).map(&:user_id)
+      new_user_ids = self.meeting_questions.reject(&:user_id_is_contact).map(&:user_id)
     (new_user_ids - self.user_ids).compact.uniq
   end
 
