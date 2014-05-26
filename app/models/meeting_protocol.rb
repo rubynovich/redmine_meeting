@@ -16,14 +16,14 @@ class MeetingProtocol < ActiveRecord::Base
   has_many :meeting_extra_answers, dependent: :delete_all
   has_many :issues, through: :meeting_answers, uniq: true
   has_many :meeting_participators, dependent: :delete_all
-  has_many :users, through: :meeting_participators, order: [:lastname, :firstname], uniq: true, select: "users.lastname, users.firstname"
+  has_many :users, through: :meeting_participators, order: [:lastname, :firstname], uniq: true, select: "users.*"
   has_many :meeting_members, through: :meeting_agenda, uniq: true
   has_many :meeting_approvers, as: :meeting_container, dependent: :delete_all
   has_many :approvers, through: :meeting_approvers, source: :person
   has_many :meeting_contacts, as: :meeting_container, dependent: :delete_all
   has_many :contacts, through: :meeting_contacts, order: [:last_name, :first_name], uniq: true
   has_many :meeting_external_approvers, as: :meeting_container, dependent: :delete_all
-  has_many :external_approvers, through: :meeting_external_approvers, source: :contact, order: [:last_name, :first_name], uniq: true, select: "contacts.last_name, contacts.first_name"
+  has_many :external_approvers, through: :meeting_external_approvers, source: :contact, order: [:last_name, :first_name], uniq: true, select: "contacts.*"
   has_many :meeting_watchers, as: :meeting_container, dependent: :delete_all
   has_many :watchers, through: :meeting_watchers, order: [:lastname, :firstname], uniq: true
   has_many :meeting_comments, as: :meeting_container, order: ["created_on DESC"], dependent: :delete_all, uniq: true
