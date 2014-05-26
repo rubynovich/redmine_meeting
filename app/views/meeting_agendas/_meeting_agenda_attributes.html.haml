@@ -35,4 +35,5 @@
     %tr
       %th= l(:label_meeting_protocol)+":"
       %td= link_to_protocol(object)
-      = render partial: "online_meetings/add_attributes_table", locals: {item: object} rescue nil #FIXME
+      - if Redmine::Plugin.all.map(&:id).include?(:redmine_online_meetings)
+        = render partial: "online_meetings/add_attributes_table", locals: {item: object} rescue nil #FIXME
