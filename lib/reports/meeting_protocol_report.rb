@@ -24,7 +24,7 @@ class MeetingProtocolReport < Prawn::Document
     move_down 10
 
     # Фактические участники совещания
-    print_meeting_participators(object.meeting_agenda.users, object.users)
+    print_meeting_participators(object.meeting_participators)
     move_down 10
 
     # Внешние участники совещания
@@ -171,25 +171,22 @@ private
     text("<b>#{l(:field_author)}:</b> <i>#{object.author}</i>", size: 10, inline_format: true)
   end
 
-  def print_meeting_participators(agenda_users, protocol_users)
+  def print_meeting_participators(meeting_participators)
     text("#{l(:field_meeting_participators)}:", size: 13, style: :bold)
     move_down 5
 
-    meeting_participators = (agenda_users|protocol_users).compact.sort_by(&:name).map do |user|
-      member = agenda_users.include?(user)
-      participator = protocol_users.include?(user)
-      status = if member && participator
-        l(:label_meeting_member_present)
-      elsif member
-        l(:label_meeting_member_blank)
-      elsif participator
-        l(:label_meeting_member_extra)
-      end
+    meeting_participators = meeting_participators.map do |participator|
+
+      status = if participator.attended?
+                 l(:label_meeting_member_present)
+               else
+                 l(:label_meeting_member_blank)
+               end
 
       [
-        (user.company rescue ""),
-        (user.job_title rescue ""),
-        user.name,
+        (participator.company rescue ""),
+        (participator.job_title rescue ""),
+        participator.name,
         status
       ]
     end
