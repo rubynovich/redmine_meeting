@@ -219,7 +219,7 @@ private
       elsif member
         l(:label_meeting_member_blank)
       elsif participator
-        l(:label_meeting_member_extra)
+        l(:label_meeting_member_present)
       end
 
       [
