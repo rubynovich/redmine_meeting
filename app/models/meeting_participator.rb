@@ -19,7 +19,7 @@ class MeetingParticipator < ActiveRecord::Base
   before_save :add_meeting_member
   before_destroy :cancel_issue_for_destroyed_participator, if: -> {self.issue.present?}
 
-  delegate :company, :job_title, to: :user
+  delegate :company, :job_title, :name, to: :user
 
   def to_s
     self.member.try(:name) || self.user.try(:name) || ''
