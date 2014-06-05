@@ -154,16 +154,21 @@ private
 #    move_down 10
 
     text("<b>#{l(:field_subject)}:</b> <i>#{object.subject}</i>", size: 10, inline_format: true)
-    if object.is_external?
-      text("<b>#{l(:field_external_company)}:</b> <i>#{object.external_company}</i>", size: 10, inline_format: true)
-      text("<b>#{l(:field_address)}:</b> <i>#{object.place}</i>", size: 10, inline_format: true)
-    elsif object.meeting_company.present? && object.meeting_company.fact_address.present?
-      text("<b>#{l(:field_place)}:</b> <i>#{object.meeting_company.fact_address}, #{object.place}</i>", size: 10, inline_format: true)
-    else
-      text("<b>#{l(:field_place)}:</b> <i>#{object.place}</i>", size: 10, inline_format: true)
-    end
 
-    text("<b>#{object.is_external? ? l(:field_address) : l(:field_place)}:</b> <i>#{object.place}</i>", size: 10, inline_format: true)
+
+    text("<b>#{l(:field_address)}:</b> <i>#{object.readable_address}</i>", size: 10, inline_format: true)
+
+    # if object.is_external?
+    #   text("<b>#{l(:field_external_company)}:</b> <i>#{object.external_company}</i>", size: 10, inline_format: true)
+    #   text("<b>#{l(:field_address)}:</b> <i>#{object.place}</i>", size: 10, inline_format: true)
+    # elsif object.meeting_company.present? && object.meeting_company.fact_address.present?
+    #   text("<b>#{l(:field_place)}:</b> <i>#{object.meeting_company.fact_address}, #{object.place}</i>", size: 10, inline_format: true)
+    # else
+    #   text("<b>#{l(:field_place)}:</b> <i>#{object.place}</i>", size: 10, inline_format: true)
+    # end
+
+    # text("<b>#{object.is_external? ? l(:field_address) : l(:field_place)}:</b> <i>#{object.place}</i>", size: 10, inline_format: true)
+
     text("<b>#{l(:field_meet_on)}:</b> <i>#{format_date(object.meet_on)}</i>", size: 10, inline_format: true)
     text("<b>#{l(:label_meeting_agenda_time)}:</b> <i>#{format_time(object.start_time, false)} - #{format_time(object.end_time, false)}</i>", size: 10, inline_format: true)
     text("<b>#{l(:field_author)}:</b> <i>#{object.author}</i>", size: 10, inline_format: true)
