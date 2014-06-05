@@ -216,7 +216,7 @@ module MeetingPlugin
         container = meeting_contact.meeting_container
         author = container.author
         contact = meeting_contact.contact
-        address = container.is_external? ? container.address : container.meeting_company.fact_address
+        address = container.readable_address
 
         key_words = {
           contact: contact,
@@ -375,6 +375,8 @@ module MeetingPlugin
           @issue_url = {controller: 'issues', action: 'show', id: @issue.id, only_path: false}
           @user = member.user
           subject = ::I18n.t(:mail_subject_meeting_members_invite, id: @container.id, meet_on: format_date(@container.meet_on), start_time: format_time(@container.start_time, false), end_time: format_time(@container.end_time, false))
+          @address = @container.readable_address
+
           mail(to: @user.mail, subject: subject)
         else
           Rails.logger.info "ERROR CREATE ISSUE FOR MEMBER #{member.inspect} #{member.user} AGENDA #{member.meeting_agenda}  #{@issue.inspect} #{@issue.errors.inspect}"

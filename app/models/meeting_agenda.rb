@@ -181,6 +181,19 @@ class MeetingAgenda < ActiveRecord::Base
     :meeting_agenda
   end
 
+  def readable_address
+    if self.is_external?
+      case self.external_place_type
+      when 'building_object'
+        self.address
+      when 'external_company'
+        "#{self.external_company.try(:name)}, #{(self.address.present? ? self.address : self.external_company.address)}"
+      end
+    else
+      "#{self.meeting_company.fact_address}, #{self.place}"
+    end
+  end
+
 private
   def add_author_id
     self.author_id = User.current.id

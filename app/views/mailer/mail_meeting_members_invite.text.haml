@@ -1,4 +1,4 @@
 = l(:label_meeting_subject) + ": «#{@container.try(:subject)}»"
-= l(:field_place) + ": #{@container.try(:place)}"
+= l(:field_place) + ": #{@address}"
 = l(:mail_body_link_to_agenda) + ": " + url_for(@agenda_url || "")
 = l(:mail_body_link_to_issue) + ": " + url_for(@issue_url || "")
