@@ -33,6 +33,7 @@ class MeetingMembersController < ApplicationController
 
     respond_to do |format|
       format.js
+      format.api { render json: {id: @object.id}, status: 200}
     end
   end
 
@@ -40,6 +41,11 @@ class MeetingMembersController < ApplicationController
     @users = if @object.present?
       user = User.find(params[:id])
       reporters = @object.meeting_questions.map(&:user)
+      if Redmine::Plugin.all.map(&:id).include?(:redmine_vacation)
+        reporters.reject!{ |user|
+          user if @object.member_on_vacation?(user)
+        }
+      end
       MeetingMember.where(model_sym_id => @object.id, user_id: user.id).try(:destroy_all) unless reporters.include?(user)
       @object.users
     else
@@ -49,6 +55,7 @@ class MeetingMembersController < ApplicationController
 
     respond_to do |format|
       format.js
+      format.api {render_api_ok}
     end
   end
 
