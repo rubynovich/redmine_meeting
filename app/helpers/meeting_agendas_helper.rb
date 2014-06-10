@@ -67,13 +67,22 @@ module MeetingAgendasHelper
   end
 
   def can_send_invites?(agenda)
-    (admin? ||
+    ret = (admin? ||
       (meeting_manager? && author?(agenda))) &&
     agenda.meet_on &&
     ((agenda.meet_on > Date.today) || (
       (agenda.meet_on == Date.today) && (agenda.start_time.seconds_since_midnight > Time.now.seconds_since_midnight))) &&
     !agenda.is_deleted? &&
     asserted?(agenda)
+
+    #if ret && Redmine::Plugin.all.map(&:id).include?(:redmine_vacation)
+    #  agenda.meeting_members_on_vacation_create
+    #  if self.errors.count > 0
+    #    ret = false
+    #  end
+    #end
+
+    ret
   end
 
   def can_show_agenda?(agenda)
