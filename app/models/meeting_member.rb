@@ -92,7 +92,12 @@ private
       end_time: self.meeting_agenda.end_time.strftime("%H:%M"),
       author: self.meeting_agenda.author.name,
       place: self.meeting_agenda.place_or_address,
-      url: url_for(controller: 'meeting_agendas', action: 'show', id: self.meeting_agenda_id, only_path: false)
+      url: url_for(controller: 'meeting_agendas', action: 'show', id: self.meeting_agenda_id, only_path: false),
+      "author.job_title" => self.meeting_agenda.author.job_title,
+      "author.mail" => self.meeting_agenda.author.mail,
+      "author.phone" => self.meeting_agenda.author.phone,
+      meeting_company: self.meeting_agenda.meeting_company,
+      address: self.meeting_agenda.place_or_address
     }
   end
 

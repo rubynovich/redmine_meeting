@@ -231,7 +231,7 @@ private
     meeting_room_id: find_meeting_room.id,
     reserve_on: self.meet_on,
     start_time: self.start_time,
-    end_time: self.end_time}
+    end_time: self.end_time,}
   end
 
   def meeting_room_reserve_new
