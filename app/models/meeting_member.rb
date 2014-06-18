@@ -96,8 +96,8 @@ private
       "author.job_title" => self.meeting_agenda.author.job_title,
       "author.mail" => self.meeting_agenda.author.mail,
       "author.phone" => self.meeting_agenda.author.phone,
-      meeting_company: self.meeting_agenda.meeting_company,
       address: self.meeting_agenda.place_or_address
+      #meeting_company: self.meeting_agenda.meeting_company,
     }
   end
 
