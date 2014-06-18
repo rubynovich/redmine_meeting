@@ -269,7 +269,9 @@ private
 
   def update_meeting_room_reserve
     if self.meeting_room_reserve.present?
-      self.meeting_room_reserve.update_attributes(meeting_room_reserve_attributes)
+      attrs = meeting_room_reserve_attributes
+      attrs.delete(:user_id)
+      self.meeting_room_reserve.update_attributes(attrs)
     else
       new_meeting_room_reserve
     end
