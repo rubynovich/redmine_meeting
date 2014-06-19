@@ -239,6 +239,7 @@ private
         )
         te.user = member.user
         te.save
+        member.update_attribute(:time_entry_id, te.id)
       end
     end
   end
