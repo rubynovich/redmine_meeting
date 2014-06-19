@@ -229,7 +229,7 @@ private
   def add_time_entry_to_invites
     self.meeting_members.select(&:meeting_participator).select(&:issue).each do |member|
       if member.time_entry
-        member.update_attribute(:hours, (((self.end_time.seconds_since_midnight - self.start_time.seconds_since_midnight) / 36) / 100.0))
+        member.time_entry.update_attribute(:hours, (((self.end_time.seconds_since_midnight - self.start_time.seconds_since_midnight) / 36) / 100.0))
       elsif self.end_time.present? && self.start_time.present?
         te = TimeEntry.new(
           issue_id: member.issue_id,
