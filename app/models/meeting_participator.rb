@@ -40,10 +40,10 @@ class MeetingParticipator < ActiveRecord::Base
   end
 
   def send_notice
-    Mailer.meeting_participators_notice(self).deliver
+    Mailer.sidekiq_delay.meeting_participators_notice(self).deliver
     self.sended_notice_on = Time.now
     self.save
-    Rails.logger.error "Participato sended_notice_on #{self.sended_notice_on}".red
+    #Rails.logger.error "Participato sended_notice_on #{self.sended_notice_on}".red
   end
 
 private

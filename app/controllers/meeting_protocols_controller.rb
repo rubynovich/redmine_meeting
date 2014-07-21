@@ -113,7 +113,7 @@ class MeetingProtocolsController < ApplicationController
     (render_403; return false) unless can_create_protocol?(@object)
     @object.save_attachments(params[:attachments] || (params[:issue] && params[:issue][:uploads]))
 
-    Rails.logger.error('В create пришел хеш: '.red + session[:meeting_participator_ids].inspect)
+    #Rails.logger.error('В create пришел хеш: '.red + session[:meeting_participator_ids].inspect)
     if session[:meeting_participator_ids].present? # конверт сессии
       pars_attrs = session[:meeting_participator_ids].map{|user_id, attended| {user_id: user_id, attended: attended} } 
       Rails.logger.error('Из которого сделали атрибуты для связи: '.red + pars_attrs.inspect)
