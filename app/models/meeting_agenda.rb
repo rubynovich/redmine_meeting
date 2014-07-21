@@ -54,6 +54,7 @@ class MeetingAgenda < ActiveRecord::Base
   validates_presence_of :asserter_id, unless: -> { self.asserter_id_is_contact? }
   validates_presence_of :external_asserter_id, if: -> { self.asserter_id_is_contact? }
   validates_presence_of :meeting_company_id
+  validates_length_of :subject, maximum: 255
   validate :end_time_less_than_start_time, if: -> { self.start_time && self.end_time && (self.end_time <= self.start_time) }
   validate :meet_on_less_than_today, if: -> { self.meet_on && (self.meet_on < Date.today) }
   validate :start_time_less_than_now, if: -> {
