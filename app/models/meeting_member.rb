@@ -123,7 +123,7 @@ private
     subject: issue_subject,
     project: Project.find(settings[:project_id]),
     description: issue_description,
-    author: User.current,
+    author: self.try(:meeting_agenda).try(:author),
     start_date: Date.today,
     due_date: self.meeting_agenda.meet_on,
     priority: self.meeting_agenda.priority || IssuePriority.default,
