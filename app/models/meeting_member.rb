@@ -38,7 +38,7 @@ class MeetingMember < ActiveRecord::Base
   def send_invite
     self.build_issue(issue_attributes)
     if self.save
-      Mailer.meeting_members_invite(self).deliver
+      Mailer.sidekiq_delay.meeting_members_invite(self).deliver
       estimated_time_create(self.issue_id)
     end
 #  rescue
