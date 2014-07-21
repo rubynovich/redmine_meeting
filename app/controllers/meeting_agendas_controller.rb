@@ -52,17 +52,13 @@ class MeetingAgendasController < ApplicationController
 
   def send_invites
     (render_403; return false) unless can_send_invites?(@object)
-    @object.meeting_members.reject(&:issue).all?(&:send_invite)
-    @object.meeting_contacts.all?(&:send_invite)
-
+    @object.sidekiq_delay.send_invites
     redirect_to action: 'show', id: @object.id
   end
 
   def resend_invites
     (render_403; return false) unless can_send_invites?(@object)
-    @object.meeting_members.all?(&:resend_invite)
-    @object.meeting_contacts.all?(&:send_invite)
-
+    @object.sidekiq_delay.resend_invites
     redirect_to action: 'show', id: @object.id
   end
 

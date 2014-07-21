@@ -194,7 +194,19 @@ class MeetingAgenda < ActiveRecord::Base
     end
   end
 
-private
+
+  def send_invites
+    self.meeting_members.reject(&:issue).all?(&:send_invite)
+    self.meeting_contacts.all?(&:send_invite)
+  end
+
+  def resend_invites
+    self.meeting_members.all?(&:resend_invite)
+    self.meeting_contacts.all?(&:send_invite)
+  end
+
+
+  private
   def add_author_id
     self.author_id = User.current.id
   end
