@@ -180,7 +180,7 @@ class MeetingProtocol < ActiveRecord::Base
 
   def assert
     begin
-      Mailer.sidekiq_delay.meeting_protocol_asserted(self).deliver
+      Mailer.meeting_protocol_asserted(self).sidekiq_delay.deliver
       self.asserted = true
       self.asserted_on = Time.now
       self.save
@@ -191,7 +191,7 @@ class MeetingProtocol < ActiveRecord::Base
 
   def send_asserter_invite
     begin
-      Mailer.sidekiq_delay.meeting_asserter_invite(self).deliver
+      Mailer.meeting_asserter_invite(self).sidekiq_delay.deliver
       self.asserter_invite_on = Time.now
       self.save
     rescue
