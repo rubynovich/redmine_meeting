@@ -9,13 +9,22 @@ class MeetingContact < ActiveRecord::Base
   validates_presence_of :contact_id
   validates_uniqueness_of :contact_id,  scope: [:meeting_container_id, :meeting_container_type]
 
+
   def send_notice
-    Mailer.sidekiq_delay.meeting_contacts_notice(self).deliver
+    self.sidekiq_delay.send_notice_async
+  end
+
+  def send_notice_async
+    Mailer.meeting_contacts_notice(self).deliver
   end
 
   def send_invite
+    self.sidekiq_delay.send_invite_aync
+  end
+
+  def send_invite_aync
     begin
-      Mailer.sidekiq_delay.meeting_contacts_invite(self).deliver
+      Mailer.meeting_contacts_invite(self).deliver
     rescue
       nil
     end
