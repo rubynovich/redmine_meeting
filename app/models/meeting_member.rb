@@ -34,14 +34,18 @@ class MeetingMember < ActiveRecord::Base
     # self.sended_notice_on = Time.now
     # self.save  
   end
-  
+
   def send_invite
     self.build_issue(issue_attributes)
     if self.save
-      Mailer.sidekiq_delay.meeting_members_invite(self).deliver
+      self.sidekiq_delay.send_invite_mail_async
       estimated_time_create(self.issue_id)
     end
+  end
+  
+  def send_invite_mail_async
 #  rescue
+    Mailer.meeting_members_invite(self).deliver
   end
 
   def resend_invite
