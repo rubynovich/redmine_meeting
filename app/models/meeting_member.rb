@@ -38,6 +38,9 @@ class MeetingMember < ActiveRecord::Base
   def send_invite
     self.build_issue(issue_attributes)
     if self.save
+      if (self.issue.try(:errors) || []).count > 0
+        Rails.logger.info "ERROR CREATE ISSUE FOR MEMBER #{self.inspect} #{self.user} AGENDA #{self.meeting_agenda}  #{self.issue.inspect} #{self.issue.try(:errors).try(:inspect)}"
+      end
       self.sidekiq_delay.send_invite_mail_async
       estimated_time_create(self.issue_id)
     end
