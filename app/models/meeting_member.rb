@@ -44,6 +44,7 @@ class MeetingMember < ActiveRecord::Base
     if (self.issue.try(:errors) || []).count > 0
       Rails.logger.info "ERROR CREATE ISSUE FOR MEMBER #{self.inspect} #{self.user} AGENDA #{self.meeting_agenda}  #{self.issue.inspect} #{self.issue.try(:errors).try(:inspect)}"
     end
+    return true
   end
   
   def send_invite_mail_async
