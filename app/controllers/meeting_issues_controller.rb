@@ -23,6 +23,7 @@ class MeetingIssuesController < ApplicationController
 
   def create
     @issue.watcher_user_ids = params[:meeting_pending_issue][:watcher_user_ids]
+    @issue.allow_to_create_in_closed_structure = true if Redmine::Plugin.all.map(&:id).include?(:redmine_closed_issues_structure)
     if @issue.save
       @issue.update_attribute(:description,
         @issue.description + "\n\n" +
