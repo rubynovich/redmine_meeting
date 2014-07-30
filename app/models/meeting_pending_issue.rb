@@ -48,6 +48,7 @@ class MeetingPendingIssue < ActiveRecord::Base
     issue = Issue.new(issue_attributes)
     issue.author = self.author
     issue.parent_issue_id = self.parent_issue_id
+    issue.allow_to_create_in_closed_structure = true if Redmine::Plugin.all.map(&:id).include?(:redmine_closed_issues_structure)
     unless issue.valid?
       copy_errors_from(issue)
     end
