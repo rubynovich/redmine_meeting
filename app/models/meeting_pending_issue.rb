@@ -90,6 +90,7 @@ class MeetingPendingIssue < ActiveRecord::Base
     @issue.author = self.author
     @issue.parent_issue_id  = self.parent_issue_id
     @issue.watcher_user_ids = self.watcher_user_ids
+    @issue.allow_to_create_in_closed_structure = true if Redmine::Plugin.all.map(&:id).include?(:redmine_closed_issues_structure)
     if @issue.save
       self.meeting_container.update_attribute(:issue_id, @issue.id)
     end
