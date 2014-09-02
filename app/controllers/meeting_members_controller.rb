@@ -43,7 +43,7 @@ class MeetingMembersController < ApplicationController
       reporters = @object.meeting_questions.map(&:user)
       if Redmine::Plugin.all.map(&:id).include?(:redmine_vacation)
         reporters.reject!{ |user|
-          user if @object.member_on_vacation?(user)
+          user if user && @object.member_on_vacation?(user)
         }
       end
       MeetingMember.where(model_sym_id => @object.id, user_id: user.id).try(:destroy_all) unless reporters.include?(user)

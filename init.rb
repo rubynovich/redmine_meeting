@@ -41,6 +41,7 @@ end
 
 Rails.configuration.to_prepare do
   require_dependency 'meeting_agenda'
+  require_dependency 'meeting_member'
   require_dependency 'meeting_protocol'
   require_dependency 'mailer'
   require_dependency 'meeting_participator'

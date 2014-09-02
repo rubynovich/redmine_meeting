@@ -378,8 +378,8 @@ module MeetingPlugin
           @address = @container.readable_address
 
           mail(to: @user.mail, subject: subject)
-        else
-          Rails.logger.info "ERROR CREATE ISSUE FOR MEMBER #{member.inspect} #{member.user} AGENDA #{member.meeting_agenda}  #{@issue.inspect} #{@issue.errors.inspect}"
+         #else
+         #  Rails.logger.info "ERROR CREATE ISSUE FOR MEMBER #{member.inspect} #{member.user} AGENDA #{member.meeting_agenda}  #{@issue.inspect} #{@issue.try(:errors).try(:inspect)}"
         end
       end
 

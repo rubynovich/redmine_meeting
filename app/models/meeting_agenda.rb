@@ -197,13 +197,13 @@ class MeetingAgenda < ActiveRecord::Base
 
 
   def send_invites
-    self.meeting_members.reject(&:issue).all?(&:send_invite)
-    self.meeting_contacts.all?(&:send_invite)
+    self.meeting_members.reject(&:issue).each(&:send_invite)
+    self.meeting_contacts.each(&:send_invite)
   end
 
   def resend_invites
-    self.meeting_members.all?(&:resend_invite)
-    self.meeting_contacts.all?(&:send_invite)
+    self.meeting_members.each(&:resend_invite)
+    self.meeting_contacts.each(&:send_invite)
   end
 
 
