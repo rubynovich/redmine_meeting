@@ -125,6 +125,7 @@ private
     description: issue_description,
     author: self.try(:meeting_agenda).try(:author),
     start_date: Date.today,
+    estimated_time: 1.0,
     due_date: self.meeting_agenda.meet_on,
     priority: self.meeting_agenda.priority || IssuePriority.default,
     assigned_to: self.user}
