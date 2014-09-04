@@ -83,7 +83,7 @@ class MeetingPendingIssue < ActiveRecord::Base
     status: self.status,
     assigned_to: self.assigned_to,
     start_date: self.start_date,
-    estimated_time: 1.0,
+    estimated_hours: self.estimated_hours,
     due_date: self.due_date}
   end
 
