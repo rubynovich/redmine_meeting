@@ -17,8 +17,8 @@ class MeetingIssuesController < ApplicationController
       description: @object.description,
       priority: @object.meeting_agenda.priority,
       status: IssueStatus.default,
-      author: User.current,
-      estimated_hours: 1.0
+      author: User.current
+
     }
   end
 
