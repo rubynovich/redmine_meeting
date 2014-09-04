@@ -20,3 +20,5 @@ tramp
 
 # elpa packages
 /elpa/
+
+Gemfile.lock
