@@ -16,6 +16,7 @@ class MeetingIssuesController < ApplicationController
       tracker_id: Setting[:plugin_redmine_meeting][:issue_tracker],
       description: @object.description,
       priority: @object.meeting_agenda.priority,
+      estimated_hours: 1.0,
       status: IssueStatus.default,
       author: User.current
 
@@ -23,6 +24,7 @@ class MeetingIssuesController < ApplicationController
   end
 
   def create
+
     @issue.watcher_user_ids = params[:meeting_pending_issue][:watcher_user_ids]
     if @issue.save
       @issue.update_attribute(:description,
@@ -66,7 +68,8 @@ private
   def new_issue
     @issue = MeetingPendingIssue.new(params[:meeting_pending_issue])
     @issue.meeting_container = @object
-  end
+    
+ end
 
   def find_object
     @object = case params[:meeting_answer_type]

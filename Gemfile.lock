@@ -1,0 +1,19 @@
+GEM
+  specs:
+    haml (4.0.5)
+      tilt
+    nested_form (0.3.2)
+    pdf-core (0.2.5)
+    prawn (1.0.0)
+      pdf-core (~> 0.2.2)
+      ttfunk (~> 1.1.1)
+    tilt (1.4.1)
+    ttfunk (1.1.1)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  haml
+  nested_form
+  prawn (~> 1.0.0.rc1)
