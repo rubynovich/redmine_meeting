@@ -114,7 +114,8 @@ private
 #      issue_id: issue.id,
 #      issue_type: :update,
       meeting_container_id: @object.id,
-      meeting_container_type: @object.class.to_s
+      meeting_container_type: @object.class.to_s,
+      estimated_hours: 1.0
     )
   end
 
