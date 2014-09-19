@@ -100,6 +100,7 @@ class MeetingPendingIssue < ActiveRecord::Base
 
   def update_issue
     @issue = self.meeting_container.issue
+    @issue.estimated_hours = self.estimated_hours
     @issue.init_journal(User.current, self.issue_note)
     @issue.status = IssueStatus.default
     @issue.save
