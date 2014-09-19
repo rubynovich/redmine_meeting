@@ -73,6 +73,8 @@ class MeetingAgenda < ActiveRecord::Base
     mq.size != mq.uniq.size
   }
 
+  validate :meeting_questions_issues_valid
+
   before_create :add_author_id
   after_save :add_new_users_from_questions
   after_save :add_new_contacts_from_questions
@@ -299,6 +301,14 @@ class MeetingAgenda < ActiveRecord::Base
   def add_new_contacts_from_questions
     new_contact_ids_from_questions.each do |contact_id|
       MeetingContact.create(meeting_container_type: self.class.to_s, meeting_container_id: self.id, contact_id: contact_id)
+    end
+  end
+
+  def meeting_questions_issues_valid
+    for issue in self.issues
+      if issue.project.required_estimated_hours? && issue.estimated_hours.nil?
+        errors.add(:base, "В задаче #{issue.to_s} не проставлена оценка времени.")
+      end
     end
   end
 
