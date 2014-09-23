@@ -58,9 +58,14 @@ class MeetingIssuesController < ApplicationController
         MeetingExtraAnswer.find(params[:id])
       end
     issue = @object.question_issue
-    if update_issue(issue).valid?
-      @object.update_attribute(:issue_type, :update)
-      @object.update_attribute(:issue_id, issue.id)
+    Rails.logger.error( " ISSUE #{issue.inspect} ".red)
+    if issue.project.required_estimated_hours? && !issue.estimated_hours.present?
+      @estimated_hours_error = "В задаче ##{issue.id} необходимо заполнить поле 'Оценка времени'"
+    else 
+      if update_issue(issue).valid?
+        @object.update_attribute(:issue_type, :update)
+        @object.update_attribute(:issue_id, issue.id)
+      end
     end
   end
 
@@ -111,11 +116,11 @@ private
     MeetingPendingIssue.create(
       issue_note: issue_note,
       author_id: User.current.id,
-#      issue_id: issue.id,
-#      issue_type: :update,
+    # issue_id: issue.id,
+    # issue_type: :update,
       meeting_container_id: @object.id,
-      meeting_container_type: @object.class.to_s,
-      estimated_hours: 1.0
+      meeting_container_type: @object.class.to_s
+    # estimated_hours: 1.0
     )
   end
 

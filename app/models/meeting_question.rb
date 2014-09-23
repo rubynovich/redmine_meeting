@@ -23,7 +23,6 @@ class MeetingQuestion < ActiveRecord::Base
   validates_presence_of :contact_id, if: ->{ self.user_id_is_contact? }
 #  validates_uniqueness_of :title, scope: :meeting_agenda_id
 
-
   def <=>(object)
     position <=> object.position
   end

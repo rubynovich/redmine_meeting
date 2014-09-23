@@ -305,11 +305,23 @@ class MeetingAgenda < ActiveRecord::Base
   end
 
   def meeting_questions_issues_valid
-    for issue in self.issues
-      if issue.project.required_estimated_hours? && issue.estimated_hours.nil?
-        errors.add(:base, "В задаче #{issue.to_s} не проставлена оценка времени.")
+    Rails.logger.error(" HERE #{self.issues.inspect}  ".red)
+    Rails.logger.error(" MEETING_ISSUES #{self.meeting_questions.inspect}  ".red)
+
+    flag = true
+    for question in self.meeting_questions
+      if question.issue
+        issue = question.issue
+        Rails.logger.error(" PROJECT #{issue.project.required_estimated_hours?.inspect}".cyan)
+        Rails.logger.error(" ISSUE: #{ issue.estimated_hours.inspect }".cyan)
+        if issue.project.required_estimated_hours? && !issue.estimated_hours.present?
+          errors.add(:base, "В задаче ##{issue.id} необходимо заполнить поле \"Оценка времени\".")
+          flag = false
+        end
       end
+      return flag
     end
+
   end
 
 end
